@@ -1,0 +1,33 @@
+.nav {
+    background: black;
+    color: var(--off-white);
+    height: 90px;
+    /* padding: 0 2rem; */
+    /* max-width: 1440px; */
+    margin: 0 auto;
+}
+
+.navContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1440px;
+    height: 90px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+}
+
+.navMenu {
+    list-style-type: none;
+    
+}
+
+.li {
+    display: inline;
+    margin-left: 2rem;
+}
+
+.link {
+    text-decoration: none;
+    color: var(--off-white)
+}
