@@ -1,14 +1,11 @@
 .main {
     position: relative;
-    /* max-width: 2000px; */
     margin: 0 auto;
     min-height: 900px;
     background-image: url('../public/cti_blog_hero_original_2000_optimized.jpg');
     background-repeat: no-repeat;
-    /* background-size: 2000px 1346px; */
     background-size: cover;
     background-position-y: 65%;
-    
 }
 
 .mainContainer {
@@ -34,4 +31,22 @@
     font-weight: bold;
     font-size: 29px;
     margin-left: 15rem;
+}
+
+@media (max-width: 1440px) {
+    .main {
+        position: relative;
+        margin: 0 auto;
+        min-height: 900px;
+        background-image: url('../public/hero_img_2.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-y: 65%;
+        background-position-x: 50%;
+    }
+}
+@media (max-width: 800px) {
+    .main {
+        background-position-x: 60%;
+    }
 }
