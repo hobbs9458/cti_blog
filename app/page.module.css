@@ -1,6 +1,8 @@
-.main {
+
+
+.heroWrap {
   position: relative;
-  margin: 0 auto;
+  margin: 0 auto 4rem;
   min-height: 900px;
   background-image: url('../public/hero/cti_blog_hero_original_2000_optimized.jpg');
   background-repeat: no-repeat;
@@ -8,7 +10,7 @@
   background-position-y: 75%;
 }
 
-.mainContainer {
+.hero {
   max-width: 1440px;
   min-height: 900px;
   margin: 0 auto;
@@ -32,6 +34,15 @@
   margin-left: 15rem;
 }
 
+.articles {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.articlesHeader {
+  margin-left: 2rem;
+}
+
 @media (max-width: 1440px) {
   .main {
     position: relative;
@@ -46,13 +57,10 @@
 
 @media (max-width: 800px) {
   .main {
-    background-position-x: 65%;
-  }
-
-  .main {
     background-image: url('../public/hero/hero_img_tablet.jpg'),
       linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
     background-blend-mode: overlay;
+    background-position-x: 65%;
   }
 }
 
