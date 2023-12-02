@@ -1,0 +1,15 @@
+.articlePreview {
+  width: 250px;
+  height: 250px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.previewTitle {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.previewLink {
+  display: inline-block;
+}

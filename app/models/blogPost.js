@@ -8,6 +8,6 @@ const blogSchema = new Schema({
   date: { type: Date, default: Date.now() },
 });
 
-const Blog = mongoose.model('Blog', blogSchema);
+const Blog = mongoose.models.Blog || mongoose.model('Blog', blogSchema);
 
 export { Blog };

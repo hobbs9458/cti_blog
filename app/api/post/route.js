@@ -8,7 +8,10 @@ export const dynamic = 'force-dynamic';
 export async function POST(request) {
   await dbConnect();
 
-  const blogPost = await request.json();
+  const blogPost = await request.formData();
+  console.log(blogPost);
+
+  // const blogPost = await request.json();
   const post = await Blog.create(blogPost);
 
   return NextResponse.json(post, {

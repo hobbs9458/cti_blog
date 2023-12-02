@@ -4,32 +4,67 @@ import { useState } from 'react';
 
 import styles from './page.module.css';
 
+import Quill from '@/app/components/Quill';
+
 export default function Post() {
-  const [author, setAuthor] = useState('');
-  const [title, setTitle] = useState('');
-  const [post, setPost] = useState('');
+  const [quillValue, setQuillValue] = useState('');
+
+  const [formData, setFormData] = useState({
+    author: '',
+    title: '',
+    fileInput: null,
+  });
+
+  function handleInputChange(e) {
+    const { name, value, type, files } = e.target;
+
+    if (type === 'file') {
+      setFormData({
+        ...formData,
+        [name]: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log('POSTING');
+
+    const formDataToSend = new FormData();
+
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+
+    formDataToSend.append('quillValue', quillValue);
 
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title,
-        author,
-        body: post,
-      }),
+      // body: JSON.stringify(formDataToSend),
+      body: formDataToSend,
     };
+
+    console.log('form DATA', formDataToSend);
 
     const res = await fetch('http://localhost:3000/api/post', requestOptions);
     const data = await res.json();
-    console.log(data);
+    console.log('DATA', data);
 
-    setAuthor('');
-    setTitle('');
-    setPost('');
+    setFormData((prevFormData) => {
+      const newFormData = { ...prevFormData };
+
+      for (const key in newFormData) {
+        newFormData[key] = '';
+      }
+
+      return newFormData;
+    });
+
+    setQuillValue(null);
   }
 
   return (
@@ -41,8 +76,8 @@ export default function Post() {
         type='text'
         name='author'
         id='author'
-        onChange={(e) => setAuthor(e.target.value)}
-        value={author}
+        onChange={handleInputChange}
+        value={formData.author}
       />
 
       <label htmlFor='title' className={styles.label}>
@@ -52,21 +87,22 @@ export default function Post() {
         type='text'
         name='title'
         id='title'
-        onChange={(e) => setTitle(e.target.value)}
-        value={title}
+        onChange={handleInputChange}
+        value={formData.title}
       />
 
-      <label htmlFor='post' className={styles.label}>
-        Post
-      </label>
-      <textarea
-        name='post'
-        id='post'
-        cols='30'
-        rows='10'
-        onChange={(e) => setPost(e.target.value)}
-        value={post}
-      ></textarea>
+      <br></br>
+
+      <label htmlFor='img-file-upload'>Choose a preview photo for post:</label>
+      <input
+        type='file'
+        id='img-file-upload'
+        name='img-file-upload'
+        accept='image/png, image/jpeg'
+        onChange={handleInputChange}
+      />
+
+      <Quill setQuillValue={setQuillValue} quillValue={quillValue} />
       <button>Submit</button>
     </form>
   );

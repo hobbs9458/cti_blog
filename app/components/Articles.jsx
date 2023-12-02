@@ -1,3 +1,5 @@
+import ArticlePreview from './ArticlePreview';
+
 async function getData() {
   'fetching';
   const res = await fetch('http:localhost:3000/api/post', {
@@ -5,8 +7,6 @@ async function getData() {
       revalidate: 0,
     },
   });
-
-  console.log('response', res);
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -18,12 +18,8 @@ async function getData() {
 
 export default async function Articles() {
   const data = await getData();
-
-  console.log(data);
-
   const posts = data.map((post) => {
-    console.log(post._id);
-    return <div key={post._id}>{post.body}</div>;
+    return <ArticlePreview key={post._id} post={post} />;
   });
 
   return posts;
