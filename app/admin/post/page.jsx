@@ -12,7 +12,7 @@ export default function Post() {
   const [formData, setFormData] = useState({
     author: '',
     title: '',
-    fileInput: null,
+    blogPreviewImg: null,
   });
 
   function handleInputChange(e) {
@@ -40,11 +40,10 @@ export default function Post() {
       formDataToSend.append(key, formData[key]);
     }
 
-    formDataToSend.append('quillValue', quillValue);
+    formDataToSend.append('post', quillValue);
 
     const requestOptions = {
       method: 'POST',
-      // body: JSON.stringify(formDataToSend),
       body: formDataToSend,
     };
 
@@ -93,11 +92,11 @@ export default function Post() {
 
       <br></br>
 
-      <label htmlFor='img-file-upload'>Choose a preview photo for post:</label>
+      <label htmlFor='blogPreviewImg'>Choose a preview photo for post:</label>
       <input
         type='file'
-        id='img-file-upload'
-        name='img-file-upload'
+        id='blogPreviewImg'
+        name='blogPreviewImg'
         accept='image/png, image/jpeg'
         onChange={handleInputChange}
       />

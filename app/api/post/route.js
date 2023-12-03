@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import dbConnect from '@/lib/db';
 import { Blog } from '@/app/models/blogPost';
 
@@ -8,11 +9,21 @@ export const dynamic = 'force-dynamic';
 export async function POST(request) {
   await dbConnect();
 
-  const blogPost = await request.formData();
-  console.log(blogPost);
+  const formData = await request.formData();
+  let imgFile = formData.get('blogPreviewImg');
+  const dbData = {};
 
-  // const blogPost = await request.json();
-  const post = await Blog.create(blogPost);
+  for (const [name, value] of formData.entries()) {
+    if (name === 'blogPreviewImg') {
+      dbData[name] = value.name;
+    } else {
+      dbData[name] = value;
+    }
+  }
+
+  console.log(dbData);
+
+  const post = await Blog.create(dbData);
 
   return NextResponse.json(post, {
     status: 201,
