@@ -1,4 +1,10 @@
+// TODOS
+// 1. MAKE SURE TO DELETE PREVIEW IMG FILE FROM FILE SYSTEM WHEN DELETING BLOG POSTS
+
 import { NextResponse } from 'next/server';
+
+import fs from 'fs/promises';
+import path from 'path';
 
 import dbConnect from '@/lib/db';
 import { Blog } from '@/app/models/blogPost';
@@ -8,20 +14,23 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   await dbConnect();
-
   const formData = await request.formData();
   let imgFile = formData.get('blogPreviewImg');
   const dbData = {};
 
   for (const [name, value] of formData.entries()) {
-    if (name === 'blogPreviewImg') {
-      dbData[name] = value.name;
-    } else {
+    if (name !== 'blogPreviewImg') {
       dbData[name] = value;
-    }
+    } 
   }
 
-  console.log(dbData);
+  const uniqueFilename = `${Date.now()}_${imgFile.name}`;
+  const filePath = path.join(process.cwd(), 'public', 'uploads', uniqueFilename);
+  const buffer = Buffer.from(await imgFile.arrayBuffer());
+
+  await fs.writeFile(filePath, buffer);
+   
+  dbData['blogPreviewImg'] = `/uploads/${uniqueFilename}`;
 
   const post = await Blog.create(dbData);
 

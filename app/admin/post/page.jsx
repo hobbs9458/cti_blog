@@ -47,11 +47,8 @@ export default function Post() {
       body: formDataToSend,
     };
 
-    console.log('form DATA', formDataToSend);
-
     const res = await fetch('http://localhost:3000/api/post', requestOptions);
     const data = await res.json();
-    console.log('DATA', data);
 
     setFormData((prevFormData) => {
       const newFormData = { ...prevFormData };
