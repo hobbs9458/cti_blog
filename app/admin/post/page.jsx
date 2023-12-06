@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 
-import styles from './page.module.css';
-
 import Quill from '@/app/components/Quill';
+
+import styles from './page.module.css';
 
 export default function Post() {
   const [quillValue, setQuillValue] = useState('');
-
   const [formData, setFormData] = useState({
     author: '',
     title: '',

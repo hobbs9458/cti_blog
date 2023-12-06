@@ -21,15 +21,21 @@ export async function POST(request) {
   for (const [name, value] of formData.entries()) {
     if (name !== 'blogPreviewImg') {
       dbData[name] = value;
-    } 
+    }
   }
 
   const uniqueFilename = `${Date.now()}_${imgFile.name}`;
-  const filePath = path.join(process.cwd(), 'public', 'uploads', uniqueFilename);
+  const filePath = path.join(
+    process.cwd(),
+    'public',
+    'uploads',
+    uniqueFilename
+  );
+
   const buffer = Buffer.from(await imgFile.arrayBuffer());
 
   await fs.writeFile(filePath, buffer);
-   
+
   dbData['blogPreviewImg'] = `/uploads/${uniqueFilename}`;
 
   const post = await Blog.create(dbData);
