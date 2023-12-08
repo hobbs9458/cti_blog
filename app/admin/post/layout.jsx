@@ -1,31 +1,30 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useLayoutEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
+export const dynamic = 'force-dynamic';
+
 export default function Layout({ children }) {
   const router = useRouter();
-  // let user = useRef(null);
-  let [loading, setLoading] = useState();
+  let [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleRouteChange = async () => {
       const supabase = createClientComponentClient();
       setLoading(true);
       const { data } = await supabase.auth.getSession();
-      setLoading(false);
       if (!data.user) return router.push('/');
+      setLoading(false);
       // user.current = data.user;
     };
     handleRouteChange();
   }, [router]);
 
-  // if (user.current !== null) return children;
-
   if (loading) return 'Loading...';
 
   // return 'Loading...';
-  if (!loading) return children;
+  if (loading === false) return children;
 }

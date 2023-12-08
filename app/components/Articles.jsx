@@ -18,7 +18,6 @@ async function getData() {
 
 export default async function Articles() {
   const data = await getData();
-  console.log(data)
   const posts = data.map((post) => {
     return <ArticlePreview key={post._id} post={post} />;
   });
