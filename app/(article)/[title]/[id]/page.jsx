@@ -1,21 +1,27 @@
 import { headers } from 'next/headers';
 import { Blog } from '@/app/models/blogPost';
 
-import { Interweave } from 'interweave';
-// WHY IS THIS ONLY A DEV DEPENDENCY? WON'T WE ALSO NEED IN PROD?
-import { polyfill } from 'interweave-ssr';
-polyfill();
+import { JSDOM } from 'jsdom';
+import DOMPurify from 'dompurify';
 
 export default async function Article() {
+  // get article from db
   const heads = headers();
   const id = heads.get('next-url').split('/')[2];
   const article = await Blog.findById(id);
 
+  // clean markup for injection
+  const window = new JSDOM('').window;
+  const purify = DOMPurify(window);
+  const clean = purify.sanitize(article.post);
+  const cleanMarkup = { __html: clean };
+
   return (
-    <>
+    <div style={{ margin: '0 auto', maxWidth: '90%' }}>
       <h1>{article.title}</h1>
       <p>By: {article.author}</p>
-      <Interweave content={article} />
-    </>
+
+      <div dangerouslySetInnerHTML={cleanMarkup} />
+    </div>
   );
 }
