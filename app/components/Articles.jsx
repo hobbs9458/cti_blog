@@ -1,3 +1,4 @@
+import styles from './Articles.module.css'
 import ArticlePreview from './ArticlePreview';
 
 async function getData() {
@@ -22,5 +23,12 @@ export default async function Articles() {
     return <ArticlePreview key={post._id} post={post} />;
   });
 
-  return posts;
+  return (
+    <section className={styles.articles}>
+      <h2 className={styles.articlesHeader}>Articles</h2>
+      <div className={styles.articlesGrid}>
+        {posts}
+      </div>
+    </section>
+  ) 
 }

@@ -32,12 +32,14 @@ function Navbar() {
       <nav className={styles.nav}>
         <div className={styles.navContainer}>
           <div className='logo'>
-            <Image
-              src={logo}
-              width={213}
-              height={28}
-              alt={'Cutting Tools Inc Logo'}
-            />
+            <Link href='/'>
+              <Image
+                src={logo}
+                width={213}
+                height={28}
+                alt={'Cutting Tools Inc Logo'}
+                />
+            </Link>
           </div>
           <ul className={styles.navMenu}>
             <li className={styles.li}>

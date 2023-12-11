@@ -1,4 +1,5 @@
 .articlePreview {
+  position: relative;
   width: 250px;
   height: 250px;
   border: 1px solid black;
@@ -6,10 +7,29 @@
 }
 
 .previewTitle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  margin-right: auto;
+  margin-left: auto;
   text-align: center;
-  margin: 0 auto;
+
 }
 
 .previewLink {
   display: inline-block;
+  text-decoration: none;
+  width: 250px;
+  height: 250px;
+
+}
+
+.previewLink:visited {
+  text-decoration: none;
+  color: var(--black)
+}
+
+.previewImage {
+  border-radius: 5px;
 }

@@ -1,0 +1,42 @@
+.articles {
+    /* don't need width if being contained by outer container */
+    /* width: 90%; */
+    /* max-width: 815px; */
+    margin: 0 auto;
+}
+
+.articlesHeader {
+    text-decoration: underline;
+    margin-bottom: 1rem;
+}
+
+.articlesGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+}
+
+@media (max-width: 896px) {
+    .articles {
+        max-width: 600px;
+    }
+    .articlesGrid {
+        grid-template-columns: 1fr 1fr;
+        justify-content: start;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+}
+
+@media (max-width: 600px) {
+    .articlesGrid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .articlesHeader {
+        text-align: center;
+    }
+}

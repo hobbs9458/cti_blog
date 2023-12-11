@@ -17,10 +17,9 @@ export default async function Article() {
   const cleanMarkup = { __html: clean };
 
   return (
-    <div style={{ margin: '0 auto', maxWidth: '90%' }}>
+    <div style={{ margin: '0 auto', maxWidth: '75%' }}>
       <h1>{article.title}</h1>
       <p>By: {article.author}</p>
-
       <div dangerouslySetInnerHTML={cleanMarkup} />
     </div>
   );

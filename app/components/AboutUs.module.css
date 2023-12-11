@@ -1,0 +1,52 @@
+.aboutUsH1 {
+    margin-bottom: .2rem;
+}
+
+.aboutUsH2 {
+    margin-top: 1rem;
+    margin-bottom: .2rem;
+}
+
+.aboutUsP {
+    font-size: 18px;
+    margin-bottom: .5rem;
+}
+
+
+.pieImg815 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.pieImg600,
+.pieImg350 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+@media (max-width: 897px) {
+    .pieImg815 {
+        display: none;
+    }
+    
+    .pieImg600 {
+        display: block;
+    }
+}
+
+@media (max-width: 687px) {
+    .pieImg600 {
+        display: none;
+    }
+    .pieImg350 {
+        display: block;
+    }
+}
+
+@media (max-width: 600px) {
+    .pieImg350 {
+        margin: 2rem auto 0;
+    }
+}
+  

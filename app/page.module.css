@@ -1,4 +1,8 @@
-
+.contentWrap {
+  width: 90%;
+  max-width: 815px;
+  margin: 0 auto;
+}
 
 .heroWrap {
   position: relative;
@@ -16,6 +20,7 @@
   margin: 0 auto;
   padding-left: 2rem;
 }
+
 .heroText {
   position: absolute;
   top: 7rem;
@@ -32,15 +37,6 @@
   font-weight: bold;
   font-size: 29px;
   margin-left: 15rem;
-}
-
-.articles {
-  max-width: 1440px;
-  margin: 0 auto;
-}
-
-.articlesHeader {
-  margin-left: 2rem;
 }
 
 @media (max-width: 1440px) {
@@ -63,6 +59,19 @@
     background-position-x: 65%;
   }
 }
+
+@media (max-width: 896px) {
+  .contentWrap {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contentWrap {
+      text-align: center;
+  }
+}
+
 
 @media (max-width: 520px) {
   .tag {

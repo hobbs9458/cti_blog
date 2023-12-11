@@ -1,11 +1,11 @@
-import Image from 'next/image';
 import styles from './page.module.css';
 
 import Articles from './components/Articles';
+import AboutUs from './components/AboutUs';
 
 export default function Home() {
   return (
-    <main>
+    <main className={styles.mainWrap}>
       <div className={styles.heroWrap}>
         <section className={styles.hero}>
           <div className={styles.heroText}>
@@ -16,10 +16,10 @@ export default function Home() {
           </div>
         </section>
       </div>
-      <section className={styles.articles}>
-        <h1 className={styles.articlesHeader}>Articles</h1>
-        <Articles />
-      </section>
+      <div className={styles.contentWrap}>
+        <AboutUs/>
+        {/* <Articles /> */}
+      </div>
     </main>
   );
 }
