@@ -14,6 +14,7 @@ export default async function Article() {
   const window = new JSDOM('').window;
   const purify = DOMPurify(window);
   const clean = purify.sanitize(article.post);
+  console.log(clean);
   const cleanMarkup = { __html: clean };
 
   return (

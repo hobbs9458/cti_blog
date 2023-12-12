@@ -17,8 +17,8 @@ export default function Home() {
         </section>
       </div>
       <div className={styles.contentWrap}>
-        <AboutUs/>
-        {/* <Articles /> */}
+        <AboutUs />
+        <Articles />
       </div>
     </main>
   );

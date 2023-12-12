@@ -14,7 +14,6 @@
   margin-right: auto;
   margin-left: auto;
   text-align: center;
-
 }
 
 .previewLink {
@@ -22,12 +21,12 @@
   text-decoration: none;
   width: 250px;
   height: 250px;
-
+  color: var(--black);
 }
 
 .previewLink:visited {
   text-decoration: none;
-  color: var(--black)
+  color: var(--black);
 }
 
 .previewImage {
