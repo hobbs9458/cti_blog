@@ -1,7 +1,8 @@
-import styles from './page.module.css';
+import styles from "./page.module.css";
 
-import Articles from './components/Articles';
-import AboutUs from './components/AboutUs';
+import Articles from "./components/Articles";
+import AboutUs from "./components/AboutUs";
+import ContactUs from "./components/ContactUs";
 
 export default function Home() {
   return (
@@ -18,7 +19,8 @@ export default function Home() {
       </div>
       <div className={styles.contentWrap}>
         <AboutUs />
-        <Articles />
+        {/* <Articles /> */}
+        <ContactUs />
       </div>
     </main>
   );

@@ -1,3 +1,7 @@
+.aboutUsWrap {
+  margin-top: 3rem;
+}
+
 .aboutUsH1 {
   margin-bottom: 0.2rem;
 }
@@ -14,15 +18,19 @@
 
 .pieImg815 {
   margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
 }
 
 .pieImg600,
 .pieImg350,
 .pieImg337 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   display: none;
+  margin-bottom: 3rem;
+  margin-top: 1rem;
+}
+
+.metalTool815 {
+  margin-top: 2rem;
 }
 
 @media (max-width: 897px) {
@@ -44,13 +52,13 @@
   }
   .pieImg350 {
     display: block;
-    margin: 1rem auto 1rem;
+    margin: 2rem auto 3rem;
   }
 }
 
 @media (max-width: 600px) {
   .pieImg350 {
-    margin: 2rem auto 0;
+    margin: 2rem auto 3rem;
   }
 }
 
@@ -61,5 +69,6 @@
 
   .pieImg337 {
     display: block;
+    margin: 2rem auto 3rem;
   }
 }

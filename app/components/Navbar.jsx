@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 
-import logo from '../../public/CTI-logo-svg.svg';
-import hamburgerMenuIcon from '../../public/hamburger_menu.png';
+import logo from "../../public/CTI-logo-svg.svg";
+import hamburgerMenuIcon from "../../public/hamburger_menu.png";
+import closeMobileNavX from "../../public/close_x.png";
 
-import styles from './navbar.module.css';
-import { useState, useRef, useEffect } from 'react';
+import styles from "./navbar.module.css";
+import { useState, useRef, useEffect } from "react";
 
 function Navbar() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -20,10 +21,10 @@ function Navbar() {
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
 
@@ -31,42 +32,42 @@ function Navbar() {
     <>
       <nav className={styles.nav}>
         <div className={styles.navContainer}>
-          <div className='logo'>
-            <Link href='/'>
+          <div className="logo">
+            <Link href="/">
               <Image
                 src={logo}
                 width={213}
                 height={28}
-                alt={'Cutting Tools Inc Logo'}
-                />
+                alt={"Cutting Tools Inc Logo"}
+                tabIndex={0}
+              />
             </Link>
           </div>
           <ul className={styles.navMenu}>
-            <li className={styles.li}>
+            {/* <li className={styles.li}>
               <Link
-                href='https://cuttingtoolsinc.com'
-                target='_blank'
+                href="https://cuttingtoolsinc.com"
+                target="_blank"
                 className={styles.link}
               >
                 Newsletter
               </Link>
-            </li>
+            </li> */}
             <li className={styles.li}>
               <Link
-                href='https://cuttingtoolsinc.com'
-                target='_blank'
-                className={styles.link}
+                href="https://online.fliphtml5.com/yzmoq/zvqa/#p=1"
+                target="_blank"
+                className={`${styles.link} ${styles.desktopLi}`}
               >
-                Articles
+                Brochure
               </Link>
             </li>
             <li className={styles.li}>
               <Link
-                href='https://cuttingtoolsinc.com'
-                target='_blank'
-                className={styles.link}
+                href="#contact"
+                className={`${styles.link} ${styles.desktopLi}`}
               >
-                Shop
+                Contact Us
               </Link>
             </li>
           </ul>
@@ -74,43 +75,73 @@ function Navbar() {
             src={hamburgerMenuIcon}
             width={47}
             height={28}
-            alt={'Hamburger Menu Icon'}
+            alt={"Hamburger Menu Icon"}
             className={styles.hamburgerIcon}
             onClick={() => setIsMobileNavOpen((prevState) => !prevState)}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                setIsMobileNavOpen((prevState) => !prevState);
+              }
+            }}
+            tabIndex={0}
           />
         </div>
 
         {isMobileNavOpen && (
           <div className={styles.overlay}>
-            <div className={styles.mobileNav} ref={mobileNavRef}>
+            <div
+              className={styles.mobileNav}
+              ref={mobileNavRef}
+              onClick={(e) => e.preventDefault()}
+            >
               <ul className={styles.mobileNavMenu}>
-                <li className={styles.liMobile}>
+                {/* <li className={styles.liMobile}>
                   <Link
-                    href='https://cuttingtoolsinc.com'
-                    target='_blank'
+                    href="https://cuttingtoolsinc.com"
                     className={styles.link}
                   >
                     Newsletter
                   </Link>
-                </li>
+                </li> */}
                 <li className={styles.liMobile}>
                   <Link
-                    href='https://cuttingtoolsinc.com'
-                    target='_blank'
+                    href="https://online.fliphtml5.com/yzmoq/zvqa/#p=1"
+                    target="_blank"
                     className={styles.link}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMobileNavOpen(false);
+                    }}
                   >
-                    Articles
+                    Brochure
                   </Link>
                 </li>
                 <li className={styles.liMobile}>
                   <Link
-                    href='https://cuttingtoolsinc.com'
-                    target='_blank'
+                    href="#contact"
                     className={styles.link}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMobileNavOpen(false);
+                    }}
                   >
-                    Shop
+                    Contact Us
                   </Link>
                 </li>
+                <Image
+                  src={closeMobileNavX}
+                  alt="close nav menu button"
+                  width={33}
+                  height={33}
+                  className={styles.closeMobileNavX}
+                  onClick={() => setIsMobileNavOpen(false)}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      setIsMobileNavOpen(false);
+                    }
+                  }}
+                  tabIndex={0}
+                />
               </ul>
             </div>
           </div>
