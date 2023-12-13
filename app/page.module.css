@@ -104,3 +104,25 @@
     min-height: calc(100vh - 90px);
   }
 }
+
+/* LANDSCAPE */
+
+@media (max-height: 602px) {
+  .heroText {
+    position: absolute;
+    top: 5rem;
+    width: 475px;
+    line-height: 1.2;
+    color: var(--off-white);
+  }
+
+  .tag {
+    font-size: 50px;
+  }
+
+  .subTag {
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 15rem;
+  }
+}
