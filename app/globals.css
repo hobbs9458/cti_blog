@@ -39,6 +39,7 @@ p {
 .input {
   display: block;
   width: 100%;
+  border: 1px solid var(--black);
   border-radius: 5px;
   height: 1.5rem;
   margin-bottom: 1rem;

@@ -16,59 +16,34 @@
   margin-bottom: 0.5rem;
 }
 
-.pieImg815 {
-  margin-top: 2rem;
-  margin-bottom: 3rem;
-}
-
-.pieImg600,
-.pieImg350,
-.pieImg337 {
-  display: none;
-  margin-bottom: 3rem;
-  margin-top: 1rem;
-}
-
-.metalTool815 {
-  margin-top: 2rem;
+.imgWrap {
+  position: relative;
+  margin: 2rem auto 3rem;
+  max-width: 815px;
+  height: 519px;
 }
 
 @media (max-width: 897px) {
-  .pieImg815 {
-    display: none;
-  }
-
-  .pieImg600 {
-    display: block;
+  .imgWrap {
+    max-width: 600px;
+    height: 382px;
   }
 }
 
 @media (max-width: 687px) {
+  .imgWrap {
+    max-width: 400px;
+    height: 255px;
+  }
+
   .aboutUsWrap {
     text-align: center;
   }
-  .pieImg600 {
-    display: none;
-  }
-  .pieImg350 {
-    display: block;
-    margin: 2rem auto 3rem;
-  }
 }
 
-@media (max-width: 600px) {
-  .pieImg350 {
-    margin: 2rem auto 3rem;
-  }
-}
-
-@media (max-width: 400px) {
-  .pieImg350 {
-    display: none;
-  }
-
-  .pieImg337 {
-    display: block;
-    margin: 2rem auto 3rem;
+@media (max-width: 460px) {
+  .imgWrap {
+    max-width: 337px;
+    height: 215px;
   }
 }
