@@ -8,6 +8,7 @@ body {
   position: relative;
   overflow-x: hidden;
   line-height: 1.5;
+  /* min-height: 100vh; */
 }
 
 h1,
@@ -50,10 +51,24 @@ p {
   width: 100%;
   border-radius: 5px;
   padding: 0.2rem;
+  height: 200px;
 }
 
 .btn {
   border: none;
   background: none;
   border-radius: 5px;
+}
+
+.mt1 {
+  margin-top: 1rem;
+}
+.mb1 {
+  margin-bottom: 1rem;
+}
+.mr1 {
+  margin-right: 1rem;
+}
+.ml1 {
+  margin-left: 1rem;
 }

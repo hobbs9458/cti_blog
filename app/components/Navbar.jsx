@@ -38,21 +38,12 @@ function Navbar() {
                 src={logo}
                 width={213}
                 height={28}
-                alt={"Cutting Tools Inc Logo"}
+                alt="Cutting Tools Inc Logo"
                 tabIndex={0}
               />
             </Link>
           </div>
           <ul className={styles.navMenu}>
-            {/* <li className={styles.li}>
-              <Link
-                href="https://cuttingtoolsinc.com"
-                target="_blank"
-                className={styles.link}
-              >
-                Newsletter
-              </Link>
-            </li> */}
             <li className={styles.li}>
               <Link
                 href="https://online.fliphtml5.com/yzmoq/zvqa/#p=1"
@@ -64,7 +55,16 @@ function Navbar() {
             </li>
             <li className={styles.li}>
               <Link
-                href="#contact"
+                href="/store"
+                target="_blank"
+                className={`${styles.link} ${styles.desktopLi}`}
+              >
+                Store
+              </Link>
+            </li>
+            <li className={styles.li}>
+              <Link
+                href="/#contact"
                 className={`${styles.link} ${styles.desktopLi}`}
               >
                 Contact Us
@@ -75,7 +75,7 @@ function Navbar() {
             src={hamburgerMenuIcon}
             width={47}
             height={28}
-            alt={"Hamburger Menu Icon"}
+            alt="Hamburger Menu Icon"
             className={styles.hamburgerIcon}
             onClick={() => setIsMobileNavOpen((prevState) => !prevState)}
             onKeyUp={(e) => {
@@ -89,29 +89,14 @@ function Navbar() {
 
         {isMobileNavOpen && (
           <div className={styles.overlay}>
-            <div
-              className={styles.mobileNav}
-              ref={mobileNavRef}
-              onClick={(e) => e.preventDefault()}
-            >
+            <div className={styles.mobileNav} ref={mobileNavRef}>
               <ul className={styles.mobileNavMenu}>
-                {/* <li className={styles.liMobile}>
-                  <Link
-                    href="https://cuttingtoolsinc.com"
-                    className={styles.link}
-                  >
-                    Newsletter
-                  </Link>
-                </li> */}
                 <li className={styles.liMobile}>
                   <Link
                     href="https://online.fliphtml5.com/yzmoq/zvqa/#p=1"
                     target="_blank"
                     className={styles.link}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsMobileNavOpen(false);
-                    }}
+                    onClick={() => setIsMobileNavOpen(false)}
                   >
                     Brochure
                   </Link>
@@ -120,12 +105,19 @@ function Navbar() {
                   <Link
                     href="#contact"
                     className={styles.link}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsMobileNavOpen(false);
-                    }}
+                    onClick={() => setIsMobileNavOpen(false)}
                   >
                     Contact Us
+                  </Link>
+                </li>
+                <li className={styles.liMobile}>
+                  <Link
+                    href="/store"
+                    target="_blank"
+                    className={styles.link}
+                    onClick={() => setIsMobileNavOpen(false)}
+                  >
+                    Store
                   </Link>
                 </li>
                 <Image

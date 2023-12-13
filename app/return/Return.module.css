@@ -1,0 +1,20 @@
+.returnMain {
+  width: 90%;
+  max-width: 815px;
+  margin: 0 auto;
+  font-size: 18px;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.returnH1 {
+  font-size: 32px;
+}
+
+.returnH3 {
+  margin: 0.75rem auto 0;
+}
+
+.returnOl {
+  margin: 0;
+}

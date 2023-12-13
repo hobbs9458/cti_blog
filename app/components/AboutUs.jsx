@@ -1,10 +1,10 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 
-import styles from './AboutUs.module.css';
+import styles from "./AboutUs.module.css";
 
-import pieChartImage815 from '../../public/cost_pie_chart_815.svg';
-import metalTool815 from '../../public/metal_tool815.jpg';
+import pieChartImage815 from "../../public/cost_pie_chart_815.svg";
+import metalTool815 from "../../public/metal_tool815.jpg";
 
 function AboutUs() {
   return (
@@ -46,33 +46,36 @@ function AboutUs() {
           src={pieChartImage815}
           fill
           className={styles.pieImg815}
-          alt='pie chart showing only 3% of cost is on tooling'
-          sizes='(max-width: 460px) 337px,(max-width: 687px) 400px,(max-width: 897px) 600px, 815px'
+          alt="pie chart showing only 3% of cost is on tooling"
+          sizes="(max-width: 460px) 337px,(max-width: 687px) 400px,(max-width: 897px) 600px, 815px"
         />
       </div>
-      <Link href='/what-we-do' className='link'>
-        <h2 className={`${styles.aboutUsH2}`}>What We Do</h2>
-      </Link>
+
+      <h2 className={`${styles.aboutUsH2}`}>What We Do</h2>
       <p className={styles.aboutUsP}>
         From turn-key tool setup and CNC programming to coolant management and
         engineering consulting, we&#39;ve got your machining needs covered. Our
         expertise extends to tool reconditioning, ball screw repair, gaging,
-        metrology, MRO, and inventory management. Click{' '}
-        <Link href='/what-we-do' className='link-underline link'>
+        metrology, MRO, and inventory management. By recognizing that all of our
+        customers have their own unique needs and requirements, our commitment
+        continues to not just be selling a product, but ensuring that each of
+        our customers receive the best customized solutions.
+        {/* Click{" "} */}
+        {/* <Link href="/what-we-do" className="link-underline link">
           here
-        </Link>{' '}
-        for more details on the services we provide and{' '}
-        <Link href='#contact' className='link-underline link'>
-          contact Cutting Tools Inc.
-        </Link>{' '}
+        </Link>{" "} */}
+        {/* for more details on the services we provide and{" "} */}{" "}
+        <Link href="#contact" className="link-underline link">
+          Contact Cutting Tools Inc.
+        </Link>{" "}
         to see how we can optimize your operations.
       </p>
       <div className={styles.imgWrap}>
         <Image
           src={metalTool815}
           fill
-          alt='metal tool'
-          sizes='(max-width: 460px) 337px,(max-width: 687px) 400px,(max-width: 897px) 600px, 815px'
+          alt="metal tool"
+          sizes="(max-width: 460px) 337px,(max-width: 687px) 400px,(max-width: 897px) 600px, 815px"
         />
       </div>
     </div>

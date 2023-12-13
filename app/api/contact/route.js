@@ -29,8 +29,6 @@ export async function POST(req) {
 
   try {
     const res = await transporter.sendMail(mailOptions);
-    console.log("RES", res);
-    console.log(res.ok);
     if (res) {
       return NextResponse.json("Contact form submitted!", {
         status: 201,

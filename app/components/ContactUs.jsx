@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { toast } from "react-toastify";
+import validator from "validator";
 
 import styles from "./ContactUs.module.css";
 
@@ -14,15 +15,19 @@ function ContactUs() {
   async function handleFormSubmit(e) {
     e.preventDefault();
 
+    const sanitizedName = validator.escape(name);
+    const sanitizedEmail = validator.escape(email);
+    const sanitizedMessage = validator.escape(message);
+
     const res = await fetch(`${location.origin}/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name,
-        email,
-        message,
+        name: sanitizedName,
+        email: sanitizedEmail,
+        message: sanitizedMessage,
       }),
     });
 
@@ -72,6 +77,7 @@ function ContactUs() {
         className="input"
         onChange={(e) => setName(e.target.value)}
         value={name}
+        required
       />
       <label htmlFor="email" className="label">
         Email
@@ -83,6 +89,7 @@ function ContactUs() {
         className="input"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
+        required
       />
       <label htmlFor="message" className="label">
         Message
@@ -95,6 +102,7 @@ function ContactUs() {
         className="text-area"
         onChange={(e) => setMessage(e.target.value)}
         value={message}
+        required
       ></textarea>
       <button className={`btn ${styles.contactBtn}`}>Submit</button>
     </form>

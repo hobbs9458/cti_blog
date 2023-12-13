@@ -1,0 +1,16 @@
+.privacyMain {
+  width: 90%;
+  max-width: 815px;
+  margin: 0 auto;
+  font-size: 18px;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.privacyH1 {
+  font-size: 32px;
+}
+
+.privacyUl {
+  margin: 0;
+}
