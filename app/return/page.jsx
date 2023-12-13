@@ -101,8 +101,8 @@ function Return() {
       <h3 className={styles.returnH3}>Customer Responsibilities:</h3>
       <ol type="a" className={styles.returnOl}>
         <li>
-          It is the customer's responsibility to provide accurate information
-          and follow the return process as outlined in this policy.
+          It is the customer&apos;s responsibility to provide accurate
+          information and follow the return process as outlined in this policy.
         </li>
         <li>
           The customer is responsible for adequately packaging the returned
@@ -117,9 +117,9 @@ function Return() {
       </p>
       <p>
         If you have any further questions or require assistance with a return,
-        please don't hesitate to reach out to our customer service department.
-        We appreciate your business and will do our best to ensure your
-        satisfaction.
+        please don&apos;t hesitate to reach out to our customer service
+        department. We appreciate your business and will do our best to ensure
+        your satisfaction.
       </p>
       <h3 className={styles.returnH3}>Disclaimer:</h3>
       <p className="mb1">
