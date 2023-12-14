@@ -10,7 +10,7 @@ import { Akshar } from 'next/font/google';
 const akshar = Akshar({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Cutting Tools Inc',
+  title: 'Cutting Tools Inc.',
   description:
     'Cutting Tools Inc. is the premier distributor and machine solutions provider for the Automotive, Aerospace, Defense, Energy, Firearms, and Medical manufacturing industries.',
   additionalMetaTags: [
