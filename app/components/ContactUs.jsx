@@ -19,6 +19,8 @@ function ContactUs() {
     const sanitizedEmail = validator.escape(email);
     const sanitizedMessage = validator.escape(message);
 
+    console.log(email);
+
     const res = await fetch(`${location.origin}/api/contact`, {
       method: "POST",
       headers: {

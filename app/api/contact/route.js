@@ -7,10 +7,17 @@ export async function POST(req) {
 
   const contactName = data.name;
   const contactEmail = data.email;
-  const message = data.message;
+  const message =
+    `Name: ${contactName}` +
+    "\n" +
+    `Email: ${contactEmail}` +
+    "\n" +
+    `Message: ${data.message}`;
 
   const emailAddress = process.env.EMAIL;
   const emailPass = process.env.EMAIL_PASS;
+
+  console.log("api email log", contactEmail);
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -21,7 +28,7 @@ export async function POST(req) {
   });
 
   const mailOptions = {
-    from: `${contactName} <${contactEmail}>`,
+    from: `${contactName}`,
     to: emailAddress,
     subject: "New Contact Form Submission",
     text: message,
