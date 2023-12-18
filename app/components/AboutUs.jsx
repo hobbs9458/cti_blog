@@ -19,15 +19,15 @@ function AboutUs() {
       <p className={styles.aboutUsP}>
         After more than 50 years of experience and proven excellence, we are
         more than just a distributor for our customers, we are a business
-        partner. Our focus is on cost saving sand ensuring our customers are
+        partner. Our focus is on cost savings and ensuring our customers are
         more profitable by manufacturing their parts in less time and at less
         cost.
       </p>
       <p className={styles.aboutUsP}>
         We are an engineering driven, machine solutions provider and we solve
-        our customer&apos; problems at the spindle, saving time and money while
-        making them more efficient and profitable.Our sales team is comprised of
-        degreed engineers and those with decades of experience in the
+        our customers&apos; problems at the spindle, saving time and money while
+        making them more efficient and profitable. Our sales team is comprised
+        of degreed engineers and those with decades of experience in the
         manufacturing industry, and we know that sets us apart.
       </p>
       <h2 className={`${styles.aboutUsH2}`}>
