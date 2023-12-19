@@ -55,6 +55,15 @@ function Navbar() {
             </li>
             <li className={styles.li}>
               <Link
+                href="https://online.fliphtml5.com/yzmoq/nmcb/#p=1"
+                target="_blank"
+                className={`${styles.link} ${styles.desktopLi}`}
+              >
+                Line Items
+              </Link>
+            </li>
+            <li className={styles.li}>
+              <Link
                 href="/store"
                 target="_blank"
                 className={`${styles.link} ${styles.desktopLi}`}
@@ -103,11 +112,12 @@ function Navbar() {
                 </li>
                 <li className={styles.liMobile}>
                   <Link
-                    href="#contact"
+                    href="https://online.fliphtml5.com/yzmoq/nmcb/#p=1"
+                    target="_blank"
                     className={styles.link}
                     onClick={() => setIsMobileNavOpen(false)}
                   >
-                    Contact Us
+                    Line Items
                   </Link>
                 </li>
                 <li className={styles.liMobile}>
@@ -118,6 +128,15 @@ function Navbar() {
                     onClick={() => setIsMobileNavOpen(false)}
                   >
                     Store
+                  </Link>
+                </li>
+                <li className={styles.liMobile}>
+                  <Link
+                    href="#contact"
+                    className={styles.link}
+                    onClick={() => setIsMobileNavOpen(false)}
+                  >
+                    Contact Us
                   </Link>
                 </li>
                 <Image

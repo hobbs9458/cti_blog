@@ -84,7 +84,7 @@
   text-decoration: underline;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 755px) {
   .hamburgerIcon {
     display: block;
     cursor: pointer;
