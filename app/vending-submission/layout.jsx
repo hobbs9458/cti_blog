@@ -10,7 +10,5 @@ export default async function Layout({ children }) {
     redirect("/");
   }
 
-  console.log(data);
-
   return children;
 }

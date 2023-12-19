@@ -35,7 +35,12 @@ export default function VendingFormSubmission() {
     });
 
     const data = res.json();
-    console.log(data);
+    if (data.error) {
+      console.log(data.error.message);
+    }
+    if (data.data) {
+      console.log(data.data);
+    }
   }
 
   return (
