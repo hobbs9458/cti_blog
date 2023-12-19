@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { toast } from "react-toastify";
+import { Hourglass } from "react-loader-spinner";
 import validator from "validator";
 
 import styles from "./ContactUs.module.css";
@@ -10,16 +11,25 @@ import styles from "./ContactUs.module.css";
 function ContactUs() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleFormSubmit(e) {
     e.preventDefault();
 
+    if (email === "" && phone === "") {
+      return toast.error("Phone or email is required!");
+    }
+
+    setLoading(true);
+
     const sanitizedName = validator.escape(name);
     const sanitizedEmail = validator.escape(email);
+    const sanitizedPhone = validator.escape(phone);
+    const sanitizedCompany = validator.escape(company);
     const sanitizedMessage = validator.escape(message);
-
-    console.log(email);
 
     const res = await fetch(`${location.origin}/api/contact`, {
       method: "POST",
@@ -29,11 +39,14 @@ function ContactUs() {
       body: JSON.stringify({
         name: sanitizedName,
         email: sanitizedEmail,
+        phone: sanitizedPhone,
+        company: sanitizedCompany,
         message: sanitizedMessage,
       }),
     });
 
     if (res.ok) {
+      setLoading(false);
       toast.success("Contact form submitted successfully!", {
         position: "top-right",
         autoClose: 5000,
@@ -47,27 +60,47 @@ function ContactUs() {
 
       setName("");
       setEmail("");
+      setPhone("");
+      setCompany("");
       setMessage("");
     } else {
-      toast.success(
-        "There was an issue submitting the form. Please try again.",
-        {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        }
-      );
+      setLoading(false);
+      toast.error("There was an issue submitting the form. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
+  }
+
+  if (loading) {
+    return (
+      <form
+        id="contact"
+        className={`${styles.form}`}
+        onSubmit={handleFormSubmit}
+      >
+        <h2 className={styles.contactUsH2}>Contact Us</h2>
+        <Hourglass
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="hourglass-loading"
+          wrapperStyle={{ display: "block", margin: "8rem auto 0" }}
+          wrapperClass=""
+          colors={["#1b1b1b", "#1b1b1b"]}
+        />
+      </form>
+    );
   }
 
   return (
     <form id="contact" className={`${styles.form}`} onSubmit={handleFormSubmit}>
-      {/* GET ICON VERSION OF HEADER */}
       <h2 className={styles.contactUsH2}>Contact Us</h2>
       <label htmlFor="name" className="label">
         Name
@@ -91,7 +124,29 @@ function ContactUs() {
         className="input"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
-        required
+      />
+      <label htmlFor="phone" className="label">
+        Phone Number
+      </label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+        className="input"
+        onChange={(e) => setPhone(e.target.value)}
+        value={phone}
+      />
+      <label htmlFor="name" className="label">
+        Company
+      </label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        className="input"
+        onChange={(e) => setCompany(e.target.value)}
+        value={company}
       />
       <label htmlFor="message" className="label">
         Message

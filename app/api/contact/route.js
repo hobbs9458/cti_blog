@@ -7,10 +7,17 @@ export async function POST(req) {
 
   const contactName = data.name;
   const contactEmail = data.email;
+  const contactPhone = data.phone;
+  const contactCompany = data.company;
+
   const message =
     `Name: ${contactName}` +
     "\n" +
-    `Email: ${contactEmail}` +
+    `Email: ${contactEmail || "N/A"}` +
+    "\n" +
+    `Phone: ${contactPhone || "N/A"}` +
+    "\n" +
+    `Company: ${contactCompany || "N/A"}` +
     "\n" +
     `Message: ${data.message}`;
 
