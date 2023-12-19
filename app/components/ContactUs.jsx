@@ -137,13 +137,13 @@ function ContactUs() {
         onChange={(e) => setPhone(e.target.value)}
         value={phone}
       />
-      <label htmlFor="name" className="label">
+      <label htmlFor="company" className="label">
         Company
       </label>
       <input
         type="text"
-        name="name"
-        id="name"
+        name="company"
+        id="company"
         className="input"
         onChange={(e) => setCompany(e.target.value)}
         value={company}
