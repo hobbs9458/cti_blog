@@ -10,6 +10,8 @@ export async function POST(req) {
   const contactPhone = data.phone;
   const contactCompany = data.company;
 
+  console.log(typeof contactPhone);
+
   const message =
     `Name: ${contactName}` +
     "\n" +
