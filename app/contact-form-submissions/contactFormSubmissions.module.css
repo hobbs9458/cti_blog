@@ -1,0 +1,11 @@
+.contactSubmissions {
+  width: 90%;
+  max-width: 815px;
+  margin: 2rem auto 0;
+  text-align: center;
+  min-height: 700px;
+}
+
+a.submissionLink:visited {
+  color: rgba(81, 81, 244, 0.822);
+}
