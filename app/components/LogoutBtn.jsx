@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import styles from "./LogoutBtn.module.css";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function LogoutBtn() {
   const router = useRouter();
@@ -12,7 +14,7 @@ export default function LogoutBtn() {
     const { error } = await supabase.auth.signOut();
 
     if (!error) {
-      router.push('/login');
+      router.push("/login");
     }
 
     if (error) {
@@ -21,7 +23,7 @@ export default function LogoutBtn() {
   };
 
   return (
-    <button className='btn-primary' onClick={handleLogout}>
+    <button className={`${styles.logoutBtn} btn`} onClick={handleLogout}>
       Logout
     </button>
   );
