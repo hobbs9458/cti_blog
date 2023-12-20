@@ -18,8 +18,10 @@ async function ContactFormSubmissions() {
   }
 
   return (
-    <div className={styles.contactSubmissions}>
-      <h1>Contact Form Submissions</h1>
+    <div className={styles.contactSubmissionsWrap}>
+      <h1 className={styles.contactSubmissionsHeader}>
+        Contact Form Submissions
+      </h1>
       {data.map((submission) => {
         return (
           <div key={submission.id}>

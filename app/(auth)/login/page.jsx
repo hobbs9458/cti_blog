@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import styles from "./login.module.css";
+import AuthForm from "../../components/AuthForm";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
-import AuthForm from "../../components/AuthForm";
-import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [error, setError] = useState("");
@@ -32,7 +33,7 @@ export default function Login() {
   };
 
   return (
-    <main>
+    <main className={styles.login}>
       <h2 className="text-center">Login</h2>
       <AuthForm handleSubmit={handleSubmit} />
       {error && <div className="error">{error}</div>}
