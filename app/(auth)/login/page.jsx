@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import styles from "./login.module.css";
+import AuthForm from "../../components/AuthForm";
 
-import AuthForm from '../../components/AuthForm';
-import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Login() {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const router = useRouter();
 
   const handleSubmit = async (e, email, password) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const supabase = createClientComponentClient();
     const { error } = await supabase.auth.signInWithPassword({
@@ -27,15 +28,15 @@ export default function Login() {
     }
 
     if (!error) {
-      router.push('/');
+      router.push("/");
     }
   };
 
   return (
-    <main>
-      <h2 className='text-center'>Login</h2>
+    <main className={styles.login}>
+      <h2 className="text-center">Login</h2>
       <AuthForm handleSubmit={handleSubmit} />
-      {error && <div className='error'>{error}</div>}
+      {error && <div className="error">{error}</div>}
     </main>
   );
 }

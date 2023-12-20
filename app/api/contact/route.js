@@ -1,30 +1,41 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
-  const data = await req.json();
+  const { name, email, phone, company, message } = await req.json();
+  const cookieStore = cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-  const contactName = data.name;
-  const contactEmail = data.email;
-  const contactPhone = data.phone;
-  const contactCompany = data.company;
+  const { data, error } = await supabase
+    .from("contact-form-submissions")
+    .insert({ name, email, phone, company, message })
+    .select()
+    .single();
 
-  const message =
-    `Name: ${contactName}` +
+  if (data) {
+    console.log("data", data);
+  }
+
+  if (error) {
+    console.log("error", error);
+  }
+
+  const emailText =
+    `Name: ${name}` +
     "\n" +
-    `Email: ${contactEmail || "N/A"}` +
+    `Email: ${email || "N/A"}` +
     "\n" +
-    `Phone: ${contactPhone || "N/A"}` +
+    `Phone: ${phone || "N/A"}` +
     "\n" +
-    `Company: ${contactCompany || "N/A"}` +
+    `Company: ${company || "N/A"}` +
     "\n" +
-    `Message: ${data.message}`;
+    `Message: ${message}`;
 
   const emailAddress = process.env.EMAIL;
   const emailPass = process.env.EMAIL_PASS;
-
-  console.log("api email log", contactEmail);
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -35,10 +46,10 @@ export async function POST(req) {
   });
 
   const mailOptions = {
-    from: `${contactName}`,
+    from: `${name}`,
     to: emailAddress,
     subject: "New Contact Form Submission",
-    text: message,
+    text: emailText,
   };
 
   try {

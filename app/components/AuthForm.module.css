@@ -1,0 +1,12 @@
+.authFormBtn {
+  background: var(--black);
+  color: var(--off-white);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.authFormBtn:hover {
+  color: var(--black);
+  background: var(--off-white);
+  border: 1px solid var(--black);
+}
