@@ -23,7 +23,6 @@ export default function Login() {
     async function checkSession() {
       setLoading(true);
       const session = (await supabase.auth.getSession()).data.session;
-      console.log(session);
       if (session) {
         setLoggedIn(true);
       } else {
