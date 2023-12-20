@@ -1,3 +1,5 @@
 phone numbers blue on safari
 
 figure out why inputs are overflowing their containers
+
+make login/logout 1 screen and make logout button look not awful
