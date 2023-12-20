@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 // import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
+import styles from "./vendingSubmission.module.css";
+
 export default function VendingFormSubmission() {
   const [item, setItem] = useState("");
   const [min, setMin] = useState("");
@@ -44,7 +46,7 @@ export default function VendingFormSubmission() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.vendingSubmission}>
       <label htmlFor="item" className="label">
         Item
       </label>
@@ -63,7 +65,7 @@ export default function VendingFormSubmission() {
         type="number"
         name="min"
         id="min"
-        className="label"
+        className="input"
         onChange={(e) => setMin(e.target.value)}
         value={min}
       />
@@ -75,11 +77,12 @@ export default function VendingFormSubmission() {
         type="number"
         name="max"
         id="max"
-        className="label"
+        className="input"
         onChange={(e) => setMax(e.target.value)}
         value={max}
+        style={{ width: "100%" }}
       />
-      <button>Submit</button>
+      <button className={`btn ${styles.vendingSubmissionBtn}`}>Submit</button>
     </form>
   );
 }

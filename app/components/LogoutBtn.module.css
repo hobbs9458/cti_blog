@@ -3,7 +3,7 @@
   color: var(--off-white);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  display: block;
+  display: inline-block;
   margin: 2rem auto 0;
 }
 
