@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 
 import styles from "./access.module.css";
 import AuthForm from "../../components/AuthForm";
+import LogoutBtn from "../../components/LogoutBtn";
 
 import { Hourglass } from "react-loader-spinner";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import LogoutBtn from "../../components/LogoutBtn";
 
 const supabase = createClientComponentClient();
 
