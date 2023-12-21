@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useState, useRef } from "react";
 
 import styles from "./vendingSubmission.module.css";
 
@@ -10,21 +8,11 @@ export default function VendingFormSubmission() {
   const [item, setItem] = useState("");
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
-
-  // const supabase = createClientComponentClient(cookieStore);
-
-  // async function handleSubmit(e) {
-  //   e.preventDefault();
-
-  //   const { error } = await supabase
-  //     .from("TEST")
-  //     .insert([{ Item: item, Min: min, Max: max }]);
-
-  //   if (error) console.log("Error: ", error);
-  // }
+  const [requester, setRequester] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log(requester);
 
     const res = await fetch(`http://localhost:3000/api/vending-request`, {
       method: "POST",
@@ -33,20 +21,17 @@ export default function VendingFormSubmission() {
         item,
         min,
         max,
+        requester,
       }),
     });
 
-    const data = res.json();
-    if (data.error) {
-      console.log(data.error.message);
-    }
-    if (data.data) {
-      console.log(data.data);
-    }
+    const data = await res.json();
+    console.log(data);
   }
 
   return (
     <form onSubmit={handleSubmit} className={styles.vendingSubmission}>
+      <h1>Vending Request</h1>
       <label htmlFor="item" className="label">
         Item
       </label>
@@ -58,30 +43,58 @@ export default function VendingFormSubmission() {
         value={item}
       />
 
-      <label htmlFor="min" className="label">
-        Min
+      <div className={styles.minMaxWrap}>
+        <div>
+          <label htmlFor="min" className="label">
+            Min
+          </label>
+          <input
+            type="number"
+            name="min"
+            id="min"
+            className="input"
+            onChange={(e) => setMin(e.target.value)}
+            value={min}
+          />
+        </div>
+        <div>
+          <label htmlFor="max" className="label">
+            Max
+          </label>
+          <input
+            type="number"
+            name="max"
+            id="max"
+            className="input"
+            onChange={(e) => setMax(e.target.value)}
+            value={max}
+            style={{ width: "100%" }}
+          />
+        </div>
+      </div>
+      <label htmlFor="requester" className="label">
+        Requested by
       </label>
-      <input
-        type="number"
-        name="min"
-        id="min"
-        className="input"
-        onChange={(e) => setMin(e.target.value)}
-        value={min}
-      />
+      <select
+        name="requester"
+        id="requester"
+        className={styles.reqDropdown}
+        required
+        value={requester}
+        onChange={(e) => setRequester(e.target.value)}
+      >
+        <option className={styles.reqOption}></option>
+        <option value="ronnie_turner" className={styles.reqOption}>
+          Ronnie Turner
+        </option>
+        <option value="john_narum" className={styles.reqOption}>
+          John Narum
+        </option>
+        <option value="jimmy_shelton" className={styles.reqOption}>
+          Jimmy Shelton
+        </option>
+      </select>
 
-      <label htmlFor="max" className="label">
-        Max
-      </label>
-      <input
-        type="number"
-        name="max"
-        id="max"
-        className="input"
-        onChange={(e) => setMax(e.target.value)}
-        value={max}
-        style={{ width: "100%" }}
-      />
       <button className={`btn ${styles.vendingSubmissionBtn}`}>Submit</button>
     </form>
   );
