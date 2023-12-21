@@ -1,8 +1,12 @@
+.loadingWrap {
+  min-height: 500px;
+}
+
 .vendingSubmission {
-  min-height: 750px;
+  min-height: 600px;
   width: 90%;
   max-width: 850px;
-  margin: 2rem auto 0;
+  margin: 3rem auto 0;
 }
 
 .vendingSubmissionBtn {

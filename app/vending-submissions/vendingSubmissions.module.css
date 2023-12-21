@@ -1,0 +1,32 @@
+.vendingSubmissionsLoaderWrap {
+  min-height: 500px;
+}
+
+.vendingSubmissions {
+  padding-top: 3rem;
+  min-height: 700px;
+  width: 90%;
+  max-width: px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.vendingSubmissionsHeader {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vendingSubmissionsTable {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;
+  border: 1px solid var(--black);
+  /* border-radius: 5px; */
+  border-spacing: 0;
+}
+
+.th,
+.td {
+  padding: 0.5rem;
+  border: 1px solid var(--black);
+}

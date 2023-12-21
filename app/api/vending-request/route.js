@@ -10,7 +10,6 @@ export async function POST(req) {
 
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session.user.id;
 
@@ -35,4 +34,52 @@ export async function POST(req) {
     .single();
 
   return NextResponse.json({ data, error });
+}
+
+export async function GET(req) {
+  const cookieStore = cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+
+  const { data, error } = await supabase.from("vending-requests").select();
+
+  if (error) {
+    return NextResponse(error);
+  }
+
+  const subs = await Promise.all(
+    data.map(async (submission) => {
+      const { data: submitter, error: submitterError } = await supabase
+        .from("users")
+        .select()
+        .eq("id", submission.sub_id)
+        .single();
+
+      const { data: requester, error: requesterError } = await supabase
+        .from("users")
+        .select()
+        .eq("id", submission.req_id)
+        .single();
+
+      if (submitterError) {
+        console.log(submitterError);
+      }
+
+      if (requesterError) {
+        console.log(requesterError);
+      }
+
+      const subName = submitter.name.split("_").join(" ").toUpperCase();
+      const reqName = requester.name.split("_").join(" ").toUpperCase();
+
+      const sub = {
+        ...submission,
+        sub_name: subName,
+        req_name: reqName,
+      };
+
+      return sub;
+    })
+  );
+
+  return NextResponse.json(subs);
 }

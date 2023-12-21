@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 
-import styles from "./vendingSubmission.module.css";
+import styles from "./vendingRequest.module.css";
+
+import { toast } from "react-toastify";
+import { Hourglass } from "react-loader-spinner";
 
 export default function VendingFormSubmission() {
   const [item, setItem] = useState("");
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
   const [requester, setRequester] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(requester);
+    setLoading(true);
 
     const res = await fetch(`http://localhost:3000/api/vending-request`, {
       method: "POST",
@@ -26,7 +30,35 @@ export default function VendingFormSubmission() {
     });
 
     const data = await res.json();
-    console.log(data);
+
+    if (data.error) {
+      return toast.error(data.error);
+    }
+
+    toast.success("Request submitted");
+
+    setItem("");
+    setMin("");
+    setMax("");
+    setRequester("");
+
+    setLoading(false);
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.loadingWrap}>
+        <Hourglass
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="hourglass-loading"
+          wrapperStyle={{ display: "block", margin: "8rem auto 0" }}
+          wrapperClass=""
+          colors={["#1b1b1b", "#1b1b1b"]}
+        />
+      </div>
+    );
   }
 
   return (
@@ -41,6 +73,7 @@ export default function VendingFormSubmission() {
         className="input"
         onChange={(e) => setItem(e.target.value)}
         value={item}
+        required
       />
 
       <div className={styles.minMaxWrap}>
@@ -55,6 +88,7 @@ export default function VendingFormSubmission() {
             className="input"
             onChange={(e) => setMin(e.target.value)}
             value={min}
+            required
           />
         </div>
         <div>
@@ -69,6 +103,7 @@ export default function VendingFormSubmission() {
             onChange={(e) => setMax(e.target.value)}
             value={max}
             style={{ width: "100%" }}
+            required
           />
         </div>
       </div>
