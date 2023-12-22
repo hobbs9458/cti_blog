@@ -132,7 +132,7 @@ function ContactUs() {
         type='tel'
         id='phone'
         name='phone'
-        pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
+        // pattern='[0-9]{3}-[0-9]{3}-[0-9]{4}'
         className='input'
         onChange={(e) => setPhone(e.target.value)}
         value={phone}
