@@ -20,7 +20,9 @@ function Footer() {
         </Link>
         <div className={`${styles.address} ${styles.footerAddress1}`}>
           <h3 className={`${styles.addressH3}`}>Mt. Juliet TN</h3>
-          <p style={{ color: '#f3f3f3' }}>(615) 391-0200</p>
+          <p style={{ color: '#f3f3f3' }} className='telephone'>
+            (615) 391-0200
+          </p>
           <p>
             1002 Pleasant Grove Pl, <br />
             Mt. Juliet, TN 37122
@@ -28,7 +30,9 @@ function Footer() {
         </div>
         <div className={`${styles.address} ${styles.footerAddress2}`}>
           <h3 className={`${styles.addressH3}`}>Louisville KY</h3>
-          <p style={{ color: '#f3f3f3' }}>(502) 896-2353</p>
+          <p style={{ color: '#f3f3f3' }} className='telephone'>
+            (502) 896-2353
+          </p>
           <p>
             13029 Middletown Industrial Blvd, <br />
             Louisville, KY 40223
