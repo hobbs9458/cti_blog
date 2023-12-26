@@ -5,21 +5,35 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function POST(req) {
   const formData = await req.json();
-
   const { item, min, max, requester } = formData;
-
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { data: sessionData } = await supabase.auth.getSession();
   const userId = sessionData.session.user.id;
 
-  const { data: requesterData, errorReqId } = await supabase
+  const { data: submitter, error: submitterError } = await supabase
     .from("users")
     .select()
-    .eq("name", requester)
+    .eq("id", userId)
     .single();
 
-  const reqId = requesterData.id;
+  if (submitterError) {
+    console.log(submitterError);
+    return NextResponse.json(
+      { error: "Error retrieving submitter name" },
+      { status: 500 }
+    );
+  }
+
+  const subNameArr = submitter.name
+    .split("_")
+    .map((name) => `${name[0].toUpperCase()}${name.slice(1)}`);
+  const subName = `${subNameArr[0]} ${subNameArr[1]}`;
+
+  const reqNameArr = requester
+    .split("_")
+    .map((name) => `${name[0].toUpperCase()}${name.slice(1)}`);
+  const reqName = `${reqNameArr[0]} ${reqNameArr[1]}`;
 
   const { data, error } = await supabase
     .from("vending-requests")
@@ -27,8 +41,8 @@ export async function POST(req) {
       Item: item,
       Min: min,
       Max: max,
-      sub_id: userId,
-      req_id: reqId,
+      "Submitted By": subName,
+      "Requested By": reqName,
     })
     .select()
     .single();
@@ -46,40 +60,5 @@ export async function GET(req) {
     return NextResponse(error);
   }
 
-  const subs = await Promise.all(
-    data.map(async (submission) => {
-      const { data: submitter, error: submitterError } = await supabase
-        .from("users")
-        .select()
-        .eq("id", submission.sub_id)
-        .single();
-
-      const { data: requester, error: requesterError } = await supabase
-        .from("users")
-        .select()
-        .eq("id", submission.req_id)
-        .single();
-
-      if (submitterError) {
-        console.log(submitterError);
-      }
-
-      if (requesterError) {
-        console.log(requesterError);
-      }
-
-      const subName = submitter.name.split("_").join(" ").toUpperCase();
-      const reqName = requester.name.split("_").join(" ").toUpperCase();
-
-      const sub = {
-        ...submission,
-        sub_name: subName,
-        req_name: reqName,
-      };
-
-      return sub;
-    })
-  );
-
-  return NextResponse.json(subs);
+  return NextResponse.json(data);
 }

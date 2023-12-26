@@ -62,8 +62,8 @@ function VendingRequests() {
                 <td className={styles.td}>{request.Item}</td>
                 <td className={styles.td}>{request.Min}</td>
                 <td className={styles.td}>{request.Max}</td>
-                <td className={styles.td}>{request.req_name}</td>
-                <td className={styles.td}>{request.sub_name}</td>
+                <td className={styles.td}>{request["Requested By"]}</td>
+                <td className={styles.td}>{request["Submitted By"]}</td>
               </tr>
             );
           })}
