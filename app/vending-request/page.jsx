@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import styles from "./vendingRequest.module.css";
 
 import { toast } from "react-toastify";
 import { Hourglass } from "react-loader-spinner";
+import readXlsxFile from "read-excel-file";
 
 export default function VendingFormSubmission() {
   const [item, setItem] = useState("");
@@ -13,8 +14,10 @@ export default function VendingFormSubmission() {
   const [max, setMax] = useState("");
   const [requester, setRequester] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploadedData, setUploadedData] = useState([]);
+  const uploadRef = useRef(null);
 
-  async function handleSubmit(e) {
+  async function handleSingleSubmit(e) {
     e.preventDefault();
     setLoading(true);
 
@@ -45,6 +48,37 @@ export default function VendingFormSubmission() {
     setLoading(false);
   }
 
+  async function handleFileChange() {
+    const rows = await readXlsxFile(uploadRef.current.files[0]);
+    setUploadedData(rows);
+  }
+
+  async function handleUploadSubmit(e) {
+    e.preventDefault();
+    if (uploadedData.length < 1) {
+      return toast.error("Please upload a file before submitting");
+    }
+
+    const res = await fetch(
+      `http://localhost:3000/api/vending-request-upload`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rows: uploadedData,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      toast.success(data.success);
+    } else {
+      toast.error("Upload not successful. Please try again.");
+    }
+  }
+
   if (loading) {
     return (
       <div className={styles.loadingWrap}>
@@ -62,75 +96,95 @@ export default function VendingFormSubmission() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.vendingSubmission}>
-      <h1>Vending Request</h1>
-      <label htmlFor="item" className="label">
-        Item
-      </label>
-      <input
-        type="text"
-        id="item"
-        className="input"
-        onChange={(e) => setItem(e.target.value)}
-        value={item}
-        required
-      />
+    <main className={styles.vendingReqMain}>
+      <h1 className={styles.vendingReqHeader}>Vending Request</h1>
+      <form className={styles.vendingUploadForm} onSubmit={handleUploadSubmit}>
+        <label htmlFor="upload" className="label mb1">
+          Upload Requests
+        </label>
+        <input
+          type="file"
+          name="upload"
+          id="upload"
+          className={styles.uploadFileInput}
+          ref={uploadRef}
+          onChange={handleFileChange}
+        />
+        <button>Submit Upload</button>
+      </form>
 
-      <div className={styles.minMaxWrap}>
-        <div>
-          <label htmlFor="min" className="label">
-            Min
-          </label>
-          <input
-            type="number"
-            name="min"
-            id="min"
-            className="input"
-            onChange={(e) => setMin(e.target.value)}
-            value={min}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="max" className="label">
-            Max
-          </label>
-          <input
-            type="number"
-            name="max"
-            id="max"
-            className="input"
-            onChange={(e) => setMax(e.target.value)}
-            value={max}
-            style={{ width: "100%" }}
-            required
-          />
-        </div>
-      </div>
-      <label htmlFor="requester" className="label">
-        Requested by
-      </label>
-      <select
-        name="requester"
-        id="requester"
-        className={styles.reqDropdown}
-        required
-        value={requester}
-        onChange={(e) => setRequester(e.target.value)}
+      <form
+        onSubmit={handleSingleSubmit}
+        className={styles.vendingFormSubmission}
       >
-        <option className={styles.reqOption}></option>
-        <option value="ronnie_turner" className={styles.reqOption}>
-          Ronnie Turner
-        </option>
-        <option value="john_narum" className={styles.reqOption}>
-          John Narum
-        </option>
-        <option value="jimmy_shelton" className={styles.reqOption}>
-          Jimmy Shelton
-        </option>
-      </select>
+        <label htmlFor="item" className="label">
+          Item
+        </label>
+        <input
+          type="text"
+          id="item"
+          className="input"
+          onChange={(e) => setItem(e.target.value)}
+          value={item}
+          required
+        />
 
-      <button className={`btn ${styles.vendingSubmissionBtn}`}>Submit</button>
-    </form>
+        <div className={styles.minMaxWrap}>
+          <div>
+            <label htmlFor="min" className="label">
+              Min
+            </label>
+            <input
+              type="number"
+              name="min"
+              id="min"
+              className="input"
+              onChange={(e) => setMin(e.target.value)}
+              value={min}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="max" className="label">
+              Max
+            </label>
+            <input
+              type="number"
+              name="max"
+              id="max"
+              className="input"
+              onChange={(e) => setMax(e.target.value)}
+              value={max}
+              style={{ width: "100%" }}
+              required
+            />
+          </div>
+        </div>
+        <label htmlFor="requester" className="label">
+          Requested by
+        </label>
+        <select
+          name="requester"
+          id="requester"
+          className={styles.reqDropdown}
+          required
+          value={requester}
+          onChange={(e) => setRequester(e.target.value)}
+        >
+          <option className={styles.reqOption}></option>
+          <option value="ronnie_turner" className={styles.reqOption}>
+            Ronnie Turner
+          </option>
+          <option value="john_narum" className={styles.reqOption}>
+            John Narum
+          </option>
+          <option value="jimmy_shelton" className={styles.reqOption}>
+            Jimmy Shelton
+          </option>
+        </select>
+
+        <button className={`btn ${styles.vendingSubmissionBtn}`}>Submit</button>
+      </form>
+    </main>
   );
 }
