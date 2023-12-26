@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 
 import styles from "./vendingRequest.module.css";
 
@@ -74,6 +75,8 @@ export default function VendingFormSubmission() {
 
     if (data.success) {
       toast.success(data.success);
+      uploadRef.current.value = "";
+      setUploadedData([]);
     } else {
       toast.error("Upload not successful. Please try again.");
     }
@@ -98,10 +101,14 @@ export default function VendingFormSubmission() {
   return (
     <main className={styles.vendingReqMain}>
       <h1 className={styles.vendingReqHeader}>Vending Request</h1>
+
       <form className={styles.vendingUploadForm} onSubmit={handleUploadSubmit}>
-        <label htmlFor="upload" className="label mb1">
+        <label htmlFor="upload" className="label">
           Upload Requests
         </label>
+        <Link href="/vending-request-excel-template.xlsx" className="link">
+          Download Excel Template For Bulk Uploads
+        </Link>
         <input
           type="file"
           name="upload"
