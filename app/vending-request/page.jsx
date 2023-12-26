@@ -16,6 +16,7 @@ export default function VendingFormSubmission() {
   const [requester, setRequester] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadedData, setUploadedData] = useState([]);
+  const [activeTab, setActiveTab] = useState("tab1");
   const uploadRef = useRef(null);
 
   async function handleSingleSubmit(e) {
@@ -102,96 +103,138 @@ export default function VendingFormSubmission() {
     <main className={styles.vendingReqMain}>
       <h1 className={styles.vendingReqHeader}>Vending Request</h1>
 
-      <form className={styles.vendingUploadForm} onSubmit={handleUploadSubmit}>
-        <label htmlFor="upload" className="label">
-          Upload Requests
-        </label>
-        <Link href="/vending-request-excel-template.xlsx" className="link">
-          Download Excel Template For Bulk Uploads
-        </Link>
-        <input
-          type="file"
-          name="upload"
-          id="upload"
-          className={styles.uploadFileInput}
-          ref={uploadRef}
-          onChange={handleFileChange}
-        />
-        <button>Submit Upload</button>
-      </form>
-
-      <form
-        onSubmit={handleSingleSubmit}
-        className={styles.vendingFormSubmission}
-      >
-        <label htmlFor="item" className="label">
-          Item
-        </label>
-        <input
-          type="text"
-          id="item"
-          className="input"
-          onChange={(e) => setItem(e.target.value)}
-          value={item}
-          required
-        />
-
-        <div className={styles.minMaxWrap}>
-          <div>
-            <label htmlFor="min" className="label">
-              Min
-            </label>
-            <input
-              type="number"
-              name="min"
-              id="min"
-              className="input"
-              onChange={(e) => setMin(e.target.value)}
-              value={min}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="max" className="label">
-              Max
-            </label>
-            <input
-              type="number"
-              name="max"
-              id="max"
-              className="input"
-              onChange={(e) => setMax(e.target.value)}
-              value={max}
-              style={{ width: "100%" }}
-              required
-            />
-          </div>
-        </div>
-        <label htmlFor="requester" className="label">
-          Requested by
-        </label>
-        <select
-          name="requester"
-          id="requester"
-          className={styles.reqDropdown}
-          required
-          value={requester}
-          onChange={(e) => setRequester(e.target.value)}
+      <div className={styles.tabBtns}>
+        <button
+          className={`${styles.tabBtn} ${
+            activeTab === "tab1" ? styles.activeTab : ""
+          } btn`}
+          onClick={() => setActiveTab("tab1")}
         >
-          <option className={styles.reqOption}></option>
-          <option value="ronnie_turner" className={styles.reqOption}>
-            Ronnie Turner
-          </option>
-          <option value="john_narum" className={styles.reqOption}>
-            John Narum
-          </option>
-          <option value="jimmy_shelton" className={styles.reqOption}>
-            Jimmy Shelton
-          </option>
-        </select>
+          Single Request
+        </button>
+        <button
+          className={`${styles.tabBtn} ${
+            activeTab === "tab2" ? styles.activeTab : ""
+          } btn`}
+          onClick={() => setActiveTab("tab2")}
+        >
+          Upload Requests
+        </button>
+        <button
+          className={`${styles.tabBtn} ${
+            activeTab === "tab3" ? styles.activeTab : ""
+          } btn`}
+          onClick={() => setActiveTab("tab3")}
+        >
+          Item Search
+        </button>
+      </div>
 
-        <button className={`btn ${styles.vendingSubmissionBtn}`}>Submit</button>
-      </form>
+      {activeTab === "tab1" && (
+        <form
+          onSubmit={handleSingleSubmit}
+          className={styles.vendingSingleForm}
+        >
+          <label htmlFor="item" className="label">
+            Item
+          </label>
+          <input
+            type="text"
+            id="item"
+            className="input"
+            onChange={(e) => setItem(e.target.value)}
+            value={item}
+            required
+          />
+
+          <div className={styles.minMaxWrap}>
+            <div>
+              <label htmlFor="min" className="label">
+                Min
+              </label>
+              <input
+                type="number"
+                name="min"
+                id="min"
+                className="input"
+                onChange={(e) => setMin(e.target.value)}
+                value={min}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="max" className="label">
+                Max
+              </label>
+              <input
+                type="number"
+                name="max"
+                id="max"
+                className="input"
+                onChange={(e) => setMax(e.target.value)}
+                value={max}
+                style={{ width: "100%" }}
+                required
+              />
+            </div>
+          </div>
+          <label htmlFor="requester" className="label">
+            Requested by
+          </label>
+          <select
+            name="requester"
+            id="requester"
+            className={styles.reqDropdown}
+            required
+            value={requester}
+            onChange={(e) => setRequester(e.target.value)}
+          >
+            <option className={styles.reqOption}></option>
+            <option value="ronnie_turner" className={styles.reqOption}>
+              Ronnie Turner
+            </option>
+            <option value="john_narum" className={styles.reqOption}>
+              John Narum
+            </option>
+            <option value="jimmy_shelton" className={styles.reqOption}>
+              Jimmy Shelton
+            </option>
+          </select>
+
+          <button className={`btn ${styles.vendingSingleFormBtn}`}>
+            Submit
+          </button>
+        </form>
+      )}
+
+      {activeTab === "tab2" && (
+        <form
+          className={styles.vendingUploadForm}
+          onSubmit={handleUploadSubmit}
+        >
+          <p className={styles.downloadTemplateP}>
+            {" "}
+            <Link href="/vending-request-excel-template.xlsx" className="link">
+              Download the excel template
+            </Link>{" "}
+            and upload requests in bulk.
+          </p>
+
+          <input
+            type="file"
+            name="upload"
+            id="upload"
+            className={styles.uploadFileInput}
+            ref={uploadRef}
+            onChange={handleFileChange}
+          />
+          <button className={`${styles.uploadSubmitBtn} btn`}>Upload</button>
+        </form>
+      )}
+
+      {activeTab === "tab3" && (
+        <div style={{ textAlign: "center" }}>Search Page...</div>
+      )}
     </main>
   );
 }
