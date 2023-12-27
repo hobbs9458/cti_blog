@@ -1,5 +1,8 @@
-phone numbers blue on safari
+add links to access page
 
-figure out why inputs are overflowing their containers
+change table headers to lowercase in supabase and code :0
 
-make login/logout 1 screen and make logout button look not awful
+try adding light gray bg to table to lessen border thickness
+
+change fetches to location.origin if it works
+
