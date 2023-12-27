@@ -60,28 +60,30 @@
 
 .uploadSubmitBtn {
   display: block;
-  background: var(--black);
-  color: var(--off-white);
-  padding: 0.5rem 1.5rem;
-  font-size: 16px;
-  width: 100%;
-}
-
-.uploadSubmitBtn:hover {
   background: #f3f3f3;
   color: var(--black);
   border: 1px solid black;
+  padding: 0.5rem 1.5rem;
+  font-size: 16px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.uploadSubmitBtn:hover {
+  background: var(--black);
+  color: var(--off-white);
 }
 
 .vendingSingleForm {
   width: 90%;
-  max-width: 850px;
+  max-width: 650px;
   margin: 0 auto 4rem;
 }
 
 .vendingSingleFormBtn {
-  background: var(--black);
-  color: var(--off-white);
+  color: var(--black);
+  background: var(--off-white);
+  border: 1px solid var(--black);
   padding: 0.5rem 1.5rem;
   cursor: pointer;
   display: block;
@@ -91,9 +93,8 @@
 }
 
 .vendingSingleFormBtn:hover {
-  color: var(--black);
-  background: var(--off-white);
-  border: 1px solid var(--black);
+  background: var(--black);
+  color: var(--off-white);
 }
 
 .reqDropdown {

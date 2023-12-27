@@ -4,10 +4,8 @@ import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function POST(req) {
-  console.log("POST!!!");
   const formData = await req.json();
-  const rows = formData.rows.slice(1);
-
+  const rows = formData.rows;
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { data: sessionData } = await supabase.auth.getSession();
@@ -21,40 +19,31 @@ export async function POST(req) {
 
   if (submitterError) {
     console.log(submitterError);
-    return NextResponse.json(
-      { error: "Error retrieving submitter name" },
-      { status: 500 }
-    );
   }
-
-  const subNameArr = submitter.name
-    .split("_")
-    .map((name) => `${name[0].toUpperCase()}${name.slice(1)}`);
-  const subName = `${subNameArr[0]} ${subNameArr[1]}`;
 
   const successfullyInsertedIds = [];
 
   try {
     for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      const item = row[0];
-      const min = row[1];
-      const max = row[2];
-      const reqName = row[3];
+      const { item, min, max, requested_by } = rows[i];
 
       const { data, error } = await supabase
         .from("vending-requests")
         .insert({
-          Item: item,
-          Min: min,
-          Max: max,
-          "Submitted By": subName,
-          "Requested By": reqName,
+          item,
+          min,
+          max,
+          submitted_by: submitter.name,
+          requested_by: requested_by
+            .split(" ")
+            .map((name) => name[0].toLowerCase() + name.slice(1))
+            .join("_"),
         })
         .select()
         .single();
 
       if (error) {
+        console.log(error);
         throw new Error(error);
       }
 

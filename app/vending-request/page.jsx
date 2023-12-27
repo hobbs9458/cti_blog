@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 
 import styles from "./vendingRequest.module.css";
@@ -19,11 +19,18 @@ export default function VendingFormSubmission() {
   const [activeTab, setActiveTab] = useState("tab1");
   const uploadRef = useRef(null);
 
+  useEffect(() => {
+    // loading state was preventing from setting uploadRef to null on submit. useEffect resets it after submission
+    if (uploadRef.current?.value) {
+      uploadRef.current.value = "";
+    }
+  }, []);
+
   async function handleSingleSubmit(e) {
     e.preventDefault();
     setLoading(true);
 
-    const res = await fetch(`http://localhost:3000/api/vending-request`, {
+    const res = await fetch(`${location.origin}/api/vending-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -52,7 +59,23 @@ export default function VendingFormSubmission() {
 
   async function handleFileChange() {
     const rows = await readXlsxFile(uploadRef.current.files[0]);
-    setUploadedData(rows);
+    const formattedRows = [];
+
+    const rowTemplate = {};
+    rows[0].forEach((header) => (rowTemplate[header] = ""));
+
+    rows.slice(1).forEach((row) => {
+      let index = 0;
+      const rowObj = { ...rowTemplate };
+
+      for (const key in rowObj) {
+        rowObj[key] = row[index];
+        index++;
+      }
+      formattedRows.push(rowObj);
+    });
+
+    setUploadedData(formattedRows);
   }
 
   async function handleUploadSubmit(e) {
@@ -61,23 +84,22 @@ export default function VendingFormSubmission() {
       return toast.error("Please upload a file before submitting");
     }
 
-    const res = await fetch(
-      `http://localhost:3000/api/vending-request-upload`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          rows: uploadedData,
-        }),
-      }
-    );
+    setLoading(true);
+
+    const res = await fetch(`${location.origin}/api/vending-request-upload`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        rows: uploadedData,
+      }),
+    });
 
     const data = await res.json();
 
     if (data.success) {
       toast.success(data.success);
-      uploadRef.current.value = "";
       setUploadedData([]);
+      setLoading(false);
     } else {
       toast.error("Upload not successful. Please try again.");
     }

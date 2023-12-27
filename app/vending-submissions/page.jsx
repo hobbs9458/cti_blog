@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 
+import { capitalize } from "@/utils/functions";
+
 import { Hourglass } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import styles from "./vendingSubmissions.module.css";
@@ -155,12 +157,16 @@ function VendingRequests() {
                   <td className={styles.td}>
                     {request.created_at.slice(0, 10)}
                   </td>
-                  <td className={styles.td}>{request.Item}</td>
-                  <td className={styles.td}>{request.Min}</td>
-                  <td className={styles.td}>{request.Max}</td>
-                  <td className={styles.td}>{request["Requested By"]}</td>
-                  <td className={styles.td}>{request["Submitted By"]}</td>
-                  <td className={styles.td}>{request.Status}</td>
+                  <td className={styles.td}>{request.item}</td>
+                  <td className={styles.td}>{request.min}</td>
+                  <td className={styles.td}>{request.max}</td>
+                  <td className={styles.td}>
+                    {capitalize(request.requested_by, "_")}
+                  </td>
+                  <td className={styles.td}>
+                    {capitalize(request.submitted_by, "_")}
+                  </td>
+                  <td className={styles.td}>{request.status}</td>
                 </tr>
               );
             })}
@@ -275,7 +281,6 @@ function VendingRequests() {
           </form>
         )}
       </main>
-      s
     </>
   );
 }

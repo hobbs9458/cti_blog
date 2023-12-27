@@ -25,24 +25,14 @@ export async function POST(req) {
     );
   }
 
-  const subNameArr = submitter.name
-    .split("_")
-    .map((name) => `${name[0].toUpperCase()}${name.slice(1)}`);
-  const subName = `${subNameArr[0]} ${subNameArr[1]}`;
-
-  const reqNameArr = requester
-    .split("_")
-    .map((name) => `${name[0].toUpperCase()}${name.slice(1)}`);
-  const reqName = `${reqNameArr[0]} ${reqNameArr[1]}`;
-
   const { data, error } = await supabase
     .from("vending-requests")
     .insert({
-      Item: item,
-      Min: min,
-      Max: max,
-      "Submitted By": subName,
-      "Requested By": reqName,
+      item,
+      min,
+      max,
+      submitted_by: submitter.name,
+      requested_by: requester,
     })
     .select()
     .single();
@@ -54,11 +44,32 @@ export async function GET(req) {
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-  const { data, error } = await supabase.from("vending-requests").select();
+  const session = await supabase.auth.getSession();
+  const userId = session.data.session.user.id;
 
-  if (error) {
-    return NextResponse(error);
+  const { data: roleData, error: roleDataError } = await supabase
+    .from("user-roles")
+    .select("role-types (role)")
+    .eq("user_id", userId)
+    .single();
+
+  if (roleDataError) {
+    console.log(roleDataError);
   }
 
-  return NextResponse.json(data);
+  const role = roleData["role-types"].role;
+
+  if (role === "admin") {
+    const { data, error } = await supabase
+      .from("vending-requests")
+      .select()
+      .order("id", { ascending: true });
+
+    if (error) {
+      return NextResponse(error);
+    }
+    return NextResponse.json(data);
+  }
+
+  // only select the rows where the user is either the requester or the submitter.
 }
