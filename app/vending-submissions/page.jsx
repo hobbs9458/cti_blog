@@ -27,6 +27,7 @@ function VendingRequests() {
   async function getSubmissions() {
     const res = await fetch(`${location.origin}/api/vending-request`);
     const data = await res.json();
+    console.log(data);
     setRequests(data);
     setLoading(false);
   }
@@ -179,32 +180,16 @@ function VendingRequests() {
             ref={editFormRef}
           >
             <h4>Edit Row</h4>
-            <label htmlFor="id" className="label">
-              ID
-            </label>
-            <input
-              type="text"
-              name="id"
-              id="id"
-              className="input"
-              onChange={handleEditFormChange}
-              value={editForm.id}
-              disabled
-              style={{ color: "white", background: "gray" }}
-            />
-            <label htmlFor="createdAt" className="label">
-              Created At
-            </label>
-            <input
-              type="text"
-              name="createdAt"
-              id="createdAt"
-              className="input"
-              onChange={handleEditFormChange}
-              value={editForm.createdAt}
-              disabled
-              style={{ color: "white", background: "gray" }}
-            />
+            <p className={styles.editFormInfo}>ID: {editForm.id}</p>
+            <p className={styles.editFormInfo}>
+              Created At: {editForm.createdAt}
+            </p>
+            <p className={styles.editFormInfo}>
+              Requested By: {editForm.reqBy}
+            </p>
+            <p className={`mb1 ${styles.editFormInfo}`}>
+              Submitted By: {editForm.subBy}
+            </p>
             <label htmlFor="item" className="label">
               Item
             </label>
@@ -238,32 +223,7 @@ function VendingRequests() {
               onChange={handleEditFormChange}
               value={editForm.max}
             />
-            <label htmlFor="reqBy" className="label">
-              Requested By
-            </label>
-            <input
-              type="text"
-              name="reqBy"
-              id="reqBy"
-              className="input"
-              onChange={handleEditFormChange}
-              value={editForm.reqBy}
-              disabled
-              style={{ color: "white", background: "gray" }}
-            />
-            <label htmlFor="subBy" className="label">
-              Submitted By
-            </label>
-            <input
-              type="text"
-              name="subBy"
-              id="subBy"
-              className="input"
-              onChange={handleEditFormChange}
-              value={editForm.subBy}
-              disabled
-              style={{ color: "white", background: "gray" }}
-            />
+
             <label htmlFor="status" className="label">
               Status
             </label>

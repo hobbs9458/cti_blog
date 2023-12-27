@@ -12,9 +12,9 @@ export async function POST(req) {
   const { data, error } = await supabase
     .from("vending-requests")
     .update({
-      Min: min,
-      Max: max,
-      Status: status,
+      min,
+      max,
+      status,
     })
     .match({ id })
     .select()

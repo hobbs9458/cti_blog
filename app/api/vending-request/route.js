@@ -71,5 +71,25 @@ export async function GET(req) {
     return NextResponse.json(data);
   }
 
-  // only select the rows where the user is either the requester or the submitter.
+  // // only select the rows where the user is either the requester or the submitter.
+  // const { data: userData, error: userDataError } = await supabase
+  //   .from("users")
+  //   .select()
+  //   .eq("id", userId)
+  //   .single();
+
+  // if (userDataError) {
+  //   console.log(userDataError);
+  // }
+
+  // const { data: rows, error: rowsError } = await supabase
+  //   .from("vending-requests")
+  //   .select()
+  //   .or(`requested_by.eq.${userData.name},submitted_by.eq.${userData.name}`);
+
+  // if (rowsError) {
+  //   return NextResponse(rowsError);
+  // }
+
+  // return NextResponse.json(rows);
 }

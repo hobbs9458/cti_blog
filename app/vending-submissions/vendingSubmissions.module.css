@@ -42,7 +42,12 @@
   right: 0;
   bottom: 0;
   left: 0;
-  /* background: rgb(255, 255, 255); */
+  background: rgba(39, 39, 39, 0.551);
+  z-index: 1;
+}
+
+.editFormInfo {
+  text-align: left;
 }
 
 .editRowForm {
@@ -57,7 +62,7 @@
   color: var(--off-white);
   border: 1px solid var(--black);
   border-radius: 5px;
-  padding: 1rem;
+  padding: 2rem;
   z-index: 100;
 }
 
