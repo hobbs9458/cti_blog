@@ -6,4 +6,6 @@ try adding light gray bg to table to lessen border thickness
 
 change fetches to location.origin if it works
 
+add same drop shadow as contact button for all buttons 
+
 
