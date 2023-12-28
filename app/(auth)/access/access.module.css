@@ -4,3 +4,17 @@
   margin: 5rem auto 0;
   min-height: 700px;
 }
+
+.accessWrap {
+  text-align: center;
+}
+
+.accessUl {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* .accessLink {
+  display: block;
+} */

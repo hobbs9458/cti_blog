@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import styles from "./access.module.css";
 import AuthForm from "../../components/AuthForm";
@@ -16,8 +16,6 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const router = useRouter();
 
   useEffect(() => {
     async function checkSession() {
@@ -48,7 +46,7 @@ export default function Login() {
     }
 
     if (!error) {
-      router.push("/");
+      setLoggedIn(true);
     }
   };
 
@@ -70,14 +68,34 @@ export default function Login() {
 
   return (
     <main className={styles.access}>
-      {loggedIn ? (
-        <h2 className="text-center">You are logged in</h2>
-      ) : (
-        <h2 className="text-center">Login</h2>
-      )}
+      <div className={styles.accessWrap}>
+        {loggedIn ? (
+          <>
+            <h2 className="text-center">You are logged in</h2>
+            <ul className={styles.accessUl}>
+              <li>
+                <Link href="/vending-request" className=" link">
+                  Vending Request
+                </Link>
+              </li>
+              <li>
+                <Link href="/vending-submissions" className="link">
+                  Vending Submissions
+                </Link>
+              </li>
+            </ul>
+          </>
+        ) : (
+          <h2 className="text-center">Login</h2>
+        )}
 
-      {loggedIn ? <LogoutBtn /> : <AuthForm handleSubmit={handleSubmit} />}
-      {error && <div className="error">{error}</div>}
+        {loggedIn ? (
+          <LogoutBtn setLoggedIn={setLoggedIn} />
+        ) : (
+          <AuthForm handleSubmit={handleSubmit} />
+        )}
+        {error && <div className="error">{error}</div>}
+      </div>
     </main>
   );
 }

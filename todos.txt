@@ -8,4 +8,8 @@ change fetches to location.origin if it works
 
 add same drop shadow as contact button for all buttons and change width on some of the wider forms. button on access page too small
 
+streamline error handling process and responses from api
+
+change the update to either a put or patch request rather than another post request so you can consolidate your api routes
+
 

@@ -1,12 +1,20 @@
+.authForm {
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .authFormBtn {
-  background: var(--black);
-  color: var(--off-white);
+  width: 100%;
+  font-size: 16px;
+  color: var(--black);
+  background: var(--off-white);
+  border: 1px solid var(--black);
   padding: 0.5rem 1rem;
   cursor: pointer;
 }
 
 .authFormBtn:hover {
-  color: var(--black);
-  background: var(--off-white);
-  border: 1px solid var(--black);
+  background: var(--black);
+  color: var(--off-white);
 }

@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { capitalize } from "@/utils/functions";
 
-import { Hourglass } from "react-loader-spinner";
-import { toast } from "react-toastify";
 import styles from "./vendingSubmissions.module.css";
+
+import { Hourglass } from "react-loader-spinner";
+// import { toast } from "react-toastify";
 
 function VendingRequests() {
   const [requests, setRequests] = useState(null);
@@ -24,6 +27,8 @@ function VendingRequests() {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const editFormRef = useRef(null);
 
+  const router = useRouter();
+
   async function getSubmissions() {
     const res = await fetch(`${location.origin}/api/vending-request`);
     const data = await res.json();
@@ -35,80 +40,86 @@ function VendingRequests() {
     getSubmissions();
   }, []);
 
-  function handleOutsideClick(e) {
-    if (editFormRef.current && !editFormRef.current.contains(e.target)) {
-      setIsEditFormOpen(false);
-    }
-  }
+  // function handleOutsideClick(e) {
+  //   if (editFormRef.current && !editFormRef.current.contains(e.target)) {
+  //     setIsEditFormOpen(false);
+  //   }
+  // }
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleOutsideClick);
 
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleOutsideClick);
+  //   };
+  // }, []);
 
-  function handleTableClick(e) {
+  // function handleTableClick(e) {
+  //   if (e.target.tagName === "TD") {
+  //     handleRowEdit(e);
+  //   }
+  // }
+
+  function handleNavigateToRequestPage(e) {
     if (e.target.tagName === "TD") {
-      handleRowEdit(e);
+      router.push(e.target.parentElement.getAttribute("data-link"));
     }
   }
 
-  function handleRowEdit(e) {
-    const row = Array.from(e.target.parentElement.childNodes);
-    const fields = Object.keys(editForm);
-    const updatedForm = { ...editForm };
+  // function handleRowEdit(e) {
+  //   const row = Array.from(e.target.parentElement.childNodes);
+  //   const fields = Object.keys(editForm);
+  //   const updatedForm = { ...editForm };
 
-    row.forEach((col, i) => {
-      const fieldToSet = fields[i];
-      updatedForm[fieldToSet] = col.innerText;
-    });
+  //   row.forEach((col, i) => {
+  //     const fieldToSet = fields[i];
+  //     updatedForm[fieldToSet] = col.innerText;
+  //   });
 
-    setEditForm(updatedForm);
-    setIsEditFormOpen(true);
-  }
+  //   setEditForm(updatedForm);
+  //   setIsEditFormOpen(true);
+  // }
 
-  function handleEditFormChange(e) {
-    const { name, value } = e.target;
+  // function handleEditFormChange(e) {
+  //   const { name, value } = e.target;
 
-    setEditForm({
-      ...editForm,
-      [name]: value,
-    });
-  }
+  //   setEditForm({
+  //     ...editForm,
+  //     [name]: value,
+  //   });
+  // }
 
-  async function handleEditFormSubmit(e) {
-    e.preventDefault();
+  // async function handleEditFormSubmit(e) {
+  //   e.preventDefault();
 
-    const res = await fetch(`${location.origin}/api/vending-request-edit`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        editForm,
-      }),
-    });
+  //   const res = await fetch(`${location.origin}/api/vending-request-edit`, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       editForm,
+  //     }),
+  //   });
 
-    const data = await res.json();
+  //   const data = await res.json();
 
-    if (data.error === null) {
-      toast.success("Edit successful");
-      getSubmissions();
-      setEditForm({
-        id: "",
-        createdAt: "",
-        item: "",
-        min: "",
-        max: "",
-        reqBy: "",
-        subBy: "",
-        status: "",
-      });
-      setIsEditFormOpen(false);
-    } else {
-      toast.error("Edit unsuccessful, please try again");
-    }
-  }
+  //   if (data.error === null) {
+  //     toast.success("Edit successful");
+  //     getSubmissions();
+  //     setEditForm({
+  //       id: "",
+  //       createdAt: "",
+  //       item: "",
+  //       min: "",
+  //       max: "",
+  //       reqBy: "",
+  //       subBy: "",
+  //       status: "",
+  //     });
+  //     setIsEditFormOpen(false);
+  //   } else {
+  //     toast.error("Edit unsuccessful, please try again");
+  //   }
+  // }
 
   if (loading) {
     return (
@@ -135,7 +146,7 @@ function VendingRequests() {
         </h1>
         <table
           className={styles.vendingSubmissionsTable}
-          onClick={handleTableClick}
+          onClick={handleNavigateToRequestPage}
         >
           <thead>
             <tr>
@@ -152,7 +163,17 @@ function VendingRequests() {
           <tbody>
             {requests.map((request) => {
               return (
-                <tr key={request.id} className={styles.tr}>
+                <tr
+                  key={request.id}
+                  className={styles.tr}
+                  data-link={`/vending-submissions/${request.id}`}
+
+                  // onClick={() =>
+                  //   handleNavigateToRequestPage(
+                  //     `/vending-submissions/${request.id}`
+                  //   )
+                  // }
+                >
                   <td className={styles.td}>{request.id}</td>
                   <td className={styles.td}>
                     {request.created_at.slice(0, 10)}
@@ -172,7 +193,7 @@ function VendingRequests() {
             })}
           </tbody>
         </table>
-        {isEditFormOpen && (
+        {/* {isEditFormOpen && (
           <form
             className={styles.editRowForm}
             onSubmit={handleEditFormSubmit}
@@ -238,7 +259,7 @@ function VendingRequests() {
               Edit Request
             </button>
           </form>
-        )}
+        )} */}
       </main>
     </>
   );

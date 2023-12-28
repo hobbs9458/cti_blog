@@ -6,7 +6,7 @@ import styles from "./LogoutBtn.module.css";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export default function LogoutBtn() {
+export default function LogoutBtn({ setLoggedIn }) {
   const router = useRouter();
 
   const handleLogout = async function () {
@@ -14,7 +14,7 @@ export default function LogoutBtn() {
     const { error } = await supabase.auth.signOut();
 
     if (!error) {
-      router.push("/");
+      setLoggedIn(false);
     }
 
     if (error) {

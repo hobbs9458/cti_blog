@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
+import { getRole } from "@/utils/functions";
+
 export async function POST(req) {
   const formData = await req.json();
   const { item, min, max, requester } = formData;
@@ -41,26 +43,21 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  console.log("GET");
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
   const session = await supabase.auth.getSession();
   const userId = session.data.session.user.id;
+  const userRole = await getRole(createRouteHandlerClient, cookies);
+  const reqId = req.nextUrl.searchParams.get(["id"]);
 
-  const { data: roleData, error: roleDataError } = await supabase
-    .from("user-roles")
-    .select("role-types (role)")
-    .eq("user_id", userId)
-    .single();
-
-  if (roleDataError) {
-    console.log(roleDataError);
+  // if an id is present in query string, check roles and send back the request
+  if (reqId) {
+    // if user is admin or if user is associated with request then send back request
+    return NextResponse.json({ single: "request" });
   }
 
-  const role = roleData["role-types"].role;
-
-  if (role === "admin") {
+  // if no id in query string check role and send all requests if admin. if not admin send requests associated with user only
+  if (userRole === "admin") {
     const { data, error } = await supabase
       .from("vending-requests")
       .select()
