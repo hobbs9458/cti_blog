@@ -6,6 +6,6 @@ try adding light gray bg to table to lessen border thickness
 
 change fetches to location.origin if it works
 
-add same drop shadow as contact button for all buttons 
+add same drop shadow as contact button for all buttons and change width on some of the wider forms. button on access page too small
 
 

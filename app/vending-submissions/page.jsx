@@ -27,7 +27,6 @@ function VendingRequests() {
   async function getSubmissions() {
     const res = await fetch(`${location.origin}/api/vending-request`);
     const data = await res.json();
-    console.log(data);
     setRequests(data);
     setLoading(false);
   }
