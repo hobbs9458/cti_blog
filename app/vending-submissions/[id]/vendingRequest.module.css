@@ -1,0 +1,41 @@
+.vendingRequestMain {
+  padding-top: 3rem;
+}
+
+.requestInfoWrap,
+.requestUpdateFormWrap {
+  width: 90%;
+  max-width: 450px;
+  margin: 0 auto 3rem;
+}
+
+.requestUpdateForm,
+.requestInfo {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 2rem;
+}
+
+.requestHeader {
+  font-size: 24px;
+}
+
+.updateRequestBtn {
+  width: 100%;
+  background: #f3f3f3;
+  color: var(--black);
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 1rem;
+}
+
+.updateRequestBtn:hover {
+  background: var(--black);
+  color: var(--off-white);
+}
+
+.commentForm {
+  max-width: 450px;
+  margin: 0 auto 3rem;
+}

@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
-import styles from "./vendingRequest.module.css";
+import styles from './vendingRequest.module.css';
 
-import { toast } from "react-toastify";
-import { Hourglass } from "react-loader-spinner";
-import readXlsxFile from "read-excel-file";
+import { toast } from 'react-toastify';
+import { Hourglass } from 'react-loader-spinner';
+import readXlsxFile from 'read-excel-file';
 
 export default function VendingFormSubmission() {
-  const [item, setItem] = useState("");
-  const [min, setMin] = useState("");
-  const [max, setMax] = useState("");
-  const [requester, setRequester] = useState("");
+  const [item, setItem] = useState('');
+  const [min, setMin] = useState('');
+  const [max, setMax] = useState('');
+  const [requester, setRequester] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploadedData, setUploadedData] = useState([]);
-  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab, setActiveTab] = useState('tab1');
   const uploadRef = useRef(null);
 
   useEffect(() => {
     // loading state was preventing from setting uploadRef to null on submit. useEffect resets it after submission
     if (uploadRef.current?.value) {
-      uploadRef.current.value = "";
+      uploadRef.current.value = '';
     }
   }, []);
 
@@ -31,8 +31,8 @@ export default function VendingFormSubmission() {
     setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         item,
         min,
@@ -47,12 +47,12 @@ export default function VendingFormSubmission() {
       return toast.error(data.error);
     }
 
-    toast.success("Request submitted");
+    toast.success('Request submitted');
 
-    setItem("");
-    setMin("");
-    setMax("");
-    setRequester("");
+    setItem('');
+    setMin('');
+    setMax('');
+    setRequester('');
 
     setLoading(false);
   }
@@ -62,7 +62,7 @@ export default function VendingFormSubmission() {
     const formattedRows = [];
 
     const rowTemplate = {};
-    rows[0].forEach((header) => (rowTemplate[header] = ""));
+    rows[0].forEach((header) => (rowTemplate[header] = ''));
 
     rows.slice(1).forEach((row) => {
       let index = 0;
@@ -81,14 +81,14 @@ export default function VendingFormSubmission() {
   async function handleUploadSubmit(e) {
     e.preventDefault();
     if (uploadedData.length < 1) {
-      return toast.error("Please upload a file before submitting");
+      return toast.error('Please upload a file before submitting');
     }
 
     setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request-upload`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         rows: uploadedData,
       }),
@@ -101,7 +101,7 @@ export default function VendingFormSubmission() {
       setUploadedData([]);
       setLoading(false);
     } else {
-      toast.error("Upload not successful. Please try again.");
+      toast.error('Upload not successful. Please try again.');
     }
   }
 
@@ -110,12 +110,12 @@ export default function VendingFormSubmission() {
       <div className={styles.loadingWrap}>
         <Hourglass
           visible={true}
-          height="80"
-          width="80"
-          ariaLabel="hourglass-loading"
-          wrapperStyle={{ display: "block", margin: "8rem auto 0" }}
-          wrapperClass=""
-          colors={["#1b1b1b", "#1b1b1b"]}
+          height='80'
+          width='80'
+          ariaLabel='hourglass-loading'
+          wrapperStyle={{ display: 'block', margin: '8rem auto 0' }}
+          wrapperClass=''
+          colors={['#1b1b1b', '#1b1b1b']}
         />
       </div>
     );
@@ -128,42 +128,42 @@ export default function VendingFormSubmission() {
       <div className={styles.tabBtns}>
         <button
           className={`${styles.tabBtn} ${
-            activeTab === "tab1" ? styles.activeTab : ""
+            activeTab === 'tab1' ? styles.activeTab : ''
           } btn`}
-          onClick={() => setActiveTab("tab1")}
+          onClick={() => setActiveTab('tab1')}
         >
           Single Request
         </button>
         <button
           className={`${styles.tabBtn} ${
-            activeTab === "tab2" ? styles.activeTab : ""
+            activeTab === 'tab2' ? styles.activeTab : ''
           } btn`}
-          onClick={() => setActiveTab("tab2")}
+          onClick={() => setActiveTab('tab2')}
         >
           Upload Requests
         </button>
         <button
           className={`${styles.tabBtn} ${
-            activeTab === "tab3" ? styles.activeTab : ""
+            activeTab === 'tab3' ? styles.activeTab : ''
           } btn`}
-          onClick={() => setActiveTab("tab3")}
+          onClick={() => setActiveTab('tab3')}
         >
           Item Search
         </button>
       </div>
 
-      {activeTab === "tab1" && (
+      {activeTab === 'tab1' && (
         <form
           onSubmit={handleSingleSubmit}
           className={styles.vendingSingleForm}
         >
-          <label htmlFor="item" className="label">
+          <label htmlFor='item' className='label'>
             Item
           </label>
           <input
-            type="text"
-            id="item"
-            className="input"
+            type='text'
+            id='item'
+            className='input'
             onChange={(e) => setItem(e.target.value)}
             value={item}
             required
@@ -171,56 +171,50 @@ export default function VendingFormSubmission() {
 
           <div className={styles.minMaxWrap}>
             <div>
-              <label htmlFor="min" className="label">
+              <label htmlFor='min' className='label'>
                 Min
               </label>
               <input
-                type="number"
-                name="min"
-                id="min"
-                className="input"
+                type='number'
+                name='min'
+                id='min'
+                className='input'
                 onChange={(e) => setMin(e.target.value)}
                 value={min}
                 required
               />
             </div>
             <div>
-              <label htmlFor="max" className="label">
+              <label htmlFor='max' className='label'>
                 Max
               </label>
               <input
-                type="number"
-                name="max"
-                id="max"
-                className="input"
+                type='number'
+                name='max'
+                id='max'
+                className='input'
                 onChange={(e) => setMax(e.target.value)}
                 value={max}
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 required
               />
             </div>
           </div>
-          <label htmlFor="requester" className="label">
+          <label htmlFor='requester' className='label'>
             Requested by
           </label>
           <select
-            name="requester"
-            id="requester"
-            className={styles.reqDropdown}
+            name='requester'
+            id='requester'
+            className='dropdown'
             required
             value={requester}
             onChange={(e) => setRequester(e.target.value)}
           >
-            <option className={styles.reqOption}></option>
-            <option value="ronnie_turner" className={styles.reqOption}>
-              Ronnie Turner
-            </option>
-            <option value="john_narum" className={styles.reqOption}>
-              John Narum
-            </option>
-            <option value="jimmy_shelton" className={styles.reqOption}>
-              Jimmy Shelton
-            </option>
+            <option></option>
+            <option value='ronnie_turner'>Ronnie Turner</option>
+            <option value='john_narum'>John Narum</option>
+            <option value='jimmy_shelton'>Jimmy Shelton</option>
           </select>
 
           <button className={`btn ${styles.vendingSingleFormBtn}`}>
@@ -229,23 +223,23 @@ export default function VendingFormSubmission() {
         </form>
       )}
 
-      {activeTab === "tab2" && (
+      {activeTab === 'tab2' && (
         <form
           className={styles.vendingUploadForm}
           onSubmit={handleUploadSubmit}
         >
           <p className={styles.downloadTemplateP}>
-            {" "}
-            <Link href="/vending-request-excel-template.xlsx" className="link">
+            {' '}
+            <Link href='/vending-request-excel-template.xlsx' className='link'>
               Download the excel template
-            </Link>{" "}
+            </Link>{' '}
             and upload requests in bulk.
           </p>
 
           <input
-            type="file"
-            name="upload"
-            id="upload"
+            type='file'
+            name='upload'
+            id='upload'
             className={styles.uploadFileInput}
             ref={uploadRef}
             onChange={handleFileChange}
@@ -254,8 +248,8 @@ export default function VendingFormSubmission() {
         </form>
       )}
 
-      {activeTab === "tab3" && (
-        <div style={{ textAlign: "center" }}>Search Page...</div>
+      {activeTab === 'tab3' && (
+        <div style={{ textAlign: 'center' }}>Search Page...</div>
       )}
     </main>
   );

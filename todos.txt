@@ -12,4 +12,6 @@ streamline error handling process and responses from api
 
 change the update to either a put or patch request rather than another post request so you can consolidate your api routes
 
+add min height css class globally for all pages: vh - navbarHeight - footerHeight?
+
 

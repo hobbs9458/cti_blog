@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
-import { getRole } from "@/utils/functions";
+import { getRole } from '@/utils/functions';
 
 export async function POST(req) {
   const formData = await req.json();
@@ -14,21 +14,21 @@ export async function POST(req) {
   const userId = sessionData.session.user.id;
 
   const { data: submitter, error: submitterError } = await supabase
-    .from("users")
+    .from('users')
     .select()
-    .eq("id", userId)
+    .eq('id', userId)
     .single();
 
   if (submitterError) {
     console.log(submitterError);
     return NextResponse.json(
-      { error: "Error retrieving submitter name" },
+      { error: 'Error retrieving submitter name' },
       { status: 500 }
     );
   }
 
   const { data, error } = await supabase
-    .from("vending-requests")
+    .from('vending-requests')
     .insert({
       item,
       min,
@@ -43,51 +43,100 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
+  // get supabase client and session
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const session = await supabase.auth.getSession();
+
+  // get permissions of user
   const userId = session.data.session.user.id;
-  const userRole = await getRole(createRouteHandlerClient, cookies);
-  const reqId = req.nextUrl.searchParams.get(["id"]);
+  const userRoles = await getRole(createRouteHandlerClient, cookies);
+  const rolesThatAccessAllRequests = ['admin', 'it', 'mgmt', 'logistics'];
+  const rolesThatAccessPersonalRequests = ['sales'];
+  const fullRequestAccess = userRoles.some((role) =>
+    rolesThatAccessAllRequests.includes(role)
+  );
+  const personalRequestAccess = userRoles.some((role) =>
+    rolesThatAccessPersonalRequests.includes(role)
+  );
+
+  // check for id in query
+  const reqId = req.nextUrl.searchParams.get(['id']);
 
   // if an id is present in query string, check roles and send back the request
   if (reqId) {
+    if (!fullRequestAccess && !personalRequestAccess) {
+      return NextResponse.json({
+        errorMessage: `You don't have permission to see this page.`,
+      });
+    }
+
     // if user is admin or if user is associated with request then send back request
-    return NextResponse.json({ single: "request" });
+    const { data: request, error: requestError } = await supabase
+      .from('vending-requests')
+      .select()
+      .eq('id', reqId)
+      .single();
+
+    if (requestError) {
+      console.log(requestError);
+      return NextResponse.json({
+        errorMessage: `There was a problem. Please try again or contact an administrator.`,
+      });
+    }
+
+    return NextResponse.json({
+      request,
+      userRoles,
+    });
   }
 
-  // if no id in query string check role and send all requests if admin. if not admin send requests associated with user only
-  if (userRole === "admin") {
-    const { data, error } = await supabase
-      .from("vending-requests")
+  // if no id in query string check role and send all requests if applicable
+  if (fullRequestAccess) {
+    const { data, error: vendingRequestError } = await supabase
+      .from('vending-requests')
       .select()
-      .order("id", { ascending: true });
+      .order('id', { ascending: true });
 
-    if (error) {
-      return NextResponse(error);
+    if (vendingRequestError) {
+      console.log(vendingRequestError);
+      return NextResponse.json({
+        error:
+          'There was a problem. Please try again or contact an administrator.',
+      });
     }
     return NextResponse.json(data);
   }
 
-  // only select the rows where the user is either the requester or the submitter.
-  const { data: userData, error: userDataError } = await supabase
-    .from("users")
-    .select()
-    .eq("id", userId)
-    .single();
+  // if user is sales role only select the rows where the user is either the requester or the submitter.
 
-  if (userDataError) {
-    console.log(userDataError);
+  if (personalRequestAccess) {
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('name')
+      .eq('id', userId)
+      .single();
+
+    if (userError) {
+      console.log(userError);
+      return NextResponse.json({
+        error:
+          'There was a problem. Please try again or contact an administrator.',
+      });
+    }
+
+    const { data: rows, error: rowsError } = await supabase
+      .from('vending-requests')
+      .select()
+      .or(`requested_by.eq.${user.name},submitted_by.eq.${user.name}`);
+
+    if (rowsError) {
+      console.log(rowsError);
+      return NextResponse.json({
+        error:
+          'There was a problem. Please try again or contact an administrator.',
+      });
+    }
+    return NextResponse.json(rows);
   }
-
-  const { data: rows, error: rowsError } = await supabase
-    .from("vending-requests")
-    .select()
-    .or(`requested_by.eq.${userData.name},submitted_by.eq.${userData.name}`);
-
-  if (rowsError) {
-    return NextResponse(rowsError);
-  }
-
-  return NextResponse.json(rows);
 }

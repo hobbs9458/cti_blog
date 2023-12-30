@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <body className={akshar.className}>
         <Navbar />
-        {children}
+        <div className='childrenHeight'>{children}</div>
         <ToastContainer />
         <Footer />
       </body>
