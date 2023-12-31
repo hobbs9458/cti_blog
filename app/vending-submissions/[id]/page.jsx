@@ -78,11 +78,16 @@ function Request() {
     const res = await fetch(`${location.origin}/api/vending-request-comments`, {
       method: 'POST',
       'Content-Type': 'application/json',
-      body: JSON.stringify(comment),
+      body: JSON.stringify({ comment, requestId: request.id }),
     });
 
     const data = await res.json();
-    console.log(data);
+
+    if (data.errorMessage) {
+      toast.error(data.errorMessage);
+    } else if (data.successMessage) {
+      toast.success(data.successMessage);
+    }
   }
 
   if (loading) {

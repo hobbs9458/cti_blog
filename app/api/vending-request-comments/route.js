@@ -4,8 +4,7 @@ import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 export async function POST(req) {
-  const comment = await req.json();
-
+  const { comment, requestId } = await req.json();
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const sessionData = await supabase.auth.getSession();
@@ -17,16 +16,29 @@ export async function POST(req) {
     .eq('id', userId)
     .single();
 
-  console.log(userData);
-  console.log(userError);
+  if (userError) {
+    console.log(userError);
+    return NextResponse.json({
+      errorMessage:
+        'There was a problem adding your comment. Please try again or contact an administrator.',
+    });
+  }
+
   const { data, error } = await supabase
     .from('vending_request_comments')
-    .insert({ comment, user: userData.name, request:  })
+    .insert({ comment, user: userData.name, request: requestId })
     .select()
     .single();
 
-  console.log(data);
-  console.log(error);
+  if (error) {
+    console.log(error);
+    return NextResponse.json({
+      errorMessage:
+        'There was a problem adding your comment. Please try again or contact an administrator.',
+    });
+  }
 
-  return NextResponse.json({ key: 'api-test' });
+  if (data) {
+    return NextResponse.json({ successMessage: 'Comment added' });
+  }
 }
