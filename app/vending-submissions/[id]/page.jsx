@@ -22,7 +22,7 @@ function Request() {
     min: "",
     max: "",
     status: "",
-    completed: "",
+    isComplete: "",
   });
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(null);
@@ -41,35 +41,47 @@ function Request() {
       }
 
       const {
-        min,
+        created_at: createdAt,
+        id,
+        is_complete: isComplete,
+        item,
         max,
+        min,
+        requested_by: requestedBy,
         status,
+        submitted_by: submittedBy,
         vending_request_comments: comments,
       } = data.request;
+
+      const vendingRequest = {
+        createdAt,
+        id,
+        isComplete,
+        item,
+        max,
+        min,
+        requestedBy,
+        status,
+        submittedBy,
+      };
 
       setRequestFormData({
         min,
         max,
         status,
+        isComplete,
       });
 
+      setRequest(vendingRequest);
       setUserRoles(data.userRoles);
-      setRequest(data.request);
       setComments(comments);
       setLoading(false);
     }
     getVendingRequest();
   }, [reqId]);
 
-  const localDate = useMemo(() => {
-    if (request) {
-      const date = new Date(request.created_at);
-      return date.toLocaleString();
-    }
-  }, [request]);
-
   function handleEditFormChange(e) {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
     if (!name || !value) {
       return;
@@ -77,8 +89,23 @@ function Request() {
 
     setRequestFormData({
       ...requestFormData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
+  }
+
+  async function handleUpdateRequestFormSubmit(e) {
+    e.preventDefault();
+
+    const update = {};
+    const fields = Object.keys(requestFormData);
+
+    const updatedFields = fields.filter((field) => {
+      return requestFormData[field] !== request[field];
+    });
+
+    updatedFields.forEach((field) => (update[field] = requestFormData[field]));
+
+    console.log(update);
   }
 
   async function handleSubmitComment(e) {
@@ -120,9 +147,9 @@ function Request() {
       <div className={styles.requestInfoWrap}>
         <h1 className={styles.requestHeader}> Vending Request {request.id}</h1>
         <div className={styles.requestInfo}>
-          <p>Created At: {localDate}</p>
-          <p>Requested By: {capitalize(request.requested_by, "_")}</p>
-          <p>Submitted By: {capitalize(request.submitted_by, "_")}</p>
+          <p>Created At: {readableDate(request.createdAt)}</p>
+          <p>Requested By: {capitalize(request.requestedBy, "_")}</p>
+          <p>Submitted By: {capitalize(request.submittedBy, "_")}</p>
           <p>Item: {request.item}</p>
           <p>Min: {request.min}</p>
           <p>Max: {request.max}</p>
@@ -132,7 +159,10 @@ function Request() {
       {usersWithUpdatePermission.some((role) => userRoles.includes(role)) && (
         <div className={styles.requestUpdateFormWrap}>
           <h2 className={styles.updateRequestHeader}>Update Request</h2>
-          <form className={styles.requestUpdateForm}>
+          <form
+            className={styles.requestUpdateForm}
+            onSubmit={handleUpdateRequestFormSubmit}
+          >
             <div className={styles.requestUpdateFormContentWrap}>
               {userRoles.includes("sales") && (
                 <>
@@ -183,8 +213,14 @@ function Request() {
               )}
               {userRoles.includes("it") && (
                 <div className={styles.updateRequestCheckbox}>
-                  <label htmlFor="completed">Mark Completed</label>
-                  <input type="checkbox" name="completed" id="completed" />
+                  <label htmlFor="isComplete">Mark Completed</label>
+                  <input
+                    type="checkbox"
+                    name="isComplete"
+                    id="isComplete"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.isComplete}
+                  />
                 </div>
               )}
             </div>
@@ -212,18 +248,20 @@ function Request() {
       </form>
       <div className={styles.commentsWrap}>
         <h2 className="center-text">Comments</h2>
-        {comments.map((comment, id) => {
-          return (
-            <div key={id} className={styles.comment}>
-              <div className={styles.commentNameDateWrap}>
-                <p>{capitalize(comment.user, "_")}</p>
-                <p>{readableDate(comment.created_at)}</p>
+        {comments.length > 0 &&
+          comments.map((comment, id) => {
+            return (
+              <div key={id} className={styles.comment}>
+                <div className={styles.commentNameDateWrap}>
+                  <p>{capitalize(comment.user, "_")}</p>
+                  <p>{readableDate(comment.created_at)}</p>
+                </div>
+                <hr style={{ marginTop: "0", marginBottom: "1rem" }} />
+                <div style={{ whiteSpace: "pre-wrap" }}>{comment.comment}</div>
               </div>
-              <hr style={{ marginTop: "0" }} />
-              <div style={{ whiteSpace: "pre-wrap" }}>{comment.comment}</div>
-            </div>
-          );
-        })}
+            );
+          })}
+        {comments.length < 1 && <p>No comments</p>}
       </div>
     </main>
   );

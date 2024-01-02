@@ -53,7 +53,7 @@ export async function GET(req) {
   const userRoles = await getRole(createRouteHandlerClient, cookies);
   const rolesThatAccessAllRequests = ["admin", "it", "mgmt", "logistics"];
   const rolesThatAccessPersonalRequests = ["sales"];
-  const fullRequestAccess = userRoles.some((role) =>
+  const allRequestAccess = userRoles.some((role) =>
     rolesThatAccessAllRequests.includes(role)
   );
   const personalRequestAccess = userRoles.some((role) =>
@@ -65,7 +65,7 @@ export async function GET(req) {
 
   // if an id is present in query string, check roles and send back the request
   if (reqId) {
-    if (!fullRequestAccess && !personalRequestAccess) {
+    if (!allRequestAccess && !personalRequestAccess) {
       return NextResponse.json({
         errorMessage: `You don't have permission to see this page.`,
       });
@@ -75,12 +75,10 @@ export async function GET(req) {
     const { data: request, error: requestError } = await supabase
       .from("vending-requests")
       .select(
-        "id, created_at, item, min, max, submitted_by, requested_by, status, vending_request_comments (id, created_at, user, comment)"
+        "id, created_at, item, min, max, submitted_by, requested_by, status, is_complete, vending_request_comments (id, created_at, user, comment)"
       )
       .eq("id", reqId)
       .single();
-
-    console.log(request);
 
     if (requestError) {
       console.log(requestError);
@@ -95,8 +93,8 @@ export async function GET(req) {
     });
   }
 
-  // if no id in query string check role and send all requests if applicable
-  if (fullRequestAccess) {
+  // if no id in query string check role and send requests based on user role
+  if (allRequestAccess) {
     const { data, error: vendingRequestError } = await supabase
       .from("vending-requests")
       .select()

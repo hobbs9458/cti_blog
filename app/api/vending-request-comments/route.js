@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { clearConfig } from "dompurify";
+import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 
 export async function GET(req) {
   const reqId = req.nextUrl.searchParams.get(["reqId"]);
@@ -36,6 +37,9 @@ export async function POST(req) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const sessionData = await supabase.auth.getSession();
   const userId = sessionData.data.session.user.id;
+  const window = new JSDOM("").window;
+  const purify = DOMPurify(window);
+  const cleanComment = purify.sanitize(comment);
 
   const { data: userData, error: userError } = await supabase
     .from("users")
@@ -53,7 +57,7 @@ export async function POST(req) {
 
   const { data, error } = await supabase
     .from("vending_request_comments")
-    .insert({ comment, user: userData.name, request: requestId })
+    .insert({ comment: cleanComment, user: userData.name, request: requestId })
     .select()
     .single();
 

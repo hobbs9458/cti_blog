@@ -2,16 +2,25 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
   const { name, email, phone, company, message } = await req.json();
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+  const window = new JSDOM("").window;
+  const purify = DOMPurify(window);
+  const cleanName = purify.sanitize(name);
+  const cleanEmail = purify.sanitize(email);
+  const cleanPhone = purify.sanitize(phone);
+  const cleanCompany = purify.sanitize(company);
+  const cleanMessage = purify.sanitize(message);
 
   const { data, error } = await supabase
     .from("contact-form-submissions")
-    .insert({ name, email, phone, company, message })
+    .insert({ cleanName, cleanEmail, cleanPhone, cleanCompany, cleanMessage })
     .select()
     .single();
 
@@ -24,15 +33,15 @@ export async function POST(req) {
   }
 
   const emailText =
-    `Name: ${name}` +
+    `Name: ${cleanName}` +
     "\n" +
-    `Email: ${email || "N/A"}` +
+    `Email: ${cleanEmail || "N/A"}` +
     "\n" +
-    `Phone: ${phone || "N/A"}` +
+    `Phone: ${cleanPhone || "N/A"}` +
     "\n" +
-    `Company: ${company || "N/A"}` +
+    `Company: ${cleanCompany || "N/A"}` +
     "\n" +
-    `Message: ${message}`;
+    `Message: ${cleanMessage}`;
 
   const emailAddress = process.env.EMAIL;
   const emailPass = process.env.EMAIL_PASS;
@@ -46,7 +55,7 @@ export async function POST(req) {
   });
 
   const mailOptions = {
-    from: `${name}`,
+    from: `${cleanName}`,
     to: emailAddress,
     subject: "New Contact Form Submission",
     text: emailText,
