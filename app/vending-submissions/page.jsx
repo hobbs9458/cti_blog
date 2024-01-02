@@ -1,50 +1,76 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { capitalize } from '@/utils/functions';
+import { capitalize } from "@/utils/functions";
 
-import styles from './vendingSubmissions.module.css';
+import styles from "./vendingSubmissions.module.css";
 
-import { Hourglass } from 'react-loader-spinner';
-import { toast } from 'react-toastify';
+import { Hourglass } from "react-loader-spinner";
+import { toast } from "react-toastify";
 
 function VendingRequests() {
   const [requests, setRequests] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editForm, setEditForm] = useState({
-    id: '',
-    createdAt: '',
-    item: '',
-    min: '',
-    max: '',
-    reqBy: '',
-    subBy: '',
-    status: '',
+    id: "",
+    createdAt: "",
+    item: "",
+    min: "",
+    max: "",
+    reqBy: "",
+    subBy: "",
+    status: "",
   });
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const editFormRef = useRef(null);
 
   const router = useRouter();
 
-  async function getSubmissions() {
-    const res = await fetch(`${location.origin}/api/vending-request`);
-    const data = await res.json();
-
-    if (data.error) {
-      toast.error(
-        'There was a problem. Please try again or contact the administrator.'
-      );
-    } else {
-      setRequests(data);
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let isMounted = true;
+
+    async function getSubmissions() {
+      try {
+        const res = await fetch(`${location.origin}/api/vending-request`, {
+          signal,
+        });
+
+        if (!isMounted) {
+          // Component is unmounted, do not update state
+          return;
+        }
+
+        const data = await res.json();
+
+        if (data.error) {
+          toast.error(
+            "There was a problem. Please try again or contact the administrator."
+          );
+        } else {
+          setRequests(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        if (error.name === "AbortError") {
+          console.log("Fetch aborted!");
+        } else {
+          console.log("Error fetching data", error);
+        }
+      }
+    }
+
     getSubmissions();
+
+    return () => {
+      // Abort the request when the component unmounts or when a dependency changes
+      isMounted = false;
+      controller.abort();
+    };
   }, []);
 
   // function handleOutsideClick(e) {
@@ -68,8 +94,8 @@ function VendingRequests() {
   // }
 
   function handleNavigateToRequestPage(e) {
-    if (e.target.tagName === 'TD') {
-      router.push(e.target.parentElement.getAttribute('data-link'));
+    if (e.target.tagName === "TD") {
+      router.push(e.target.parentElement.getAttribute("data-link"));
     }
   }
 
@@ -133,12 +159,12 @@ function VendingRequests() {
       <div className={styles.vendingSubmissionsLoaderWrap}>
         <Hourglass
           visible={true}
-          height='80'
-          width='80'
-          ariaLabel='hourglass-loading'
-          wrapperStyle={{ display: 'block', margin: '8rem auto 0' }}
-          wrapperClass=''
-          colors={['#1b1b1b', '#1b1b1b']}
+          height="80"
+          width="80"
+          ariaLabel="hourglass-loading"
+          wrapperStyle={{ display: "block", margin: "8rem auto 0" }}
+          wrapperClass=""
+          colors={["#1b1b1b", "#1b1b1b"]}
         />
       </div>
     );
@@ -189,10 +215,10 @@ function VendingRequests() {
                   <td className={styles.td}>{request.min}</td>
                   <td className={styles.td}>{request.max}</td>
                   <td className={styles.td}>
-                    {capitalize(request.requested_by, '_')}
+                    {capitalize(request.requested_by, "_")}
                   </td>
                   <td className={styles.td}>
-                    {capitalize(request.submitted_by, '_')}
+                    {capitalize(request.submitted_by, "_")}
                   </td>
                   <td className={styles.td}>{request.status}</td>
                 </tr>

@@ -3,17 +3,22 @@
 }
 
 .requestInfoWrap,
-.requestUpdateFormWrap {
+.requestUpdateFormWrap,
+.commentsWrap {
   width: 90%;
   max-width: 450px;
   margin: 0 auto 3rem;
 }
 
-.requestUpdateForm,
+.requestUpdateFormContentWrap,
 .requestInfo {
   border: 1px solid black;
   border-radius: 5px;
   padding: 2rem;
+}
+
+.requestUpdateFormContentWrap {
+  margin-bottom: 0.5rem;
 }
 
 .requestHeader {
@@ -38,4 +43,16 @@
 .commentForm {
   max-width: 450px;
   margin: 0 auto 3rem;
+}
+
+.comment {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.commentNameDateWrap {
+  display: flex;
+  justify-content: space-between;
 }

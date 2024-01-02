@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
-import { getRole } from '@/utils/functions';
+import { getRole } from "@/utils/functions";
 
 export async function POST(req) {
   const formData = await req.json();
@@ -14,21 +14,21 @@ export async function POST(req) {
   const userId = sessionData.session.user.id;
 
   const { data: submitter, error: submitterError } = await supabase
-    .from('users')
+    .from("users")
     .select()
-    .eq('id', userId)
+    .eq("id", userId)
     .single();
 
   if (submitterError) {
     console.log(submitterError);
     return NextResponse.json(
-      { error: 'Error retrieving submitter name' },
+      { error: "Error retrieving submitter name" },
       { status: 500 }
     );
   }
 
   const { data, error } = await supabase
-    .from('vending-requests')
+    .from("vending-requests")
     .insert({
       item,
       min,
@@ -51,8 +51,8 @@ export async function GET(req) {
   // get permissions of user
   const userId = session.data.session.user.id;
   const userRoles = await getRole(createRouteHandlerClient, cookies);
-  const rolesThatAccessAllRequests = ['admin', 'it', 'mgmt', 'logistics'];
-  const rolesThatAccessPersonalRequests = ['sales'];
+  const rolesThatAccessAllRequests = ["admin", "it", "mgmt", "logistics"];
+  const rolesThatAccessPersonalRequests = ["sales"];
   const fullRequestAccess = userRoles.some((role) =>
     rolesThatAccessAllRequests.includes(role)
   );
@@ -61,7 +61,7 @@ export async function GET(req) {
   );
 
   // check for id in query
-  const reqId = req.nextUrl.searchParams.get(['id']);
+  const reqId = req.nextUrl.searchParams.get(["id"]);
 
   // if an id is present in query string, check roles and send back the request
   if (reqId) {
@@ -73,10 +73,14 @@ export async function GET(req) {
 
     // if user is admin or if user is associated with request then send back request
     const { data: request, error: requestError } = await supabase
-      .from('vending-requests')
-      .select()
-      .eq('id', reqId)
+      .from("vending-requests")
+      .select(
+        "id, created_at, item, min, max, submitted_by, requested_by, status, vending_request_comments (id, created_at, user, comment)"
+      )
+      .eq("id", reqId)
       .single();
+
+    console.log(request);
 
     if (requestError) {
       console.log(requestError);
@@ -94,15 +98,15 @@ export async function GET(req) {
   // if no id in query string check role and send all requests if applicable
   if (fullRequestAccess) {
     const { data, error: vendingRequestError } = await supabase
-      .from('vending-requests')
+      .from("vending-requests")
       .select()
-      .order('id', { ascending: true });
+      .order("id", { ascending: true });
 
     if (vendingRequestError) {
       console.log(vendingRequestError);
       return NextResponse.json({
         error:
-          'There was a problem. Please try again or contact an administrator.',
+          "There was a problem. Please try again or contact an administrator.",
       });
     }
     return NextResponse.json(data);
@@ -112,21 +116,21 @@ export async function GET(req) {
 
   if (personalRequestAccess) {
     const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('name')
-      .eq('id', userId)
+      .from("users")
+      .select("name")
+      .eq("id", userId)
       .single();
 
     if (userError) {
       console.log(userError);
       return NextResponse.json({
         error:
-          'There was a problem. Please try again or contact an administrator.',
+          "There was a problem. Please try again or contact an administrator.",
       });
     }
 
     const { data: rows, error: rowsError } = await supabase
-      .from('vending-requests')
+      .from("vending-requests")
       .select()
       .or(`requested_by.eq.${user.name},submitted_by.eq.${user.name}`);
 
@@ -134,7 +138,7 @@ export async function GET(req) {
       console.log(rowsError);
       return NextResponse.json({
         error:
-          'There was a problem. Please try again or contact an administrator.',
+          "There was a problem. Please try again or contact an administrator.",
       });
     }
     return NextResponse.json(rows);

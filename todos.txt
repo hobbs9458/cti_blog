@@ -14,4 +14,8 @@ change the update to either a put or patch request rather than another post requ
 
 add min height css class globally for all pages: vh - navbarHeight - footerHeight?
 
+should you clean text for comments before inserting into db?
+
+
+
 
