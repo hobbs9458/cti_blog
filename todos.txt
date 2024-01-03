@@ -24,7 +24,7 @@ replace random loader code with loader component
 
 add google analytics to actual site
 
-make form inputs smaller on vending request? maybe having two inputs per line?
+make form inputs smaller on vending request? maybe having two inputs per line? maybe use grid for that? then bring back to 1 input per line on mobile
 
 NOTES:
-currently working on updating request on single request page. looking for fields that have changed compared to the request then going to send to api for update
+got new fields to insert into db 

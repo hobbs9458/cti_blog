@@ -30,9 +30,8 @@ export default function VendingFormSubmission() {
     customer: "",
     issue_qty: "",
     price_type: "margin",
+    requested_by: "",
   });
-
-  console.log(singleUploadForm);
 
   const uploadRef = useRef(null);
 
@@ -50,17 +49,9 @@ export default function VendingFormSubmission() {
       return;
     }
 
-    let formValue;
-
-    if (name === "price" && singleUploadForm.price_type === "margin") {
-      formValue = value.replace(/%/g, "");
-    } else {
-      formValue = value;
-    }
-
     setSingleUploadForm({
       ...singleUploadForm,
-      [name]: formValue,
+      [name]: value,
     });
   }
 
@@ -68,15 +59,20 @@ export default function VendingFormSubmission() {
     e.preventDefault();
     setLoading(true);
 
+    // const res = await fetch(`${location.origin}/api/vending-request`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     item,
+    //     min,
+    //     max,
+    //     requester,
+    //   }),
+    // });
     const res = await fetch(`${location.origin}/api/vending-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        item,
-        min,
-        max,
-        requester,
-      }),
+      body: JSON.stringify(singleUploadForm),
     });
 
     const data = await res.json();
@@ -310,6 +306,18 @@ export default function VendingFormSubmission() {
               value={singleUploadForm.mfg_number}
               required
             />
+            <label htmlFor="issue_qty" className="label">
+              Issue Quantity
+            </label>
+            <input
+              type="number"
+              name="issue_qty"
+              id="issue_qty"
+              className="input"
+              onChange={handleSingleUploadFormChange}
+              value={singleUploadForm.issue_qty}
+              required
+            />
             <label htmlFor="supply_net_number" className="label">
               Supply Net Number (optional)
             </label>
@@ -320,6 +328,17 @@ export default function VendingFormSubmission() {
               className="input"
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.supply_net_number}
+            />
+            <label htmlFor="customer" className="label">
+              Customer
+            </label>
+            <input
+              type="text"
+              name="customer"
+              id="customer"
+              className="input"
+              onChange={handleSingleUploadFormChange}
+              value={singleUploadForm.customer}
             />
             <label htmlFor="min" className="label">
               Min
@@ -348,7 +367,8 @@ export default function VendingFormSubmission() {
             />
 
             <label htmlFor="price" className="label">
-              Price {singleUploadForm.price_type === "margin" ? "%" : "$"}
+              Price
+              {/* {singleUploadForm.price_type === "margin" ? "%" : "$"} */}
             </label>
 
             <label htmlFor="profit" style={{ fontSize: "14px" }}>
@@ -374,11 +394,11 @@ export default function VendingFormSubmission() {
               onChange={handleSingleUploadFormChange}
             />
             <div className={styles.priceInputWrap}>
-              <p className={styles.marginSymbol}>
+              <p className={styles.profitSymbol}>
                 {singleUploadForm.price_type === "profit" && "$"}
               </p>
               <input
-                type="text"
+                type="number"
                 name="price"
                 id="price"
                 className="input"
@@ -389,21 +409,21 @@ export default function VendingFormSubmission() {
                     ? {
                         paddingLeft: ".8rem",
                       }
-                    : {}
+                    : { paddingRight: "1.1rem" }
                 }
                 required
               />
-              <p className={styles.profitSymbol}>
+              <p className={styles.marginSymbol}>
                 {singleUploadForm.price_type === "margin" && "%"}
               </p>
             </div>
 
-            <label htmlFor="requester" className="label">
+            <label htmlFor="requested_by" className="label">
               Requested by
             </label>
             <select
-              name="requester"
-              id="requester"
+              name="requested_by"
+              id="requested_by"
               className="dropdown"
               required
               value={singleUploadForm.requested_by}

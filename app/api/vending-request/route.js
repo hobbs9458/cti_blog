@@ -7,7 +7,7 @@ import { getRole } from "@/utils/functions";
 
 export async function POST(req) {
   const formData = await req.json();
-  const { item, min, max, requester } = formData;
+  console.log(formData);
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { data: sessionData } = await supabase.auth.getSession();
@@ -30,14 +30,14 @@ export async function POST(req) {
   const { data, error } = await supabase
     .from("vending-requests")
     .insert({
-      item,
-      min,
-      max,
+      ...formData,
       submitted_by: submitter.name,
-      requested_by: requester,
     })
     .select()
     .single();
+
+  console.log("DATA", data);
+  console.log("ERROR", error);
 
   return NextResponse.json({ data, error });
 }
