@@ -32,6 +32,7 @@ function Request() {
 
   useEffect(() => {
     async function getVendingRequest() {
+      setLoading(true);
       const res = await fetch(
         `${location.origin}/api/vending-request?id=${reqId}`
       );
@@ -91,6 +92,8 @@ function Request() {
 
   async function handleUpdateRequestFormSubmit(e) {
     e.preventDefault();
+
+    setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request`, {
       method: "PATCH",
@@ -161,6 +164,8 @@ function Request() {
         }
       }
     }
+
+    setLoading(false);
   }
 
   async function handleSubmitComment(e) {
@@ -169,6 +174,8 @@ function Request() {
     if (comment === "") {
       return toast.error("Cannot submit blank comment");
     }
+
+    setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request-comments`, {
       method: "POST",
@@ -190,6 +197,8 @@ function Request() {
       setComments(comments);
       setComment("");
     }
+
+    setLoading(false);
   }
 
   if (loading) {
@@ -309,7 +318,9 @@ function Request() {
               <div key={id} className={styles.comment}>
                 <div className={styles.commentNameDateWrap}>
                   {comment.is_auto === true ? (
-                    <p>Auto Generated Update</p>
+                    <b>
+                      <p>Update</p>
+                    </b>
                   ) : (
                     <p>{capitalize(comment.user, "_")}</p>
                   )}
