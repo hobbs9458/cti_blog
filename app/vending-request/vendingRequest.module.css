@@ -106,3 +106,21 @@
   border: 1px solid var(--black);
   width: 100%;
 }
+
+.priceInputWrap {
+  position: relative;
+}
+
+.profitSymbol {
+  position: absolute;
+  right: 5px;
+  top: 4px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.marginSymbol {
+  position: absolute;
+  left: 5px;
+  top: 6.1px;
+}

@@ -64,7 +64,7 @@ function Request() {
   function handleEditFormChange(e) {
     const { name, value, type, checked } = e.target;
 
-    if (!name || !value) {
+    if (name === undefined || value === undefined) {
       return;
     }
 
