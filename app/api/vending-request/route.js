@@ -75,7 +75,7 @@ export async function GET(req) {
     const { data: request, error: requestError } = await supabase
       .from("vending-requests")
       .select(
-        "id, created_at, item, min, max, submitted_by, requested_by, status, is_complete, vending_request_comments (id, created_at, user, comment)"
+        "id, created_at, item, min, max, submitted_by, requested_by, status, is_complete, vending_request_comments (id, created_at, user, comment, is_auto)"
       )
       .eq("id", reqId)
       .single();
@@ -103,7 +103,7 @@ export async function GET(req) {
     if (vendingRequestError) {
       console.log(vendingRequestError);
       return NextResponse.json({
-        error:
+        errorMessage:
           "There was a problem. Please try again or contact an administrator.",
       });
     }
@@ -122,7 +122,7 @@ export async function GET(req) {
     if (userError) {
       console.log(userError);
       return NextResponse.json({
-        error:
+        errorMessage:
           "There was a problem. Please try again or contact an administrator.",
       });
     }
@@ -135,10 +135,37 @@ export async function GET(req) {
     if (rowsError) {
       console.log(rowsError);
       return NextResponse.json({
-        error:
+        errorMessage:
           "There was a problem. Please try again or contact an administrator.",
       });
     }
     return NextResponse.json(rows);
   }
+}
+
+export async function PATCH(req) {
+  const requestData = await req.json();
+  const formData = requestData.requestFormData;
+
+  console.log(formData);
+  // const { id, min, max, status } = formData.editForm;
+  const cookieStore = cookies();
+  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+
+  const { data, error } = await supabase
+    .from("vending-requests")
+    .update(formData)
+    .match({ id: formData.id })
+    .select()
+    .single();
+
+  if (error) {
+    console.log(error);
+    return NextResponse.json({
+      errorMessage:
+        "There was a problem. Please try again or contact an administrator.",
+    });
+  }
+
+  return NextResponse.json(data);
 }

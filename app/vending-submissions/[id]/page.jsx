@@ -19,10 +19,11 @@ function Request() {
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [requestFormData, setRequestFormData] = useState({
+    id: "",
     min: "",
     max: "",
     status: "",
-    isComplete: "",
+    is_complete: "",
   });
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(null);
@@ -34,49 +35,28 @@ function Request() {
       const res = await fetch(
         `${location.origin}/api/vending-request?id=${reqId}`
       );
+
       const data = await res.json();
 
       if (data.errorMessage) {
         toast.error(data.errorMessage);
       }
 
-      const {
-        created_at: createdAt,
-        id,
-        is_complete: isComplete,
-        item,
-        max,
-        min,
-        requested_by: requestedBy,
-        status,
-        submitted_by: submittedBy,
-        vending_request_comments: comments,
-      } = data.request;
-
-      const vendingRequest = {
-        createdAt,
-        id,
-        isComplete,
-        item,
-        max,
-        min,
-        requestedBy,
-        status,
-        submittedBy,
-      };
+      const { id, min, max, status, is_complete } = data.request;
 
       setRequestFormData({
+        id,
         min,
         max,
         status,
-        isComplete,
+        is_complete,
       });
-
-      setRequest(vendingRequest);
+      setRequest(data.request);
       setUserRoles(data.userRoles);
-      setComments(comments);
+      setComments(data.request.vending_request_comments);
       setLoading(false);
     }
+
     getVendingRequest();
   }, [reqId]);
 
@@ -93,19 +73,94 @@ function Request() {
     });
   }
 
+  async function getComments() {
+    const commentsRes = await fetch(
+      `${location.origin}/api/vending-request-comments?reqId=${request.id}`
+    );
+
+    const commentsData = await commentsRes.json();
+
+    if (commentsData.errorMessage) {
+      return toast.error(
+        "Error getting comments. Please try again or contact an administrator."
+      );
+    }
+
+    return commentsData.comments;
+  }
+
   async function handleUpdateRequestFormSubmit(e) {
     e.preventDefault();
 
-    const update = {};
-    const fields = Object.keys(requestFormData);
-
-    const updatedFields = fields.filter((field) => {
-      return requestFormData[field] !== request[field];
+    const res = await fetch(`${location.origin}/api/vending-request`, {
+      method: "PATCH",
+      "Content-Type": "application/json",
+      body: JSON.stringify({ requestFormData }),
     });
 
-    updatedFields.forEach((field) => (update[field] = requestFormData[field]));
+    const updatedRequest = await res.json();
 
-    console.log(update);
+    if (updatedRequest.errorMessage) {
+      return toast.error(updatedRequest.errorMessage);
+    }
+
+    // compare the original request and the updated request to identify which fields have changed
+    const updated = {};
+
+    for (const key in request) {
+      if (updatedRequest.hasOwnProperty(key)) {
+        if (request[key] !== updatedRequest[key]) {
+          updated[key] = updatedRequest[key];
+        }
+      }
+    }
+
+    // toast if a change is detected, otherwise shouldn't be an update unless there's a field on the data that is not on the request
+    if (Object.keys(updated).length > 0) {
+      setRequest(updatedRequest);
+      toast.success("Request updated");
+
+      // auto generate a comment indicating what has updated
+      let autoComment = "updated this request: \n\n";
+
+      for (const key in updated) {
+        autoComment += `${key.replace(/_/g, " ").toUpperCase()} updated from ${
+          typeof request[key] === "number"
+            ? request[key]
+            : request[key].toString().toUpperCase()
+        } to ${
+          typeof updated[key] === "number"
+            ? updated[key]
+            : updated[key].toString().toUpperCase()
+        }\n`;
+      }
+
+      const res = await fetch(
+        `${location.origin}/api/vending-request-comments`,
+        {
+          method: "POST",
+          "Content-Type": "application/json",
+          body: JSON.stringify({
+            comment: autoComment,
+            requestId: request.id,
+            isAuto: true,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.errorMessage) {
+        return toast.error(data.errorMessage);
+      }
+
+      if (data.successMessage) {
+        const comments = await getComments();
+        if (comments) {
+          setComments(comments);
+        }
+      }
+    }
   }
 
   async function handleSubmitComment(e) {
@@ -129,13 +184,12 @@ function Request() {
       toast.success(data.successMessage);
     }
 
-    const commentsRes = await fetch(
-      `${location.origin}/api/vending-request-comments?reqId=${request.id}`
-    );
-    const commentsData = await commentsRes.json();
+    const comments = await getComments();
 
-    setComments(commentsData.comments);
-    setComment("");
+    if (comments) {
+      setComments(comments);
+      setComment("");
+    }
   }
 
   if (loading) {
@@ -147,9 +201,9 @@ function Request() {
       <div className={styles.requestInfoWrap}>
         <h1 className={styles.requestHeader}> Vending Request {request.id}</h1>
         <div className={styles.requestInfo}>
-          <p>Created At: {readableDate(request.createdAt)}</p>
-          <p>Requested By: {capitalize(request.requestedBy, "_")}</p>
-          <p>Submitted By: {capitalize(request.submittedBy, "_")}</p>
+          <p>Created At: {readableDate(request.created_at)}</p>
+          <p>Requested By: {capitalize(request.requested_by, "_")}</p>
+          <p>Submitted By: {capitalize(request.submitted_by, "_")}</p>
           <p>Item: {request.item}</p>
           <p>Min: {request.min}</p>
           <p>Max: {request.max}</p>
@@ -216,10 +270,10 @@ function Request() {
                   <label htmlFor="isComplete">Mark Completed</label>
                   <input
                     type="checkbox"
-                    name="isComplete"
+                    name="is_complete"
                     id="isComplete"
                     onChange={handleEditFormChange}
-                    value={requestFormData.isComplete}
+                    value={requestFormData.is_complete}
                   />
                 </div>
               )}
@@ -231,7 +285,7 @@ function Request() {
         </div>
       )}
       <form className={styles.commentForm} onSubmit={handleSubmitComment}>
-        <h2>Leave a Comment</h2>
+        <h2>Add a Comment</h2>
         {/* <label htmlFor='comment' className='label'>
           Comment
         </label> */}
@@ -247,21 +301,30 @@ function Request() {
         <button className="btn standardBtn">Submit Comment</button>
       </form>
       <div className={styles.commentsWrap}>
-        <h2 className="center-text">Comments</h2>
+        <h2 className="center-text">Request Feed</h2>
         {comments.length > 0 &&
           comments.map((comment, id) => {
+            console.log(comment);
             return (
               <div key={id} className={styles.comment}>
                 <div className={styles.commentNameDateWrap}>
-                  <p>{capitalize(comment.user, "_")}</p>
+                  {comment.is_auto === true ? (
+                    <p>Auto Generated Update</p>
+                  ) : (
+                    <p>{capitalize(comment.user, "_")}</p>
+                  )}
                   <p>{readableDate(comment.created_at)}</p>
                 </div>
                 <hr style={{ marginTop: "0", marginBottom: "1rem" }} />
-                <div style={{ whiteSpace: "pre-wrap" }}>{comment.comment}</div>
+                <div style={{ whiteSpace: "pre-wrap" }}>
+                  {comment.is_auto
+                    ? capitalize(comment.user, "_") + " " + comment.comment
+                    : comment.comment}
+                </div>
               </div>
             );
           })}
-        {comments.length < 1 && <p>No comments</p>}
+        {comments.length < 1 && <p>No comments or updates for this request</p>}
       </div>
     </main>
   );

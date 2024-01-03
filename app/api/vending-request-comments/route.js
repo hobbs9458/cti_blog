@@ -5,7 +5,10 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
 
+import { capitalize } from "@/utils/functions";
+
 export async function GET(req) {
+  console.log("get");
   const reqId = req.nextUrl.searchParams.get(["reqId"]);
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
@@ -24,6 +27,7 @@ export async function GET(req) {
   }
 
   if (data) {
+    console.log(data);
     return NextResponse.json({
       comments: data,
       successMessage: "Comments fetched successfully",
@@ -32,15 +36,16 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const { comment, requestId } = await req.json();
+  const { comment, requestId, isAuto } = await req.json();
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const sessionData = await supabase.auth.getSession();
   const userId = sessionData.data.session.user.id;
   const window = new JSDOM("").window;
   const purify = DOMPurify(window);
-  const cleanComment = purify.sanitize(comment);
+  let cleanComment = purify.sanitize(comment);
 
+  // get users name for comment
   const { data: userData, error: userError } = await supabase
     .from("users")
     .select("name")
@@ -57,9 +62,13 @@ export async function POST(req) {
 
   const { data, error } = await supabase
     .from("vending_request_comments")
-    .insert({ comment: cleanComment, user: userData.name, request: requestId })
-    .select()
-    .single();
+    .insert({
+      comment: cleanComment,
+      user: userData.name,
+      request: requestId,
+      is_auto: typeof isAuto === "boolean" ? isAuto : false,
+    })
+    .select();
 
   if (error) {
     console.log(error);
@@ -70,6 +79,10 @@ export async function POST(req) {
   }
 
   if (data) {
-    return NextResponse.json({ successMessage: "Comment added" });
+    console.log(data);
+    return NextResponse.json({
+      successMessage: "Comment added",
+      comment: data,
+    });
   }
 }
