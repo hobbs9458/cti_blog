@@ -10,6 +10,7 @@
   max-width: px;
   margin: 0 auto 3rem;
   text-align: center;
+  overflow-x: scroll;
 }
 
 .vendingSubmissionsHeader {
@@ -27,8 +28,12 @@
 
 .th,
 .td {
-  padding: 0.5rem;
+  padding: 0.2rem;
   border: 1px solid var(--black);
+}
+
+.td {
+  height: 50px;
 }
 
 .tr:hover {

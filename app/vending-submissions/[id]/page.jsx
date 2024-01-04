@@ -28,7 +28,7 @@ function Request() {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(null);
 
-  const usersWithUpdatePermission = ["it", "sales", "logistics"];
+  const usersWithUpdatePermission = ["sales", "logistics"];
 
   useEffect(() => {
     async function getVendingRequest() {
@@ -38,6 +38,8 @@ function Request() {
       );
 
       const data = await res.json();
+
+      console.log(data);
 
       if (data.errorMessage) {
         toast.error(data.errorMessage);
@@ -213,13 +215,23 @@ function Request() {
           <p>Created At: {readableDate(request.created_at)}</p>
           <p>Requested By: {capitalize(request.requested_by, "_")}</p>
           <p>Submitted By: {capitalize(request.submitted_by, "_")}</p>
-          <p>Item: {request.item}</p>
+          <p>Description 1: {request.description_1}</p>
+          {request.description_2 && (
+            <p>Description 2: {request.description_2}</p>
+          )}
+          <p>Customer: {request.customer}</p>
+          <p>Issue Quantity: {request.issue_qty}</p>
+
           <p>Min: {request.min}</p>
           <p>Max: {request.max}</p>
           <p>Current Status: {request.status}</p>
         </div>
       </div>
-      {usersWithUpdatePermission.some((role) => userRoles.includes(role)) && (
+
+      {/* if item is not approved sales can update data and logistics can update status. if item is approved no editing allowed other than IT marking complete */}
+      {(usersWithUpdatePermission.some((role) => userRoles.includes(role)) &&
+        request.status !== "approved") ||
+      (userRoles.includes("it") && request.status === "approved") ? (
         <div className={styles.requestUpdateFormWrap}>
           <h2 className={styles.updateRequestHeader}>Update Request</h2>
           <form
@@ -292,6 +304,8 @@ function Request() {
             </button>
           </form>
         </div>
+      ) : (
+        ""
       )}
       <form className={styles.commentForm} onSubmit={handleSubmitComment}>
         <h2>Add a Comment</h2>

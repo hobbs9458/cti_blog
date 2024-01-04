@@ -7,7 +7,6 @@ import { getRole } from "@/utils/functions";
 
 export async function POST(req) {
   const formData = await req.json();
-  console.log(formData);
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { data: sessionData } = await supabase.auth.getSession();
@@ -21,10 +20,10 @@ export async function POST(req) {
 
   if (submitterError) {
     console.log(submitterError);
-    return NextResponse.json(
-      { error: "Error retrieving submitter name" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      errorMessage:
+        "User not found. Please try again or contact an administrator.",
+    });
   }
 
   const { data, error } = await supabase
@@ -39,7 +38,15 @@ export async function POST(req) {
   console.log("DATA", data);
   console.log("ERROR", error);
 
-  return NextResponse.json({ data, error });
+  if (error) {
+    console.log(error);
+    return NextResponse.json({
+      errorMessage:
+        "There was a problem. Please try again or contact an administrator.",
+    });
+  }
+
+  return NextResponse.json({ data });
 }
 
 export async function GET(req) {
@@ -75,7 +82,7 @@ export async function GET(req) {
     const { data: request, error: requestError } = await supabase
       .from("vending-requests")
       .select(
-        "id, created_at, item, min, max, submitted_by, requested_by, status, is_complete, vending_request_comments (id, created_at, user, comment, is_auto)"
+        "id, created_at, min, max, submitted_by, requested_by, status, is_complete, description_1, description_2, mfg, mfg_number, price, price_type, customer, issue_qty, vending_request_comments (id, created_at, user, comment, is_auto)"
       )
       .eq("id", reqId)
       .single();

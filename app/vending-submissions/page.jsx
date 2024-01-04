@@ -94,6 +94,13 @@ function VendingRequests() {
   // }
 
   function handleNavigateToRequestPage(e) {
+    // access data link on tr to route to request page
+    if (e.target.getAttribute("data-tag") === "table-data") {
+      // have to get parent of parent because using div inside td for styling on table
+      router.push(
+        e.target.parentElement.parentElement.getAttribute("data-link")
+      );
+    }
     if (e.target.tagName === "TD") {
       router.push(e.target.parentElement.getAttribute("data-link"));
     }
@@ -183,14 +190,32 @@ function VendingRequests() {
         >
           <thead>
             <tr>
-              <th className={styles.th}>ID</th>
-              <th className={styles.th}>Created At</th>
-              <th className={styles.th}>Item</th>
-              <th className={styles.th}>Min</th>
-              <th className={styles.th}>Max</th>
-              <th className={styles.th}>Requested By</th>
-              <th className={styles.th}>Submitted By</th>
-              <th className={styles.th}>Status</th>
+              <th className={styles.th} style={{ width: "70px" }}>
+                ID
+              </th>
+              <th className={styles.th} style={{ width: "120px" }}>
+                Created At
+              </th>
+
+              <th className={styles.th} style={{ width: "200px" }}>
+                Sales Rep
+              </th>
+              <th className={styles.th} style={{ width: "200px" }}>
+                Customer
+              </th>
+              <th className={styles.th} style={{ width: "200px" }}>
+                MFG
+              </th>
+              <th className={styles.th} style={{ width: "200px" }}>
+                Desc 1
+              </th>
+              <th className={styles.th} style={{ width: "200px" }}>
+                SN Number
+              </th>
+
+              <th className={styles.th} style={{ width: "200px" }}>
+                Status
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -200,26 +225,28 @@ function VendingRequests() {
                   key={request.id}
                   className={styles.tr}
                   data-link={`/vending-submissions/${request.id}`}
-
-                  // onClick={() =>
-                  //   handleNavigateToRequestPage(
-                  //     `/vending-submissions/${request.id}`
-                  //   )
-                  // }
                 >
                   <td className={styles.td}>{request.id}</td>
                   <td className={styles.td}>
                     {request.created_at.slice(0, 10)}
                   </td>
-                  <td className={styles.td}>{request.item}</td>
-                  <td className={styles.td}>{request.min}</td>
-                  <td className={styles.td}>{request.max}</td>
+
                   <td className={styles.td}>
                     {capitalize(request.requested_by, "_")}
                   </td>
+                  <td className={styles.td}>{request.customer}</td>
+                  <td className={styles.td}>{request.mfg}</td>
+
                   <td className={styles.td}>
-                    {capitalize(request.submitted_by, "_")}
+                    <div
+                      style={{ maxHeight: "50px", overflow: "auto" }}
+                      data-tag="table-data"
+                    >
+                      {request.description_1}
+                    </div>
                   </td>
+
+                  <td className={styles.td}>{request.supply_net_number}</td>
                   <td className={styles.td}>{request.status}</td>
                 </tr>
               );

@@ -29,7 +29,7 @@ export default function VendingFormSubmission() {
     price_type: "",
     customer: "",
     issue_qty: "",
-    price_type: "margin",
+    price_type: "profit",
     requested_by: "",
   });
 
@@ -76,17 +76,27 @@ export default function VendingFormSubmission() {
     });
 
     const data = await res.json();
+    console.log(data);
 
-    if (data.error) {
-      return toast.error(data.error);
+    if (data.errorMessage) {
+      return toast.error(data.errorMessage);
     }
 
     toast.success("Request submitted");
 
-    setItem("");
-    setMin("");
-    setMax("");
-    setRequester("");
+    // setItem("");
+    // setMin("");
+    // setMax("");
+    // setRequester("");
+
+    // clear upload form after submission
+    for (const key in singleUploadForm) {
+      if (key === "price_type") {
+        singleUploadForm[key] = "profit";
+      } else {
+        singleUploadForm[key] = "";
+      }
+    }
 
     setLoading(false);
   }

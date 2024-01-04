@@ -22,7 +22,7 @@ make custom input with radio boxes for price to pick margin or percent with cust
 
 replace random loader code with loader component
 
-add google analytics to actual site
+add google analytics 
 
 make form inputs smaller on vending request? maybe having two inputs per line? maybe use grid for that? then bring back to 1 input per line on mobile
 
