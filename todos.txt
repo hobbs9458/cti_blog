@@ -10,15 +10,9 @@ add same drop shadow as contact button for all buttons and change width on some 
 
 streamline error handling process and responses from api
 
-change the update to either a put or patch request rather than another post request so you can consolidate your api routes
-
 add min height css class globally for all pages: vh - navbarHeight - footerHeight?
 
-should you clean text for comments before inserting into db?
-
 added dompurify to contact us on feature/vending-submissions branch. test before deploying.
-
-make custom input with radio boxes for price to pick margin or percent with custom formatting for each
 
 replace random loader code with loader component
 
@@ -26,7 +20,6 @@ add google analytics
 
 make form inputs smaller on vending request? maybe having two inputs per line? maybe use grid for that? then bring back to 1 input per line on mobile
 
-why does it already pull the comments and updates in the correct order?
+web notifications
 
 NOTES:
-got new fields to insert into db 

@@ -10,10 +10,6 @@ import { Hourglass } from "react-loader-spinner";
 import readXlsxFile from "read-excel-file";
 
 export default function VendingFormSubmission() {
-  const [item, setItem] = useState("");
-  const [min, setMin] = useState("");
-  const [max, setMax] = useState("");
-  const [requester, setRequester] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadedData, setUploadedData] = useState([]);
   const [activeTab, setActiveTab] = useState("tab1");
@@ -59,16 +55,6 @@ export default function VendingFormSubmission() {
     e.preventDefault();
     setLoading(true);
 
-    // const res = await fetch(`${location.origin}/api/vending-request`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     item,
-    //     min,
-    //     max,
-    //     requester,
-    //   }),
-    // });
     const res = await fetch(`${location.origin}/api/vending-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,18 +62,12 @@ export default function VendingFormSubmission() {
     });
 
     const data = await res.json();
-    console.log(data);
 
     if (data.errorMessage) {
       return toast.error(data.errorMessage);
     }
 
     toast.success("Request submitted");
-
-    // setItem("");
-    // setMin("");
-    // setMax("");
-    // setRequester("");
 
     // clear upload form after submission
     for (const key in singleUploadForm) {
@@ -198,74 +178,6 @@ export default function VendingFormSubmission() {
 
       {activeTab === "tab1" && (
         <>
-          {/* <form
-            onSubmit={handleSingleSubmit}
-            className={styles.vendingSingleForm}
-          >
-            <label htmlFor="item" className="label">
-              Item
-            </label>
-            <input
-              type="text"
-              id="item"
-              className="input"
-              onChange={(e) => setItem(e.target.value)}
-              value={item}
-              required
-            />
-
-            <div className={styles.minMaxWrap}>
-              <div>
-                <label htmlFor="min" className="label">
-                  Min
-                </label>
-                <input
-                  type="number"
-                  name="min"
-                  id="min"
-                  className="input"
-                  onChange={(e) => setMin(e.target.value)}
-                  value={min}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="max" className="label">
-                  Max
-                </label>
-                <input
-                  type="number"
-                  name="max"
-                  id="max"
-                  className="input"
-                  onChange={(e) => setMax(e.target.value)}
-                  value={max}
-                  style={{ width: "100%" }}
-                  required
-                />
-              </div>
-            </div>
-            <label htmlFor="requester" className="label">
-              Requested by
-            </label>
-            <select
-              name="requester"
-              id="requester"
-              className="dropdown"
-              required
-              value={requester}
-              onChange={(e) => setRequester(e.target.value)}
-            >
-              <option></option>
-              <option value="ronnie_turner">Ronnie Turner</option>
-              <option value="john_narum">John Narum</option>
-              <option value="jimmy_shelton">Jimmy Shelton</option>
-            </select>
-
-            <button className={`btn ${styles.vendingSingleFormBtn}`}>
-              Submit
-            </button>
-          </form> */}
           <form
             onSubmit={handleSingleSubmit}
             className={styles.vendingSingleForm}
@@ -378,7 +290,6 @@ export default function VendingFormSubmission() {
 
             <label htmlFor="price" className="label">
               Price
-              {/* {singleUploadForm.price_type === "margin" ? "%" : "$"} */}
             </label>
 
             <label htmlFor="profit" style={{ fontSize: "14px" }}>

@@ -16,7 +16,7 @@ function Request() {
   const pathname = usePathname();
   const reqId = pathname.split("/").slice(-1)[0];
   const [userRoles, setUserRoles] = useState([]);
-  const [request, setRequest] = useState(null);
+  const [request, setRequest] = useState("");
   const [loading, setLoading] = useState(true);
   const [requestFormData, setRequestFormData] = useState({
     id: "",
@@ -34,7 +34,7 @@ function Request() {
     supply_net_number: "",
   });
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState("");
 
   const usersWithUpdatePermission = ["sales", "logistics"];
 
@@ -50,8 +50,6 @@ function Request() {
       if (data.errorMessage) {
         toast.error(data.errorMessage);
       }
-
-      console.log(data.request);
 
       const {
         id,
@@ -244,8 +242,8 @@ function Request() {
         <h1 className={styles.requestHeader}> Vending Request {request.id}</h1>
         <div className={styles.requestInfo}>
           <p>Created At: {readableDate(request.created_at)}</p>
-          <p>Sales Rep: {capitalize(request.sales_rep, "_")}</p>
           <p>Submitted By: {capitalize(request.submitted_by, "_")}</p>
+          <p>Sales Rep: {capitalize(request.sales_rep, "_")}</p>
           <p>Description 1: {request.description_1}</p>
           {request.description_2 && (
             <p>Description 2: {request.description_2}</p>
@@ -258,9 +256,10 @@ function Request() {
           <p>Issue Quantity: {request.issue_qty}</p>
 
           <p>
-            {request.price_type === "profit" ? "Profit" : "Margin"}:{" "}
+            {request.price_type === "profit" ? "Profit: " : "Profit Margin: "}
             {request.price_type === "profit" && "$"}
-            {request.price} {request.price_type === "margin" && "%"}
+            {request.price}
+            {request.price_type === "margin" && "%"}
           </p>
           <p>Min: {request.min}</p>
           <p>Max: {request.max}</p>
@@ -307,7 +306,11 @@ function Request() {
                     id="description_2"
                     className="input"
                     onChange={handleEditFormChange}
-                    value={requestFormData.description_2}
+                    value={
+                      requestFormData.description_2 === null
+                        ? ""
+                        : requestFormData.description_2
+                    }
                   />
                   <label htmlFor="supply_net_number" className="label">
                     Supply Net Number
@@ -318,7 +321,11 @@ function Request() {
                     id="supply_net_number"
                     className="input"
                     onChange={handleEditFormChange}
-                    value={requestFormData.supply_net_number}
+                    value={
+                      requestFormData.supply_net_number === null
+                        ? ""
+                        : requestFormData.supply_net_number
+                    }
                   />
                   <label htmlFor="mfg" className="label">
                     MFG

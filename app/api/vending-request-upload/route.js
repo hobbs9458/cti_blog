@@ -25,15 +25,36 @@ export async function POST(req) {
 
   try {
     for (let i = 0; i < rows.length; i++) {
-      const { item, min, max, sales_rep } = rows[i];
+      const {
+        min,
+        max,
+        sales_rep,
+        description_1,
+        description_2,
+        mfg,
+        mfg_number,
+        supply_net_number,
+        price,
+        price_type,
+        customer,
+        issue_qty,
+      } = rows[i];
 
       const { data, error } = await supabase
         .from("vending-requests")
         .insert({
-          item,
           min,
           max,
           submitted_by: submitter.name,
+          description_1,
+          description_2,
+          mfg,
+          mfg_number,
+          supply_net_number,
+          price,
+          price_type,
+          customer,
+          issue_qty,
           sales_rep: sales_rep
             .split(" ")
             .map((name) => name[0].toLowerCase() + name.slice(1))

@@ -17,6 +17,17 @@
   padding: 2rem;
 }
 
+.requestInfo {
+  font-size: 17px;
+}
+
+/* color black request and comment??? */
+/* .requestInfo,
+.comment {
+  background: var(--black);
+  color: var(--off-white);
+} */
+
 .requestUpdateFormContentWrap {
   margin-bottom: 0.5rem;
 }
