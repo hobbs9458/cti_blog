@@ -25,7 +25,7 @@ export async function POST(req) {
 
   try {
     for (let i = 0; i < rows.length; i++) {
-      const { item, min, max, requested_by } = rows[i];
+      const { item, min, max, sales_rep } = rows[i];
 
       const { data, error } = await supabase
         .from("vending-requests")
@@ -34,7 +34,7 @@ export async function POST(req) {
           min,
           max,
           submitted_by: submitter.name,
-          requested_by: requested_by
+          sales_rep: sales_rep
             .split(" ")
             .map((name) => name[0].toLowerCase() + name.slice(1))
             .join("_"),

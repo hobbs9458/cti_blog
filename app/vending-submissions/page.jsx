@@ -52,6 +52,7 @@ function VendingRequests() {
             "There was a problem. Please try again or contact the administrator."
           );
         } else {
+          console.log(data);
           setRequests(data);
           setLoading(false);
         }
@@ -232,7 +233,7 @@ function VendingRequests() {
                   </td>
 
                   <td className={styles.td}>
-                    {capitalize(request.requested_by, "_")}
+                    {capitalize(request.sales_rep, "_")}
                   </td>
                   <td className={styles.td}>{request.customer}</td>
                   <td className={styles.td}>{request.mfg}</td>
@@ -247,7 +248,11 @@ function VendingRequests() {
                   </td>
 
                   <td className={styles.td}>{request.supply_net_number}</td>
-                  <td className={styles.td}>{request.status}</td>
+                  <td className={styles.td}>
+                    {request.is_complete
+                      ? "Complete"
+                      : capitalize(request.status)}
+                  </td>
                 </tr>
               );
             })}

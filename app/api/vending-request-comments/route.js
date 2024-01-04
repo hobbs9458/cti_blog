@@ -16,7 +16,8 @@ export async function GET(req) {
   const { data, error } = await supabase
     .from("vending_request_comments")
     .select()
-    .eq("request", reqId);
+    .eq("request", reqId)
+    .order("id", { ascending: true });
 
   if (error) {
     console.log(error);

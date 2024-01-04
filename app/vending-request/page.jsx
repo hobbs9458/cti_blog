@@ -30,7 +30,7 @@ export default function VendingFormSubmission() {
     customer: "",
     issue_qty: "",
     price_type: "profit",
-    requested_by: "",
+    sales_rep: "",
   });
 
   const uploadRef = useRef(null);
@@ -428,15 +428,15 @@ export default function VendingFormSubmission() {
               </p>
             </div>
 
-            <label htmlFor="requested_by" className="label">
-              Requested by
+            <label htmlFor="sales_rep" className="label">
+              Sales Rep
             </label>
             <select
-              name="requested_by"
-              id="requested_by"
+              name="sales_rep"
+              id="sales_rep"
               className="dropdown"
               required
-              value={singleUploadForm.requested_by}
+              value={singleUploadForm.sales_rep}
               onChange={handleSingleUploadFormChange}
             >
               <option></option>

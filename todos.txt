@@ -26,5 +26,7 @@ add google analytics
 
 make form inputs smaller on vending request? maybe having two inputs per line? maybe use grid for that? then bring back to 1 input per line on mobile
 
+why does it already pull the comments and updates in the correct order?
+
 NOTES:
 got new fields to insert into db 

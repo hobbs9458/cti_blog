@@ -24,6 +24,14 @@ function Request() {
     max: "",
     status: "",
     is_complete: "",
+    description_1: "",
+    description_2: "",
+    price: "",
+    price_type: "",
+    mfg: "",
+    mfg_number: "",
+    issue_qty: "",
+    supply_net_number: "",
   });
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(null);
@@ -39,13 +47,27 @@ function Request() {
 
       const data = await res.json();
 
-      console.log(data);
-
       if (data.errorMessage) {
         toast.error(data.errorMessage);
       }
 
-      const { id, min, max, status, is_complete } = data.request;
+      console.log(data.request);
+
+      const {
+        id,
+        min,
+        max,
+        status,
+        is_complete,
+        description_1,
+        description_2,
+        price,
+        price_type,
+        mfg,
+        mfg_number,
+        issue_qty,
+        supply_net_number,
+      } = data.request;
 
       setRequestFormData({
         id,
@@ -53,6 +75,14 @@ function Request() {
         max,
         status,
         is_complete,
+        description_1,
+        description_2,
+        price,
+        price_type,
+        mfg,
+        mfg_number,
+        issue_qty,
+        supply_net_number,
       });
       setRequest(data.request);
       setUserRoles(data.userRoles);
@@ -125,7 +155,8 @@ function Request() {
       setRequest(updatedRequest);
       toast.success("Request updated");
 
-      // auto generate a comment indicating what has updated
+      // auto generate a comment indicating what has updated.
+      // updaters name is added in the api handler
       let autoComment = "updated this request: \n\n";
 
       for (const key in updated) {
@@ -167,7 +198,7 @@ function Request() {
       }
     }
 
-    setLoading(false);
+    return setLoading(false);
   }
 
   async function handleSubmitComment(e) {
@@ -200,7 +231,7 @@ function Request() {
       setComment("");
     }
 
-    setLoading(false);
+    return setLoading(false);
   }
 
   if (loading) {
@@ -213,25 +244,40 @@ function Request() {
         <h1 className={styles.requestHeader}> Vending Request {request.id}</h1>
         <div className={styles.requestInfo}>
           <p>Created At: {readableDate(request.created_at)}</p>
-          <p>Requested By: {capitalize(request.requested_by, "_")}</p>
+          <p>Sales Rep: {capitalize(request.sales_rep, "_")}</p>
           <p>Submitted By: {capitalize(request.submitted_by, "_")}</p>
           <p>Description 1: {request.description_1}</p>
           {request.description_2 && (
             <p>Description 2: {request.description_2}</p>
           )}
-          <p>Customer: {request.customer}</p>
+          {request.supply_net_number !== "" && (
+            <p>Supply Net Number: {request.supply_net_number}</p>
+          )}
+          <p>MFG: {request.mfg}</p>
+          <p>MFG Number: {request.mfg_number}</p>
           <p>Issue Quantity: {request.issue_qty}</p>
 
+          <p>
+            {request.price_type === "profit" ? "Profit" : "Margin"}:{" "}
+            {request.price_type === "profit" && "$"}
+            {request.price} {request.price_type === "margin" && "%"}
+          </p>
           <p>Min: {request.min}</p>
           <p>Max: {request.max}</p>
-          <p>Current Status: {request.status}</p>
+          <p>Customer: {request.customer}</p>
+          <p>
+            Current Status:{" "}
+            {request.is_complete ? "Completed" : capitalize(request.status)}
+          </p>
         </div>
       </div>
 
       {/* if item is not approved sales can update data and logistics can update status. if item is approved no editing allowed other than IT marking complete */}
       {(usersWithUpdatePermission.some((role) => userRoles.includes(role)) &&
         request.status !== "approved") ||
-      (userRoles.includes("it") && request.status === "approved") ? (
+      (userRoles.includes("it") &&
+        request.status === "approved" &&
+        request.is_complete === false) ? (
         <div className={styles.requestUpdateFormWrap}>
           <h2 className={styles.updateRequestHeader}>Update Request</h2>
           <form
@@ -241,6 +287,125 @@ function Request() {
             <div className={styles.requestUpdateFormContentWrap}>
               {userRoles.includes("sales") && (
                 <>
+                  <label htmlFor="description_1" className="label">
+                    Description 1
+                  </label>
+                  <input
+                    type="text"
+                    name="description_1"
+                    id="description_1"
+                    className="input"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.description_1}
+                  />
+                  <label htmlFor="description_2" className="label">
+                    Description 2
+                  </label>
+                  <input
+                    type="text"
+                    name="description_2"
+                    id="description_2"
+                    className="input"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.description_2}
+                  />
+                  <label htmlFor="supply_net_number" className="label">
+                    Supply Net Number
+                  </label>
+                  <input
+                    type="number"
+                    name="supply_net_number"
+                    id="supply_net_number"
+                    className="input"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.supply_net_number}
+                  />
+                  <label htmlFor="mfg" className="label">
+                    MFG
+                  </label>
+                  <input
+                    type="text"
+                    name="mfg"
+                    id="mfg"
+                    className="input"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.mfg}
+                  />
+                  <label htmlFor="mfg_number" className="label">
+                    MFG Number
+                  </label>
+                  <input
+                    type="number"
+                    name="mfg_number"
+                    id="mfg_number"
+                    className="input"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.mfg_number}
+                    required
+                  />
+                  <label htmlFor="issue_qty" className="label">
+                    Issue Quantity
+                  </label>
+                  <input
+                    type="number"
+                    name="issue_qty"
+                    id="issue_qty"
+                    className="input"
+                    onChange={handleEditFormChange}
+                    value={requestFormData.issue_qty}
+                    required
+                  />
+                  <label htmlFor="price" className="label">
+                    Price
+                    {/* {singleUploadForm.price_type === "margin" ? "%" : "$"} */}
+                  </label>
+
+                  <label htmlFor="profit" style={{ fontSize: "14px" }}>
+                    Profit
+                  </label>
+                  <input
+                    type="radio"
+                    name="price_type"
+                    id="profit"
+                    value="profit"
+                    checked={requestFormData.price_type === "profit"}
+                    onChange={handleEditFormChange}
+                  />
+                  <label htmlFor="margin" style={{ fontSize: "14px" }}>
+                    Margin
+                  </label>
+                  <input
+                    type="radio"
+                    name="price_type"
+                    id="margin"
+                    value="margin"
+                    checked={requestFormData.price_type === "margin"}
+                    onChange={handleEditFormChange}
+                  />
+                  <div className={styles.priceInputWrap}>
+                    <p className={styles.profitSymbol}>
+                      {requestFormData.price_type === "profit" && "$"}
+                    </p>
+                    <input
+                      type="number"
+                      name="price"
+                      id="price"
+                      className="input"
+                      onChange={handleEditFormChange}
+                      value={requestFormData.price}
+                      style={
+                        requestFormData.price_type === "profit"
+                          ? {
+                              paddingLeft: ".8rem",
+                            }
+                          : { paddingRight: "1.1rem" }
+                      }
+                      required
+                    />
+                    <p className={styles.marginSymbol}>
+                      {requestFormData.price_type === "margin" && "%"}
+                    </p>
+                  </div>
                   <label htmlFor="min" className="label">
                     Min
                   </label>
@@ -251,7 +416,6 @@ function Request() {
                     className="input"
                     onChange={handleEditFormChange}
                     value={requestFormData.min}
-                    disabled={!userRoles.includes("sales")}
                   />
                   <label htmlFor="max" className="label">
                     Max
@@ -263,7 +427,6 @@ function Request() {
                     className="input"
                     onChange={handleEditFormChange}
                     value={requestFormData.max}
-                    disabled={!userRoles.includes("sales")}
                   />
                 </>
               )}
@@ -327,7 +490,6 @@ function Request() {
         <h2 className="center-text">Request Feed</h2>
         {comments.length > 0 &&
           comments.map((comment, id) => {
-            console.log(comment);
             return (
               <div key={id} className={styles.comment}>
                 <div className={styles.commentNameDateWrap}>

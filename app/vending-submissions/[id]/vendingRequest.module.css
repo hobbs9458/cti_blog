@@ -56,3 +56,23 @@
   display: flex;
   justify-content: space-between;
 }
+
+.priceInputWrap {
+  position: relative;
+}
+
+.marginSymbol {
+  position: absolute;
+  right: 5px;
+  top: 4px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.profitSymbol {
+  position: absolute;
+  left: 5px;
+  top: 6.1px;
+  font-size: 16px;
+  /* font-weight: bold; */
+}

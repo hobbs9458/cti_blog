@@ -82,7 +82,7 @@ export async function GET(req) {
     const { data: request, error: requestError } = await supabase
       .from("vending-requests")
       .select(
-        "id, created_at, min, max, submitted_by, requested_by, status, is_complete, description_1, description_2, mfg, mfg_number, price, price_type, customer, issue_qty, vending_request_comments (id, created_at, user, comment, is_auto)"
+        "id, created_at, min, max, submitted_by, sales_rep, status, is_complete, description_1, description_2, mfg, mfg_number, price, price_type, customer, issue_qty, supply_net_number, vending_request_comments (id, created_at, user, comment, is_auto)"
       )
       .eq("id", reqId)
       .single();
@@ -118,7 +118,6 @@ export async function GET(req) {
   }
 
   // if user is sales role only select the rows where the user is either the requester or the submitter.
-
   if (personalRequestAccess) {
     const { data: user, error: userError } = await supabase
       .from("users")
@@ -137,7 +136,8 @@ export async function GET(req) {
     const { data: rows, error: rowsError } = await supabase
       .from("vending-requests")
       .select()
-      .or(`requested_by.eq.${user.name},submitted_by.eq.${user.name}`);
+      .or(`sales_rep.eq.${user.name},submitted_by.eq.${user.name}`)
+      .order("id", { ascending: true });
 
     if (rowsError) {
       console.log(rowsError);
@@ -146,6 +146,7 @@ export async function GET(req) {
           "There was a problem. Please try again or contact an administrator.",
       });
     }
+
     return NextResponse.json(rows);
   }
 }
