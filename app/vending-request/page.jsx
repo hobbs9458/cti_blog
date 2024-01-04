@@ -55,16 +55,28 @@ export default function VendingFormSubmission() {
     e.preventDefault();
     setLoading(true);
 
+    // need to change fields with values of empty string to null otherwise supabase will not accept some data
+    const filteredUploadForm = {};
+
+    for (const key in singleUploadForm) {
+      if (singleUploadForm[key] === "") {
+        filteredUploadForm[key] = null;
+      } else {
+        filteredUploadForm[key] = singleUploadForm[key];
+      }
+    }
+
     const res = await fetch(`${location.origin}/api/vending-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(singleUploadForm),
+      body: JSON.stringify(filteredUploadForm),
     });
 
     const data = await res.json();
 
     if (data.errorMessage) {
-      return toast.error(data.errorMessage);
+      toast.error(data.errorMessage);
+      return setLoading(false);
     }
 
     toast.success("Request submitted");
@@ -123,10 +135,10 @@ export default function VendingFormSubmission() {
     if (data.success) {
       toast.success(data.success);
       setUploadedData([]);
-      setLoading(false);
     } else {
       toast.error("Upload not successful. Please try again.");
     }
+    setLoading(false);
   }
 
   if (loading) {

@@ -20,6 +20,12 @@ add google analytics
 
 make form inputs smaller on vending request? maybe having two inputs per line? maybe use grid for that? then bring back to 1 input per line on mobile
 
-web notifications
+turn loader off when error on submitting request
+
+web notifications:
+  -entry: sales rep, logistics, submitter
+  -approval: IT, sales rep, logistics
+  -denied: sales rep, logistics
+  -comment: commenter, sales rep, logistics
 
 NOTES:

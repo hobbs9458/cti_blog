@@ -35,9 +35,6 @@ export async function POST(req) {
     .select()
     .single();
 
-  console.log("DATA", data);
-  console.log("ERROR", error);
-
   if (error) {
     console.log(error);
     return NextResponse.json({
@@ -45,6 +42,8 @@ export async function POST(req) {
         "There was a problem. Please try again or contact an administrator.",
     });
   }
+
+  // send email to submitter, logistics, and sales rep. can get submitter's name from submitter.name
 
   return NextResponse.json({ data });
 }
