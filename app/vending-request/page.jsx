@@ -76,7 +76,8 @@ export default function VendingFormSubmission() {
 
     if (data.errorMessage) {
       toast.error(data.errorMessage);
-      return setLoading(false);
+      setLoading(false);
+      return;
     }
 
     toast.success("Request submitted");
@@ -136,7 +137,9 @@ export default function VendingFormSubmission() {
       toast.success(data.success);
       setUploadedData([]);
     } else {
-      toast.error("Upload not successful. Please try again.");
+      toast.error(
+        "Upload not successful. Please try again or contact an administrator."
+      );
     }
     setLoading(false);
   }
@@ -366,6 +369,7 @@ export default function VendingFormSubmission() {
               <option value="ronnie_turner">Ronnie Turner</option>
               <option value="john_narum">John Narum</option>
               <option value="jimmy_shelton">Jimmy Shelton</option>
+              <option value="kayla_jones">Kayla Jones</option>
             </select>
 
             <button className={`btn ${styles.vendingSingleFormBtn}`}>

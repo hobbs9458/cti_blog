@@ -22,6 +22,16 @@ make form inputs smaller on vending request? maybe having two inputs per line? m
 
 turn loader off when error on submitting request
 
+update logistics email to actual logistics email in .env
+
+make sure link in vending submissions email is working
+
+change is_auto to is_update
+
+add a name in the corner so people know they are logged in
+
+make sure you are double checking roles on the backend before performing updates
+
 web notifications:
   -entry: sales rep, logistics, submitter
   -approval: IT, sales rep, logistics
@@ -29,3 +39,5 @@ web notifications:
   -comment: commenter, sales rep, logistics
 
 NOTES:
+
+when status changes to approved it notifies IT. It's kind of a brittle setup so if you change the way the updates are written you will need to change how to notify IT

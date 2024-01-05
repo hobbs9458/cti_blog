@@ -26,3 +26,29 @@ export function readableDate(createdAt) {
   const date = new Date(createdAt);
   return date.toLocaleString();
 }
+
+export async function sendMail(nodemailer, subject, message, emailAddresses) {
+  const emailAddress = process.env.EMAIL;
+  const emailPass = process.env.EMAIL_PASS;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: emailAddress,
+      pass: emailPass,
+    },
+  });
+
+  const mailOptions = {
+    from: `${emailAddress}`,
+    to: emailAddresses,
+    subject,
+    html: message,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log(error);
+  }
+}

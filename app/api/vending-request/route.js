@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import nodemailer from "nodemailer";
+import { sendMail } from "@/utils/functions";
 
-import { getRole } from "@/utils/functions";
+import { capitalize, getRole } from "@/utils/functions";
 
 export async function POST(req) {
   const formData = await req.json();
@@ -26,7 +28,7 @@ export async function POST(req) {
     });
   }
 
-  const { data, error } = await supabase
+  const { data: vendingRequest, vendingRequestError } = await supabase
     .from("vending-requests")
     .insert({
       ...formData,
@@ -35,20 +37,77 @@ export async function POST(req) {
     .select()
     .single();
 
-  if (error) {
-    console.log(error);
+  if (vendingRequestError) {
+    console.log(vendingRequestError);
     return NextResponse.json({
       errorMessage:
         "There was a problem. Please try again or contact an administrator.",
     });
   }
 
-  // send email to submitter, logistics, and sales rep.
-  // can get submitter's name from submitter.name
-  // sales rep will be available on formData
-  // logistics shouldn't change
+  // send email to submitter, logistics, and sales rep
 
-  return NextResponse.json({ data });
+  const { data: salesRepEmail, error: salesRepEmailError } = await supabase
+    .from("users")
+    .select("email")
+    .eq("name", vendingRequest.sales_rep)
+    .single();
+
+  if (salesRepEmailError) {
+    console.log(salesRepEmailError);
+  }
+
+  const emailAddresses = [
+    submitter.email,
+    salesRepEmail.email,
+    process.env.LOGISTICS_EMAIL,
+  ];
+
+  const subject = "New Vending Request Submission";
+
+  const message = `<html>
+    <head>
+      <style>
+        h1, h2, p {
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        p {
+          font-size: 16px;
+        }
+
+        a:hover {
+          text-decoration: none;
+        }
+      </style>
+    </head>
+    <body>
+      <h1 font-size: 20px">Vending request ${vendingRequest.id}</h1>
+      <h2 style="margin: 0; font-size: 18px">Submitted by ${capitalize(
+        submitter.name,
+        "_"
+      )}</h2>
+      <hr/>
+      <p style="margin: 0;">Sales Rep: ${capitalize(
+        vendingRequest.sales_rep,
+        "_"
+      )}</p>
+      <p style="margin: 0;">Description 1: ${vendingRequest.description_1}</p>
+      <p style="margin: 0;">Supply Net Number: ${
+        vendingRequest.supply_net_number || "N/A"
+      }</p>
+      <p style="margin: 0;">Min: ${vendingRequest.min}</p>
+      <p style="margin: 0;">Max: ${vendingRequest.max}</p>
+      <p style="margin: 0;">Customer: ${vendingRequest.customer}</p>
+      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
+        vendingRequest.id
+      }" style="color: black">here<a/> to view the request.</p>
+    </body>
+  </html>`;
+
+  await sendMail(nodemailer, subject, message, emailAddresses);
+
+  return NextResponse.json({ vendingRequest });
 }
 
 export async function GET(req) {
@@ -156,26 +215,63 @@ export async function GET(req) {
 export async function PATCH(req) {
   const requestData = await req.json();
   const formData = requestData.requestFormData;
-
-  console.log(formData);
-  // const { id, min, max, status } = formData.editForm;
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-  const { data, error } = await supabase
+  const { data: updatedRequest, error: updatedRequestError } = await supabase
     .from("vending-requests")
     .update(formData)
     .match({ id: formData.id })
     .select()
     .single();
 
-  if (error) {
-    console.log(error);
+  if (updatedRequestError) {
+    console.log(updatedRequestError);
     return NextResponse.json({
       errorMessage:
         "There was a problem. Please try again or contact an administrator.",
     });
   }
 
-  return NextResponse.json(data);
+  if (updatedRequest.status === "approved") {
+    // if vending request is approved notify it
+    const { data: users, erro: usersError } = await supabase
+      .from("users")
+      .select();
+
+    if (usersError) {
+      console.log(usersError);
+    }
+
+    const itUsers = users.filter((user) => user.roles.includes("it"));
+    const itEmails = itUsers.map((itUser) => itUser.email);
+
+    const subject = `Vending Request ${updatedRequest.id} Has Been Approved`;
+    const message = `<html>
+    <head>
+      <style>
+        h1, h2, p {
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        p {
+          font-size: 16px;
+        }
+
+        a:hover {
+          text-decoration: none;
+        }
+      </style>
+    </head>
+    <body>
+      <h1 font-size: 20px">Vending Request ${updatedRequest.id} Has Been Approved</h1>
+      <hr/>
+      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${updatedRequest.id}" style="color: black">here<a/> to review the request.</p>
+    </body>
+  </html>`;
+
+    await sendMail(nodemailer, subject, message, itEmails);
+  }
+
+  return NextResponse.json(updatedRequest);
 }
