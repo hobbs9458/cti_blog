@@ -25,23 +25,17 @@ function ContactUs() {
 
     setLoading(true);
 
-    const sanitizedName = validator.escape(name);
-    const sanitizedEmail = validator.escape(email);
-    const sanitizedPhone = validator.escape(phone);
-    const sanitizedCompany = validator.escape(company);
-    const sanitizedMessage = validator.escape(message);
-
     const res = await fetch(`${location.origin}/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: sanitizedName,
-        email: sanitizedEmail,
-        phone: sanitizedPhone,
-        company: sanitizedCompany,
-        message: sanitizedMessage,
+        name,
+        email,
+        phone,
+        company,
+        message,
       }),
     });
 

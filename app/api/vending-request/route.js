@@ -43,7 +43,10 @@ export async function POST(req) {
     });
   }
 
-  // send email to submitter, logistics, and sales rep. can get submitter's name from submitter.name
+  // send email to submitter, logistics, and sales rep.
+  // can get submitter's name from submitter.name
+  // sales rep will be available on formData
+  // logistics shouldn't change
 
   return NextResponse.json({ data });
 }
