@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { toast } from "react-toastify";
 import { Hourglass } from "react-loader-spinner";
-import validator from "validator";
 
 import styles from "./ContactUs.module.css";
 
