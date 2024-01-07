@@ -1,13 +1,8 @@
-.loadingWrap {
-  min-height: 500px;
-}
-
 .vendingReqMain {
   padding-top: 3rem;
   width: 90%;
   max-width: 850px;
   margin: 0 auto;
-  min-height: 650px;
 }
 
 .vendingReqHeader {

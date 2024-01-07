@@ -6,8 +6,8 @@
 .contactSubmissionsWrap {
   width: 90%;
   max-width: 375px;
-  margin: 2rem auto 0;
-  min-height: 700px;
+  margin: 0 auto;
+  padding-top: 5rem;
   text-align: center;
 }
 

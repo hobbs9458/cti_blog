@@ -1,9 +1,9 @@
 .submissionScreen {
   width: 90%;
   max-width: 815px;
-  margin: 2rem auto 0;
+  margin: 0 auto;
   text-align: center;
-  min-height: 700px;
+  padding-top: 5rem;
 }
 
 .submission {
@@ -12,11 +12,12 @@
   border-radius: 5px;
   max-width: 500px;
   margin: 0 auto;
-  padding: 1rem 2rem 2rem 2rem;
+  padding: 2rem 3rem 3rem 3rem;
 }
 
 .submissionHeader {
   font-size: 18px;
   text-decoration: underline;
   text-align: center;
+  margin-bottom: 1rem;
 }

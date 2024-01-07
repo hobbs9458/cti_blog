@@ -1,21 +1,14 @@
-.vendingSubmissionsLoaderWrap {
-  min-height: 500px;
-}
-
 .vendingSubmissions {
   position: relative;
   padding-top: 3rem;
-  min-height: 700px;
   width: 90%;
-  max-width: px;
   margin: 0 auto 3rem;
   text-align: center;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .vendingSubmissionsHeader {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 .vendingSubmissionsTable {
