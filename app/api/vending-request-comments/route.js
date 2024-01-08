@@ -35,6 +35,7 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
+  console.log("ADDING COMMENT");
   const { comment, requestId, isUpdate } = await req.json();
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
@@ -84,7 +85,13 @@ export async function POST(req) {
 
   let text;
 
-  if (newComment.is_update) {
+  console.log(newComment);
+  if (
+    newComment.is_update &&
+    newComment.comment === "has updated the STATUS of this request to COMPLETE."
+  ) {
+    text = "This request's status has been updated to COMPLETE.";
+  } else if (newComment.is_update) {
     text = newComment.comment
       .split("\n")
       .slice(2, -1)
@@ -93,6 +100,8 @@ export async function POST(req) {
   } else {
     text = newComment.comment;
   }
+
+  console.log("TEXT", text);
 
   const message = `<html>
     <head>
@@ -119,9 +128,9 @@ export async function POST(req) {
       } by ${capitalize(newComment.user, "_")}</h2>
       <hr/>
       ${text}
-      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
+      <p style="color: black;">Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
         newComment.request
-      }" style="color: black">here<a/> to view the request.</p>
+      }" style="color: black;">here</a> to view the request.</p>
     </body>
   </html>`;
 

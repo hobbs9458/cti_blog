@@ -55,3 +55,38 @@ export async function sendMail(nodemailer, subject, message, emailAddresses) {
     console.log(error);
   }
 }
+
+export async function getUser(supabase) {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const userId = sessionData.session.user.id;
+
+  const { data: user, error: userError } = await supabase
+    .from("users")
+    .select()
+    .eq("id", userId)
+    .single();
+
+  if (userError) {
+    console.log("submitterError", userError);
+  }
+
+  if (user) {
+    return user;
+  }
+}
+
+export async function getUserByName(supabase, name) {
+  const { data: user, error: userError } = await supabase
+    .from("users")
+    .select()
+    .eq("name", name)
+    .single();
+
+  if (userError) {
+    console.log("submitterError", userError);
+  }
+
+  if (user) {
+    return user;
+  }
+}

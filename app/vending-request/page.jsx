@@ -95,11 +95,16 @@ export default function VendingFormSubmission() {
     setLoading(false);
   }
 
-  async function handleFileChange() {
+  async function handleFileChange(e) {
+    if (e.target.files.length === 0) {
+      setUploadedData([]);
+      return;
+    }
+
     const rows = await readXlsxFile(uploadRef.current.files[0]);
     const formattedRows = [];
-
     const rowTemplate = {};
+
     rows[0].forEach((header) => (rowTemplate[header] = ""));
 
     rows.slice(1).forEach((row) => {

@@ -5,34 +5,19 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import nodemailer from "nodemailer";
 import { sendMail } from "@/utils/functions";
 
-import { capitalize, getRole } from "@/utils/functions";
+import { capitalize, getRole, getUser } from "@/utils/functions";
 
 export async function POST(req) {
   const formData = await req.json();
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  const { data: sessionData } = await supabase.auth.getSession();
-  const userId = sessionData.session.user.id;
-
-  const { data: submitter, error: submitterError } = await supabase
-    .from("users")
-    .select()
-    .eq("id", userId)
-    .single();
-
-  if (submitterError) {
-    console.log(submitterError);
-    return NextResponse.json({
-      errorMessage:
-        "User not found. Please try again or contact an administrator.",
-    });
-  }
+  const user = await getUser(supabase);
 
   const { data: vendingRequest, vendingRequestError } = await supabase
     .from("vending-requests")
     .insert({
       ...formData,
-      submitted_by: submitter.name,
+      submitted_by: user.name,
     })
     .select()
     .single();
@@ -58,7 +43,7 @@ export async function POST(req) {
 
   const uniqueEmailAddresses = new Set();
 
-  uniqueEmailAddresses.add(submitter.email);
+  uniqueEmailAddresses.add(user.email);
   uniqueEmailAddresses.add(salesRepEmail.email);
   uniqueEmailAddresses.add(process.env.LOGISTICS_EMAIL);
 
@@ -85,7 +70,7 @@ export async function POST(req) {
     <body>
       <h1 style="font-size: 20px">Vending request ${vendingRequest.id}</h1>
       <h2 style="margin: 0; font-size: 18px">Submitted by ${capitalize(
-        submitter.name,
+        user.name,
         "_"
       )}</h2>
       <hr/>
@@ -100,11 +85,11 @@ export async function POST(req) {
       <p style="margin: 0;">Min: ${vendingRequest.min}</p>
       <p style="margin: 0;">Max: ${vendingRequest.max}</p>
       <p style="margin: 0;">Customer: ${vendingRequest.customer}</p>
-      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
+      <p style="color: black;">Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
         vendingRequest.id
       }?redirect=/vending-submissions/${
     vendingRequest.id
-  }" style="color: black">here</a> to view the request.</p>
+  }" style="color: black;">here</a> to view the request.</p>
     </body>
   </html>`;
 
@@ -290,11 +275,11 @@ export async function PATCH(req) {
       approverData.name,
       "_"
     )}.</p>
-      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
+      <p style="color: black;">Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
         updatedRequest.id
       }?redirect=/vending-submissions/${
       updatedRequest.id
-    }" style="color: black">here</a> to review the request.</p>
+    }" style="color: black;">here</a> to review the request.</p>
     </body>
   </html>`;
 

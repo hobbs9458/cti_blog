@@ -167,22 +167,32 @@ function Request() {
 
       // auto generate a comment indicating what has updated.
       // updaters name is added in the api handler
-      let autoComment = "updated this request: \n\n";
+      // if is_completed is present in update, it should always indicate that is_completed has been marked true, as is_completed is only ever changed from false to true and nobody other than IT can change it
+      let autoComment;
 
-      for (const key in updated) {
-        autoComment += `${key.replace(/_/g, " ").toUpperCase()} updated from ${
-          request[key] === null || request[key] === ""
-            ? "N/A"
-            : typeof request[key] === "number"
-            ? request[key]
-            : request[key].toString().toUpperCase()
-        } to ${
-          updated[key] === null || updated[key] === ""
-            ? "N/A"
-            : typeof updated[key] === "number"
-            ? updated[key]
-            : updated[key].toString().toUpperCase()
-        }\n`;
+      console.log("updated", updated);
+
+      if (updated.hasOwnProperty("is_complete")) {
+        autoComment = "has updated the STATUS of this request to COMPLETE.";
+      } else {
+        autoComment = "updated this request: \n\n";
+        for (const key in updated) {
+          autoComment += `${key
+            .replace(/_/g, " ")
+            .toUpperCase()} updated from ${
+            request[key] === null || request[key] === ""
+              ? "N/A"
+              : typeof request[key] === "number"
+              ? request[key]
+              : request[key].toString().toUpperCase()
+          } to ${
+            updated[key] === null || updated[key] === ""
+              ? "N/A"
+              : typeof updated[key] === "number"
+              ? updated[key]
+              : updated[key].toString().toUpperCase()
+          }\n`;
+        }
       }
 
       const res = await fetch(
