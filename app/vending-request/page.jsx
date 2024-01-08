@@ -151,11 +151,19 @@ export default function VendingFormSubmission() {
 
   return (
     <main className={styles.vendingReqMain}>
+      <div className={`${styles.menuLinkWrap}`}>
+        <Link href='/access' className={`${styles.menuLink} link`}>
+          Access Page
+        </Link>
+        <Link href='/vending-submissions' className={`${styles.menuLink} link`}>
+          View Vending Submissions
+        </Link>
+      </div>
       <h1 className={styles.vendingReqHeader}>Vending Request</h1>
 
       <div className={styles.tabBtns}>
         <button
-          className={`${styles.tabBtn} ${
+          className={`${styles.tabBtn} ${styles.leftTabBtn} ${
             activeTab === 'tab1' ? styles.activeTab : ''
           } btn`}
           onClick={() => setActiveTab('tab1')}
@@ -171,7 +179,7 @@ export default function VendingFormSubmission() {
           Upload Requests
         </button>
         <button
-          className={`${styles.tabBtn} ${
+          className={`${styles.tabBtn} ${styles.rightTabBtn} ${
             activeTab === 'tab3' ? styles.activeTab : ''
           } btn`}
           onClick={() => setActiveTab('tab3')}
@@ -378,7 +386,7 @@ export default function VendingFormSubmission() {
             <Link href='/vending-request-excel-template.xlsx' className='link'>
               Download the excel template
             </Link>{' '}
-            and upload requests in bulk.
+            to upload requests in bulk.
           </p>
 
           <input
@@ -394,7 +402,7 @@ export default function VendingFormSubmission() {
       )}
 
       {activeTab === 'tab3' && (
-        <div style={{ textAlign: 'center' }}>Search Page...</div>
+        <div style={{ textAlign: 'center' }}>Search Page Coming Soon</div>
       )}
     </main>
   );

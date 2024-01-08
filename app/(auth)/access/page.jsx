@@ -19,8 +19,6 @@ export default function Login() {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
 
-  console.log(userName);
-
   useEffect(() => {
     async function checkSession() {
       setLoading(true);

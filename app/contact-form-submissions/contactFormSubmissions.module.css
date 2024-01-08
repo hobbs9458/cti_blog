@@ -5,10 +5,36 @@
 
 .contactSubmissionsWrap {
   width: 90%;
-  max-width: 375px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 0 auto 5rem;
   padding-top: 5rem;
-  text-align: center;
+  /* text-align: center; */
+}
+
+.linksWrap {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border-radius: 5px;
+  padding: 2rem;
+}
+
+.submissionLinkWrap {
+  margin-bottom: 0.5rem;
+}
+
+.nameDateWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submissionLink {
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.submissionLink:hover {
+  text-decoration: underline;
 }
 
 a.submissionLink:visited {

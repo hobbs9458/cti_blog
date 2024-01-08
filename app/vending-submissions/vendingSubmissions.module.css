@@ -4,11 +4,22 @@
   width: 90%;
   margin: 0 auto 3rem;
   text-align: center;
-  overflow-x: auto;
+}
+
+.menuLinkWrap {
+  max-width: 90%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
 }
 
 .vendingSubmissionsHeader {
-  margin: 1rem 0;
+  margin: 1rem 0 2rem;
+}
+
+.tableWrap {
+  max-height: calc(90vh - 90px);
+  overflow-x: auto;
 }
 
 .vendingSubmissionsTable {

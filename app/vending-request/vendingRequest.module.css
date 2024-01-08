@@ -5,6 +5,14 @@
   margin: 0 auto;
 }
 
+.menuLinkWrap {
+  width: 90%;
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
 .vendingReqHeader {
   text-align: center;
 }
@@ -17,12 +25,24 @@
 .tabBtn {
   box-sizing: border-box;
   display: inline-block;
-  outline: 1px solid var(--black);
+  /* outline: 1px solid var(--black); */
   border-radius: 0;
   padding: 0.5rem 1.5rem;
   background: rgb(255, 255, 255);
   cursor: pointer;
   font-size: 16px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.rightTabBtn {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.leftTabBtn {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .activeTab {
@@ -32,9 +52,13 @@
 
 .vendingUploadForm {
   width: 90%;
-  max-width: 300px;
-  margin: 6rem auto 0;
+  max-width: 450px;
+  margin: 4rem auto 0;
   text-align: center;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border-radius: 5px;
+  padding: 2rem;
 }
 
 .downloadTemplateP {
@@ -57,11 +81,14 @@
   display: block;
   background: #f3f3f3;
   color: var(--black);
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0.5rem 1.5rem;
   font-size: 16px;
   width: 90%;
   margin: 0 auto;
+  font-weight: 500;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
 .uploadSubmitBtn:hover {
@@ -78,13 +105,16 @@
 .vendingSingleFormBtn {
   color: var(--black);
   background: var(--off-white);
-  border: 1px solid var(--black);
+  /* border: 1px solid var(--black); */
   padding: 0.5rem 1.5rem;
   cursor: pointer;
   display: block;
   margin: 2rem auto;
   width: 100%;
   font-size: 16px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  font-weight: 500;
 }
 
 .vendingSingleFormBtn:hover {

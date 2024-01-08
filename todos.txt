@@ -23,4 +23,6 @@ add status codes to api responses
 
 limit session length time, add exp to session
 
+move check session on access page to back end
+
 NOTES:

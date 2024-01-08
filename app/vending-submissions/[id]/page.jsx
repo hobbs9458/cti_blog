@@ -1,42 +1,43 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 
-import { usePathname } from "next/navigation";
+import { usePathname } from 'next/navigation';
 
-import Loader from "@/app/components/Loader";
-import { capitalize } from "@/utils/functions";
-import { readableDate } from "@/utils/functions";
+import Loader from '@/app/components/Loader';
+import { capitalize } from '@/utils/functions';
+import { readableDate } from '@/utils/functions';
 
-import styles from "./vendingRequest.module.css";
+import styles from './vendingRequest.module.css';
 
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 function Request() {
   const pathname = usePathname();
-  const reqId = pathname.split("/").slice(-1)[0];
+  const reqId = pathname.split('/').slice(-1)[0];
   const [userRoles, setUserRoles] = useState([]);
-  const [request, setRequest] = useState("");
+  const [request, setRequest] = useState('');
   const [loading, setLoading] = useState(true);
   const [requestFormData, setRequestFormData] = useState({
-    id: "",
-    min: "",
-    max: "",
-    status: "",
-    is_complete: "",
-    description_1: "",
-    description_2: "",
-    price: "",
-    price_type: "",
-    mfg: "",
-    mfg_number: "",
-    issue_qty: "",
-    supply_net_number: "",
+    id: '',
+    min: '',
+    max: '',
+    status: '',
+    is_complete: '',
+    description_1: '',
+    description_2: '',
+    price: '',
+    price_type: '',
+    mfg: '',
+    mfg_number: '',
+    issue_qty: '',
+    supply_net_number: '',
   });
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState("");
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState('');
 
-  const usersWithUpdatePermission = ["sales", "logistics"];
+  const usersWithUpdatePermission = ['sales', 'logistics'];
 
   useEffect(() => {
     async function getVendingRequest() {
@@ -100,7 +101,7 @@ function Request() {
 
     setRequestFormData({
       ...requestFormData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     });
   }
 
@@ -113,7 +114,7 @@ function Request() {
 
     if (commentsData.errorMessage) {
       return toast.error(
-        "Error getting comments. Please try again or contact an administrator."
+        'Error getting comments. Please try again or contact an administrator.'
       );
     }
 
@@ -126,8 +127,8 @@ function Request() {
     setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request`, {
-      method: "PATCH",
-      "Content-Type": "application/json",
+      method: 'PATCH',
+      'Content-Type': 'application/json',
       body: JSON.stringify({ requestFormData }),
     });
 
@@ -151,19 +152,19 @@ function Request() {
     // toast if a change is detected, otherwise shouldn't be an update unless there's a field on the data that is not on the request
     if (Object.keys(updated).length > 0) {
       setRequest(updatedRequest);
-      toast.success("Request updated");
+      toast.success('Request updated');
 
       // auto generate a comment indicating what has updated.
       // updaters name is added in the api handler
-      let autoComment = "updated this request: \n\n";
+      let autoComment = 'updated this request: \n\n';
 
       for (const key in updated) {
-        autoComment += `${key.replace(/_/g, " ").toUpperCase()} updated from ${
-          typeof request[key] === "number"
+        autoComment += `${key.replace(/_/g, ' ').toUpperCase()} updated from ${
+          typeof request[key] === 'number'
             ? request[key]
             : request[key].toString().toUpperCase()
         } to ${
-          typeof updated[key] === "number"
+          typeof updated[key] === 'number'
             ? updated[key]
             : updated[key].toString().toUpperCase()
         }\n`;
@@ -172,8 +173,8 @@ function Request() {
       const res = await fetch(
         `${location.origin}/api/vending-request-comments`,
         {
-          method: "POST",
-          "Content-Type": "application/json",
+          method: 'POST',
+          'Content-Type': 'application/json',
           body: JSON.stringify({
             comment: autoComment,
             requestId: request.id,
@@ -202,15 +203,15 @@ function Request() {
   async function handleSubmitComment(e) {
     e.preventDefault();
 
-    if (comment === "") {
-      return toast.error("Cannot submit blank comment");
+    if (comment === '') {
+      return toast.error('Cannot submit blank comment');
     }
 
     setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request-comments`, {
-      method: "POST",
-      "Content-Type": "application/json",
+      method: 'POST',
+      'Content-Type': 'application/json',
       body: JSON.stringify({ comment, requestId: request.id }),
     });
 
@@ -226,7 +227,7 @@ function Request() {
 
     if (comments) {
       setComments(comments);
-      setComment("");
+      setComment('');
     }
 
     return setLoading(false);
@@ -239,43 +240,61 @@ function Request() {
   return (
     <main className={styles.vendingRequestMain}>
       <div className={styles.requestInfoWrap}>
+        <div className={`${styles.menuLinkWrap}`}>
+          <Link href='/access' className={`${styles.menuLink} link`}>
+            Access Page
+          </Link>
+          <Link
+            href='/vending-submissions'
+            className={`${styles.menuLink} link`}
+          >
+            All Submissions
+          </Link>
+        </div>
         <h1 className={styles.requestHeader}> Vending Request {request.id}</h1>
         <div className={styles.requestInfo}>
           <p>Created At: {readableDate(request.created_at)}</p>
-          <p>Submitted By: {capitalize(request.submitted_by, "_")}</p>
-          <p>Sales Rep: {capitalize(request.sales_rep, "_")}</p>
+          <p style={{ fontWeight: '600' }}>
+            Current Status:{' '}
+            {request.is_complete ? 'Completed' : capitalize(request.status)}
+          </p>
+          <hr />
+          <p>Submitted By: {capitalize(request.submitted_by, '_')}</p>
+          <p>Sales Rep: {capitalize(request.sales_rep, '_')}</p>
+          <hr />
           <p>Description 1: {request.description_1}</p>
           {request.description_2 && (
             <p>Description 2: {request.description_2}</p>
           )}
-          {request.supply_net_number !== "" && (
+          <hr />
+          {request.supply_net_number !== '' && (
             <p>Supply Net Number: {request.supply_net_number}</p>
           )}
+          <hr />
           <p>MFG: {request.mfg}</p>
           <p>MFG Number: {request.mfg_number}</p>
+          <hr />
           <p>Issue Quantity: {request.issue_qty}</p>
-
+          <hr />
           <p>
-            {request.price_type === "profit" ? "Profit: " : "Profit Margin: "}
-            {request.price_type === "profit" && "$"}
+            {request.price_type === 'profit' ? 'Profit: ' : 'Profit Margin: '}
+            {request.price_type === 'profit' && '$'}
             {request.price}
-            {request.price_type === "margin" && "%"}
+            {request.price_type === 'margin' && '%'}
           </p>
+          <hr />
           <p>Min: {request.min}</p>
           <p>Max: {request.max}</p>
+          <hr />
           <p>Customer: {request.customer}</p>
-          <p>
-            Current Status:{" "}
-            {request.is_complete ? "Completed" : capitalize(request.status)}
-          </p>
         </div>
       </div>
 
       {/* if item is not approved sales can update data and logistics can update status. if item is approved no editing allowed other than IT marking complete */}
       {(usersWithUpdatePermission.some((role) => userRoles.includes(role)) &&
-        request.status !== "approved") ||
-      (userRoles.includes("it") &&
-        request.status === "approved" &&
+        request.status !== 'approved') ||
+      (userRoles.includes('it') &&
+        request.status === 'approved' &&
         request.is_complete === false) ? (
         <div className={styles.requestUpdateFormWrap}>
           <h2 className={styles.updateRequestHeader}>Update Request</h2>
@@ -284,217 +303,222 @@ function Request() {
             onSubmit={handleUpdateRequestFormSubmit}
           >
             <div className={styles.requestUpdateFormContentWrap}>
-              {userRoles.includes("sales") && (
+              {userRoles.includes('sales') && (
                 <>
-                  <label htmlFor="description_1" className="label">
+                  <label htmlFor='description_1' className='label'>
                     Description 1
                   </label>
                   <input
-                    type="text"
-                    name="description_1"
-                    id="description_1"
-                    className="input"
+                    type='text'
+                    name='description_1'
+                    id='description_1'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.description_1}
                   />
-                  <label htmlFor="description_2" className="label">
+                  <label htmlFor='description_2' className='label'>
                     Description 2
                   </label>
                   <input
-                    type="text"
-                    name="description_2"
-                    id="description_2"
-                    className="input"
+                    type='text'
+                    name='description_2'
+                    id='description_2'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={
                       requestFormData.description_2 === null
-                        ? ""
+                        ? ''
                         : requestFormData.description_2
                     }
                   />
-                  <label htmlFor="supply_net_number" className="label">
+                  <label htmlFor='supply_net_number' className='label'>
                     Supply Net Number
                   </label>
                   <input
-                    type="number"
-                    name="supply_net_number"
-                    id="supply_net_number"
-                    className="input"
+                    type='number'
+                    name='supply_net_number'
+                    id='supply_net_number'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={
                       requestFormData.supply_net_number === null
-                        ? ""
+                        ? ''
                         : requestFormData.supply_net_number
                     }
                   />
-                  <label htmlFor="mfg" className="label">
+                  <label htmlFor='mfg' className='label'>
                     MFG
                   </label>
                   <input
-                    type="text"
-                    name="mfg"
-                    id="mfg"
-                    className="input"
+                    type='text'
+                    name='mfg'
+                    id='mfg'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.mfg}
                   />
-                  <label htmlFor="mfg_number" className="label">
+                  <label htmlFor='mfg_number' className='label'>
                     MFG Number
                   </label>
                   <input
-                    type="number"
-                    name="mfg_number"
-                    id="mfg_number"
-                    className="input"
+                    type='number'
+                    name='mfg_number'
+                    id='mfg_number'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.mfg_number}
                     required
                   />
-                  <label htmlFor="issue_qty" className="label">
+                  <label htmlFor='issue_qty' className='label'>
                     Issue Quantity
                   </label>
                   <input
-                    type="number"
-                    name="issue_qty"
-                    id="issue_qty"
-                    className="input"
+                    type='number'
+                    name='issue_qty'
+                    id='issue_qty'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.issue_qty}
                     required
                   />
-                  <label htmlFor="price" className="label">
+                  <label htmlFor='price' className='label'>
                     Price
                     {/* {singleUploadForm.price_type === "margin" ? "%" : "$"} */}
                   </label>
 
-                  <label htmlFor="profit" style={{ fontSize: "14px" }}>
+                  <label htmlFor='profit' style={{ fontSize: '14px' }}>
                     Profit
                   </label>
                   <input
-                    type="radio"
-                    name="price_type"
-                    id="profit"
-                    value="profit"
-                    checked={requestFormData.price_type === "profit"}
+                    type='radio'
+                    name='price_type'
+                    id='profit'
+                    value='profit'
+                    checked={requestFormData.price_type === 'profit'}
                     onChange={handleEditFormChange}
                   />
-                  <label htmlFor="margin" style={{ fontSize: "14px" }}>
+                  <label htmlFor='margin' style={{ fontSize: '14px' }}>
                     Margin
                   </label>
                   <input
-                    type="radio"
-                    name="price_type"
-                    id="margin"
-                    value="margin"
-                    checked={requestFormData.price_type === "margin"}
+                    type='radio'
+                    name='price_type'
+                    id='margin'
+                    value='margin'
+                    checked={requestFormData.price_type === 'margin'}
                     onChange={handleEditFormChange}
                   />
                   <div className={styles.priceInputWrap}>
                     <p className={styles.profitSymbol}>
-                      {requestFormData.price_type === "profit" && "$"}
+                      {requestFormData.price_type === 'profit' && '$'}
                     </p>
                     <input
-                      type="number"
-                      name="price"
-                      id="price"
-                      className="input"
+                      type='number'
+                      name='price'
+                      id='price'
+                      className='input'
                       onChange={handleEditFormChange}
                       value={requestFormData.price}
                       style={
-                        requestFormData.price_type === "profit"
+                        requestFormData.price_type === 'profit'
                           ? {
-                              paddingLeft: ".8rem",
+                              paddingLeft: '.8rem',
                             }
-                          : { paddingRight: "1.1rem" }
+                          : { paddingRight: '1.1rem' }
                       }
                       required
                     />
                     <p className={styles.marginSymbol}>
-                      {requestFormData.price_type === "margin" && "%"}
+                      {requestFormData.price_type === 'margin' && '%'}
                     </p>
                   </div>
-                  <label htmlFor="min" className="label">
+                  <label htmlFor='min' className='label'>
                     Min
                   </label>
                   <input
-                    type="number"
-                    name="min"
-                    id="min"
-                    className="input"
+                    type='number'
+                    name='min'
+                    id='min'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.min}
                   />
-                  <label htmlFor="max" className="label">
+                  <label htmlFor='max' className='label'>
                     Max
                   </label>
                   <input
-                    type="number"
-                    name="max"
-                    id="max"
-                    className="input"
+                    type='number'
+                    name='max'
+                    id='max'
+                    className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.max}
                   />
                 </>
               )}
-              {userRoles.includes("logistics") && (
+              {userRoles.includes('logistics') && (
                 <>
-                  <label htmlFor="status" className="label">
+                  <label htmlFor='status' className='label'>
                     Update Status
                   </label>
                   <select
-                    name="status"
-                    id="status"
+                    name='status'
+                    id='status'
                     value={requestFormData.status}
                     onChange={handleEditFormChange}
-                    className="dropdown"
+                    className='dropdown'
                   >
                     <option></option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="denied">Denied</option>
+                    <option value='pending'>Pending</option>
+                    <option value='approved'>Approved</option>
+                    <option value='denied'>Denied</option>
                   </select>
                 </>
               )}
-              {userRoles.includes("it") && (
+              {userRoles.includes('it') && (
                 <div className={styles.updateRequestCheckbox}>
-                  <label htmlFor="isComplete">Mark Completed</label>
+                  <label htmlFor='isComplete'>Mark Completed</label>
                   <input
-                    type="checkbox"
-                    name="is_complete"
-                    id="isComplete"
+                    type='checkbox'
+                    name='is_complete'
+                    id='isComplete'
                     onChange={handleEditFormChange}
                     value={requestFormData.is_complete}
                   />
                 </div>
               )}
             </div>
-            <button className={`btn standardBtn`} type="submit">
+            <button
+              className={`btn standardBtn ${styles.updateBtn}`}
+              type='submit'
+            >
               Submit Update
             </button>
           </form>
         </div>
       ) : (
-        ""
+        ''
       )}
       <form className={styles.commentForm} onSubmit={handleSubmitComment}>
-        <h2>Add a Comment</h2>
+        <h2 className={styles.commentHeader}>Add a Comment</h2>
         {/* <label htmlFor='comment' className='label'>
           Comment
         </label> */}
         <textarea
-          name="comment"
-          id="comment"
-          cols="30"
-          rows="10"
-          className="text-area"
+          name='comment'
+          id='comment'
+          cols='30'
+          rows='10'
+          className={`${styles.textArea} text-area`}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         ></textarea>
-        <button className="btn standardBtn">Submit Comment</button>
+        <button className={`${styles.commentBtn} btn standardBtn`}>
+          Submit Comment
+        </button>
       </form>
       <div className={styles.commentsWrap}>
-        <h2 className="center-text">Request Feed</h2>
+        <h2 className={`center-text ${styles.feedHeader}`}>Request Feed</h2>
         {comments.length > 0 &&
           comments.map((comment, id) => {
             return (
@@ -505,14 +529,14 @@ function Request() {
                       <p>Update</p>
                     </b>
                   ) : (
-                    <p>{capitalize(comment.user, "_")}</p>
+                    <p>{capitalize(comment.user, '_')}</p>
                   )}
                   <p>{readableDate(comment.created_at)}</p>
                 </div>
-                <hr style={{ marginTop: "0", marginBottom: "1rem" }} />
-                <div style={{ whiteSpace: "pre-wrap" }}>
+                <hr style={{ marginTop: '0', marginBottom: '1rem' }} />
+                <div style={{ whiteSpace: 'pre-wrap' }}>
                   {comment.is_auto
-                    ? capitalize(comment.user, "_") + " " + comment.comment
+                    ? capitalize(comment.user, '_') + ' ' + comment.comment
                     : comment.comment}
                 </div>
               </div>

@@ -2,6 +2,13 @@
   padding-top: 3rem;
 }
 
+.menuLinkWrap {
+  display: flex;
+  max-width: 650px;
+  justify-content: space-between;
+  margin: 0 auto 2rem;
+}
+
 .requestInfoWrap,
 .requestUpdateFormWrap,
 .commentsWrap {
@@ -17,8 +24,29 @@
   padding: 2rem;
 }
 
+.requestUpdateFormContentWrap {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: none;
+}
+
+.updateBtn,
+.commentBtn {
+  margin-top: 0.5rem;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: none;
+}
+
 .requestInfo {
   font-size: 17px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: none;
+}
+
+.requestInfo p {
+  line-height: 1.75;
 }
 
 /* color black request and comment??? */
@@ -34,6 +62,13 @@
 
 .requestHeader {
   font-size: 24px;
+}
+
+.requestHeader,
+.commentHeader,
+.updateRequestHeader,
+.feedHeader {
+  padding-bottom: 0.5rem;
 }
 
 .updateRequestBtn {
@@ -56,11 +91,19 @@
   margin: 0 auto 3rem;
 }
 
+.textArea {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: none;
+}
+
 .comment {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 5px;
   margin-bottom: 1rem;
   padding: 0.5rem;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
 .commentNameDateWrap {
