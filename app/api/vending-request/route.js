@@ -101,7 +101,9 @@ export async function POST(req) {
       <p style="margin: 0;">Customer: ${vendingRequest.customer}</p>
       <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${
         vendingRequest.id
-      }" style="color: black">here<a/> to view the request.</p>
+      }?redirect=/vending-submissions/${
+    vendingRequest.id
+  }" style="color: black">here</a> to view the request.</p>
     </body>
   </html>`;
 
@@ -143,7 +145,7 @@ export async function GET(req) {
     const { data: request, error: requestError } = await supabase
       .from('vending-requests')
       .select(
-        'id, created_at, min, max, submitted_by, sales_rep, status, is_complete, description_1, description_2, mfg, mfg_number, price, price_type, customer, issue_qty, supply_net_number, vending_request_comments (id, created_at, user, comment, is_auto)'
+        'id, created_at, min, max, submitted_by, sales_rep, status, is_complete, description_1, description_2, mfg, mfg_number, price, price_type, customer, issue_qty, supply_net_number, vending_request_feed (id, created_at, user, comment, is_update)'
       )
       .eq('id', reqId)
       .single();
@@ -266,7 +268,7 @@ export async function PATCH(req) {
     <body>
       <h1 font-size: 20px">Vending Request ${updatedRequest.id} Has Been Approved</h1>
       <hr/>
-      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${updatedRequest.id}" style="color: black">here<a/> to review the request.</p>
+      <p>Click <a href="http://www.cuttingtoolsinc.com/vending-submissions/${updatedRequest.id}?redirect=/vending-submissions/${updatedRequest.id}" style="color: black">here</a> to review the request.</p>
     </body>
   </html>`;
 

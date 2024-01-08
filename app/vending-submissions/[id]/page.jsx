@@ -85,7 +85,7 @@ function Request() {
       });
       setRequest(data.request);
       setUserRoles(data.userRoles);
-      setComments(data.request.vending_request_comments);
+      setComments(data.request.vending_request_feed);
       setLoading(false);
     }
 
@@ -126,6 +126,10 @@ function Request() {
 
     setLoading(true);
 
+    if (requestFormData.supply_net_number === '') {
+      requestFormData.supply_net_number = null;
+    }
+
     const res = await fetch(`${location.origin}/api/vending-request`, {
       method: 'PATCH',
       'Content-Type': 'application/json',
@@ -135,7 +139,9 @@ function Request() {
     const updatedRequest = await res.json();
 
     if (updatedRequest.errorMessage) {
-      return toast.error(updatedRequest.errorMessage);
+      toast.error(updatedRequest.errorMessage);
+      setLoading(false);
+      return;
     }
 
     // compare the original request and the updated request to identify which fields have changed
@@ -159,12 +165,17 @@ function Request() {
       let autoComment = 'updated this request: \n\n';
 
       for (const key in updated) {
+        console.log(request[key]);
         autoComment += `${key.replace(/_/g, ' ').toUpperCase()} updated from ${
-          typeof request[key] === 'number'
+          request[key] === null || request[key] === ''
+            ? 'N/A'
+            : typeof request[key] === 'number'
             ? request[key]
             : request[key].toString().toUpperCase()
         } to ${
-          typeof updated[key] === 'number'
+          updated[key] === null || updated[key] === ''
+            ? 'N/A'
+            : typeof updated[key] === 'number'
             ? updated[key]
             : updated[key].toString().toUpperCase()
         }\n`;
@@ -178,7 +189,7 @@ function Request() {
           body: JSON.stringify({
             comment: autoComment,
             requestId: request.id,
-            isAuto: true,
+            isUpdate: true,
           }),
         }
       );
@@ -230,7 +241,8 @@ function Request() {
       setComment('');
     }
 
-    return setLoading(false);
+    setLoading(false);
+    return;
   }
 
   if (loading) {
@@ -242,7 +254,7 @@ function Request() {
       <div className={styles.requestInfoWrap}>
         <div className={`${styles.menuLinkWrap}`}>
           <Link href='/access' className={`${styles.menuLink} link`}>
-            Access Page
+            Portal Home
           </Link>
           <Link
             href='/vending-submissions'
@@ -268,7 +280,7 @@ function Request() {
           )}
           <hr />
           {request.supply_net_number !== '' && (
-            <p>Supply Net Number: {request.supply_net_number}</p>
+            <p>Supply Net Number: {request.supply_net_number || 'N/A'}</p>
           )}
           <hr />
           <p>MFG: {request.mfg}</p>
@@ -315,6 +327,7 @@ function Request() {
                     className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.description_1}
+                    required
                   />
                   <label htmlFor='description_2' className='label'>
                     Description 2
@@ -356,6 +369,7 @@ function Request() {
                     className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.mfg}
+                    required
                   />
                   <label htmlFor='mfg_number' className='label'>
                     MFG Number
@@ -396,6 +410,7 @@ function Request() {
                     value='profit'
                     checked={requestFormData.price_type === 'profit'}
                     onChange={handleEditFormChange}
+                    required
                   />
                   <label htmlFor='margin' style={{ fontSize: '14px' }}>
                     Margin
@@ -407,6 +422,7 @@ function Request() {
                     value='margin'
                     checked={requestFormData.price_type === 'margin'}
                     onChange={handleEditFormChange}
+                    required
                   />
                   <div className={styles.priceInputWrap}>
                     <p className={styles.profitSymbol}>
@@ -442,6 +458,7 @@ function Request() {
                     className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.min}
+                    required
                   />
                   <label htmlFor='max' className='label'>
                     Max
@@ -453,6 +470,7 @@ function Request() {
                     className='input'
                     onChange={handleEditFormChange}
                     value={requestFormData.max}
+                    required
                   />
                 </>
               )}
@@ -467,6 +485,7 @@ function Request() {
                     value={requestFormData.status}
                     onChange={handleEditFormChange}
                     className='dropdown'
+                    required
                   >
                     <option></option>
                     <option value='pending'>Pending</option>
@@ -484,6 +503,7 @@ function Request() {
                     id='isComplete'
                     onChange={handleEditFormChange}
                     value={requestFormData.is_complete}
+                    required
                   />
                 </div>
               )}
@@ -524,7 +544,7 @@ function Request() {
             return (
               <div key={id} className={styles.comment}>
                 <div className={styles.commentNameDateWrap}>
-                  {comment.is_auto === true ? (
+                  {comment.is_update === true ? (
                     <b>
                       <p>Update</p>
                     </b>
@@ -535,7 +555,7 @@ function Request() {
                 </div>
                 <hr style={{ marginTop: '0', marginBottom: '1rem' }} />
                 <div style={{ whiteSpace: 'pre-wrap' }}>
-                  {comment.is_auto
+                  {comment.is_update
                     ? capitalize(comment.user, '_') + ' ' + comment.comment
                     : comment.comment}
                 </div>

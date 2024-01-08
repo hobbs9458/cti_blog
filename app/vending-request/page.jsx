@@ -153,7 +153,7 @@ export default function VendingFormSubmission() {
     <main className={styles.vendingReqMain}>
       <div className={`${styles.menuLinkWrap}`}>
         <Link href='/access' className={`${styles.menuLink} link`}>
-          Access Page
+          Portal Home
         </Link>
         <Link href='/vending-submissions' className={`${styles.menuLink} link`}>
           View Vending Submissions

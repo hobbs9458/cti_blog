@@ -7,16 +7,13 @@ export async function GET(req) {
   // get supabase client and session
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  console.log(req);
 
   // check for id in query
   const userId = req.nextUrl.searchParams.get(['userId']);
 
-  console.log(userId);
-
   const { data: userData, error: userDataError } = await supabase
     .from('users')
-    .select()
+    .select('*')
     .eq('id', userId)
     .single();
 

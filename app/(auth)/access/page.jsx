@@ -10,6 +10,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import LogoutBtn from '../../components/LogoutBtn';
 import Loader from '@/app/components/Loader';
 import { capitalize } from '@/utils/functions';
+import { toast } from 'react-toastify';
 
 const supabase = createClientComponentClient();
 
@@ -35,7 +36,8 @@ export default function Login() {
 
       if (sessionData.session) {
         const res = await fetch(
-          `${location.origin}/api/user?userId=${sessionData.session.user.id}`
+          `${location.origin}/api/user?userId=${sessionData.session.user.id}`,
+          { cache: 'no-store' }
         );
 
         const data = await res.json();
@@ -56,7 +58,7 @@ export default function Login() {
     }
 
     checkSession();
-  }, []);
+  }, [loggedIn]);
 
   const handleSubmit = async (e, email, password) => {
     e.preventDefault();
@@ -90,12 +92,18 @@ export default function Login() {
             </h2>
             <ul className={styles.accessUl}>
               <li>
-                <Link href='/vending-request' className=' link'>
+                <Link
+                  href='/vending-request'
+                  className={`link ${styles.menuLink}`}
+                >
                   Create Vending Request
                 </Link>
               </li>
               <li>
-                <Link href='/vending-submissions' className='link'>
+                <Link
+                  href='/vending-submissions'
+                  className={`link ${styles.menuLink}`}
+                >
                   View Vending Submissions
                 </Link>
               </li>

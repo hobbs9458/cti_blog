@@ -19,6 +19,11 @@ async function ContactFormSubmissions() {
 
   return (
     <div className={styles.contactSubmissionsWrap}>
+      <div className={`${styles.accessLinkWrap} link`}>
+        <Link href='/access' className={styles.accessLink}>
+          Portal Home
+        </Link>
+      </div>
       <h1 className={styles.contactSubmissionsHeader}>
         Contact Form Submissions
       </h1>

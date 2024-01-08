@@ -1,12 +1,16 @@
 .access {
   width: 90%;
-  max-width: 850px;
+  max-width: 500px;
   margin: 0 auto;
   padding-top: 5rem;
 }
 
 .accessWrap {
   text-align: center;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  padding: 2rem 3rem 3rem;
+  border-radius: 5px;
 }
 
 .accessUl {
@@ -22,8 +26,8 @@
   max-width: 500px;
   margin: 0 auto;
   padding: 2rem;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px; */
 }
 
 .welcomeText {
@@ -33,3 +37,10 @@
 /* .accessLink {
   display: block;
 } */
+
+.menuLink {
+  text-decoration: none;
+}
+.menuLink:hover {
+  text-decoration: underline;
+}

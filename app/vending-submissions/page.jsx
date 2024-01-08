@@ -86,7 +86,7 @@ function VendingRequests() {
       <main className={styles.vendingSubmissions}>
         <div className={`${styles.menuLinkWrap}`}>
           <Link href='/access' className={`${styles.menuLink} link`}>
-            Access Page
+            Portal Home
           </Link>
           <Link href='/vending-request' className={`${styles.menuLink} link`}>
             Create Vending Request

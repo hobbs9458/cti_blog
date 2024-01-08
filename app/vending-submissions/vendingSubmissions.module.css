@@ -30,6 +30,13 @@
   border-spacing: 0;
 }
 
+.th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--off-white);
+}
+
 .th,
 .td {
   padding: 0.2rem;

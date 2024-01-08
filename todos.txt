@@ -25,4 +25,6 @@ limit session length time, add exp to session
 
 move check session on access page to back end
 
+handle redirect: make checkSession() api route and make layout component's client component. use useEffect to check session and handle redirects
+
 NOTES:
