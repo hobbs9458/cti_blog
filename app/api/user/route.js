@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function GET(req) {
   // get supabase client and session
@@ -9,12 +9,12 @@ export async function GET(req) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   // check for id in query
-  const userId = req.nextUrl.searchParams.get(['userId']);
+  const userId = req.nextUrl.searchParams.get(["userId"]);
 
   const { data: userData, error: userDataError } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', userId)
+    .from("users")
+    .select("*")
+    .eq("id", userId)
     .single();
 
   if (userDataError) {
@@ -27,7 +27,6 @@ export async function GET(req) {
   }
 
   if (userData) {
-    console.log(userData);
     return NextResponse.json({ status: 200, data: userData });
   }
 }

@@ -83,8 +83,6 @@ export async function POST(req) {
           .eq("id", id);
         if (deleteError) {
           console.error("Error deleting row:", deleteError);
-        } else {
-          console.log(`Row with ID ${id} deleted successfully.`);
         }
       } catch (deleteErr) {
         console.error("Error deleting row:", deleteErr);

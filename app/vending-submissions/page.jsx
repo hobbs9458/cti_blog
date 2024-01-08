@@ -34,14 +34,12 @@ function VendingRequests() {
         }
 
         const data = await res.json();
-        console.log(data);
 
         if (data.error) {
           toast.error(
             "There was a problem. Please try again or contact the administrator."
           );
         } else {
-          console.log(data);
           setRequests(data);
           setLoading(false);
         }
@@ -164,7 +162,7 @@ function VendingRequests() {
                         </td>
 
                         <td className={styles.td}>
-                          {request.supply_net_number}
+                          {request.supply_net_number || "N/A"}
                         </td>
                         <td className={styles.td}>
                           {request.is_complete

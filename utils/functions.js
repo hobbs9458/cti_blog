@@ -47,7 +47,10 @@ export async function sendMail(nodemailer, subject, message, emailAddresses) {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    const res = await transporter.sendMail(mailOptions);
+    if (res.rejected > 0) {
+      console.log("Rejected Emails", res);
+    }
   } catch (error) {
     console.log(error);
   }

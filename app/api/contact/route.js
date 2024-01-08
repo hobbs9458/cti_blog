@@ -24,12 +24,8 @@ export async function POST(req) {
     .select()
     .single();
 
-  if (data) {
-    console.log("data", data);
-  }
-
   if (error) {
-    console.log("error", error);
+    console.log("contact form post request request error", error);
   }
 
   const emailText =

@@ -33,6 +33,7 @@ function Request() {
     mfg_number: "",
     issue_qty: "",
     supply_net_number: "",
+    customer: "",
   });
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState("");
@@ -47,8 +48,6 @@ function Request() {
       );
 
       const data = await res.json();
-
-      console.log(data);
 
       if (data.errorMessage) {
         // toast.error(data.errorMessage);
@@ -70,6 +69,7 @@ function Request() {
         mfg_number,
         issue_qty,
         supply_net_number,
+        customer,
       } = data.request;
 
       setRequestFormData({
@@ -86,6 +86,7 @@ function Request() {
         mfg_number,
         issue_qty,
         supply_net_number,
+        customer,
       });
       setRequest(data.request);
       setUserRoles(data.userRoles);
@@ -169,7 +170,6 @@ function Request() {
       let autoComment = "updated this request: \n\n";
 
       for (const key in updated) {
-        console.log(request[key]);
         autoComment += `${key.replace(/_/g, " ").toUpperCase()} updated from ${
           request[key] === null || request[key] === ""
             ? "N/A"
@@ -493,6 +493,18 @@ function Request() {
                         value={requestFormData.max}
                         required
                       />
+                      <label htmlFor="customer" className="label">
+                        Customer
+                      </label>
+                      <input
+                        type="text"
+                        name="customer"
+                        id="customer"
+                        className="input"
+                        onChange={handleEditFormChange}
+                        value={requestFormData.customer}
+                        required
+                      />
                     </>
                   )}
                   {userRoles.includes("logistics") && (
@@ -517,7 +529,7 @@ function Request() {
                   )}
                   {userRoles.includes("it") && (
                     <div className={styles.updateRequestCheckbox}>
-                      <label htmlFor="isComplete">Mark Completed</label>
+                      <label htmlFor="isComplete">Mark Complete</label>
                       <input
                         type="checkbox"
                         name="is_complete"
