@@ -48,8 +48,12 @@ function Request() {
 
       const data = await res.json();
 
+      console.log(data);
+
       if (data.errorMessage) {
-        toast.error(data.errorMessage);
+        // toast.error(data.errorMessage);
+        setLoading(false);
+        return;
       }
 
       const {
@@ -247,6 +251,10 @@ function Request() {
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (!request) {
+    return 'No request';
   }
 
   return (

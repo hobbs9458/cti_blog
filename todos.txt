@@ -27,4 +27,6 @@ move check session on access page to back end
 
 handle redirect: make checkSession() api route and make layout component's client component. use useEffect to check session and handle redirects
 
+handle when no submissions on /submissions and /submissions/id
+
 NOTES:

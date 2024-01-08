@@ -35,6 +35,7 @@ function VendingRequests() {
         }
 
         const data = await res.json();
+        console.log(data);
 
         if (data.error) {
           toast.error(
@@ -78,6 +79,10 @@ function VendingRequests() {
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (requests.length < 1) {
+    return 'No submissions';
   }
 
   return (
