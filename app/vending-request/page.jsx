@@ -257,6 +257,7 @@ export default function VendingFormSubmission() {
             </label>
             <input
               type='number'
+              min='0'
               name='mfg_number'
               id='mfg_number'
               className='input'
@@ -270,6 +271,7 @@ export default function VendingFormSubmission() {
             <input
               type='number'
               name='issue_qty'
+              min='0'
               id='issue_qty'
               className='input'
               onChange={handleSingleUploadFormChange}
@@ -281,6 +283,7 @@ export default function VendingFormSubmission() {
             </label>
             <input
               type='number'
+              min='0'
               name='supply_net_number'
               id='supply_net_number'
               className='input'
@@ -305,6 +308,7 @@ export default function VendingFormSubmission() {
             <input
               type='number'
               name='min'
+              min='0'
               id='min'
               className='input'
               onChange={handleSingleUploadFormChange}
@@ -316,6 +320,7 @@ export default function VendingFormSubmission() {
             </label>
             <input
               type='number'
+              min='0'
               name='max'
               id='max'
               className='input'
@@ -357,6 +362,7 @@ export default function VendingFormSubmission() {
               </p>
               <input
                 type='number'
+                min='0'
                 name='price'
                 id='price'
                 className='input'
