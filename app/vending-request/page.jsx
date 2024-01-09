@@ -11,6 +11,7 @@ import Loader from '@/app/components/Loader';
 
 export default function VendingFormSubmission() {
   const [loading, setLoading] = useState(true);
+  const [uploadLoadingMsg, setUploadLoadingMsg] = useState(false);
   const [uploadedData, setUploadedData] = useState([]);
   const [activeTab, setActiveTab] = useState('tab1');
   const [singleUploadForm, setSingleUploadForm] = useState({
@@ -128,7 +129,7 @@ export default function VendingFormSubmission() {
     }
 
     setLoading(true);
-
+    setUploadLoadingMsg(true);
     const res = await fetch(`${location.origin}/api/vending-request-upload`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -148,10 +149,27 @@ export default function VendingFormSubmission() {
       );
     }
     setLoading(false);
+    setUploadLoadingMsg(false);
   }
 
   if (loading) {
-    return <Loader />;
+    return (
+      <>
+        <Loader />
+        {uploadLoadingMsg && (
+          <small
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            Uploading. This may take a few moments.
+          </small>
+        )}
+      </>
+    );
   }
 
   return (
