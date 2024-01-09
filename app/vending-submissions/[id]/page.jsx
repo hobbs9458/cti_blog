@@ -267,7 +267,7 @@ function Request() {
     <main className={styles.vendingRequestMain}>
       <div className={styles.requestInfoWrap}>
         <div className={`${styles.menuLinkWrap}`}>
-          <Link href='/access' className={`${styles.menuLink} link`}>
+          <Link href='/portal' className={`${styles.menuLink} link`}>
             Portal Home
           </Link>
           <Link

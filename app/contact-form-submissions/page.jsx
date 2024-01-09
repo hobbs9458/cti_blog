@@ -19,8 +19,8 @@ async function ContactFormSubmissions() {
 
   return (
     <div className={styles.contactSubmissionsWrap}>
-      <div className={`${styles.accessLinkWrap} link`}>
-        <Link href='/access' className={styles.accessLink}>
+      <div className={`${styles.portalLinkWrap} link`}>
+        <Link href='/portal' className={styles.portalLink}>
           Portal Home
         </Link>
       </div>

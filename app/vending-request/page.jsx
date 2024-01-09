@@ -175,7 +175,7 @@ export default function VendingFormSubmission() {
   return (
     <main className={styles.vendingReqMain}>
       <div className={`${styles.menuLinkWrap}`}>
-        <Link href='/access' className={`${styles.menuLink} link`}>
+        <Link href='/portal' className={`${styles.menuLink} link`}>
           Portal Home
         </Link>
         <Link href='/vending-submissions' className={`${styles.menuLink} link`}>

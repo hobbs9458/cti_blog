@@ -7,7 +7,7 @@ export default async function Layout({ children }) {
   const { data } = await supabase.auth.getSession();
 
   if (!data.session) {
-    redirect('/access');
+    redirect('/portal');
   }
 
   return children;

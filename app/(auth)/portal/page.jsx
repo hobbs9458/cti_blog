@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-import styles from "./access.module.css";
-import AuthForm from "../../components/AuthForm";
+import styles from './portal.module.css';
+import AuthForm from '../../components/AuthForm';
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import LogoutBtn from "../../components/LogoutBtn";
-import Loader from "@/app/components/Loader";
-import { capitalize } from "@/utils/functions";
-import { toast } from "react-toastify";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import LogoutBtn from '../../components/LogoutBtn';
+import Loader from '@/app/components/Loader';
+import { capitalize } from '@/utils/functions';
+import { toast } from 'react-toastify';
 
 const supabase = createClientComponentClient();
 
 export default function Login() {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     async function checkSession() {
@@ -28,7 +28,7 @@ export default function Login() {
 
       if (sessionDataError) {
         toast.error(
-          "There was a problem. Please try again or contact an administrator."
+          'There was a problem. Please try again or contact an administrator.'
         );
         setLoggedIn(false);
         setLoading(false);
@@ -37,7 +37,7 @@ export default function Login() {
       if (sessionData.session) {
         const res = await fetch(
           `${location.origin}/api/user?userId=${sessionData.session.user.id}`,
-          { cache: "no-store" }
+          { cache: 'no-store' }
         );
 
         const data = await res.json();
@@ -47,7 +47,7 @@ export default function Login() {
         }
 
         if (data.status === 200) {
-          setUserName(capitalize(data.data.name, "_").split(" ")[0]);
+          setUserName(capitalize(data.data.name, '_').split(' ')[0]);
         }
 
         setLoggedIn(true);
@@ -62,7 +62,7 @@ export default function Login() {
 
   const handleSubmit = async (e, email, password) => {
     e.preventDefault();
-    setError("");
+    setError('');
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -83,17 +83,17 @@ export default function Login() {
   }
 
   return (
-    <main className={styles.access}>
-      <div className={styles.accessWrap}>
+    <main className={styles.portal}>
+      <div className={styles.portalWrap}>
         {loggedIn ? (
           <div className={styles.loggedInMenu}>
             <h2 className={`${styles.welcomeText} text-center`}>
               Hello {userName}
             </h2>
-            <ul className={styles.accessUl}>
+            <ul className={styles.portalUl}>
               <li>
                 <Link
-                  href="/vending-request"
+                  href='/vending-request'
                   className={`link ${styles.menuLink}`}
                 >
                   Create Vending Request
@@ -101,7 +101,7 @@ export default function Login() {
               </li>
               <li>
                 <Link
-                  href="/vending-submissions"
+                  href='/vending-submissions'
                   className={`link ${styles.menuLink}`}
                 >
                   View Vending Submissions
@@ -111,11 +111,11 @@ export default function Login() {
             <LogoutBtn setLoggedIn={setLoggedIn} />
           </div>
         ) : (
-          <h2 className="text-center">Login</h2>
+          <h2 className='text-center'>Login</h2>
         )}
 
         {!loggedIn && <AuthForm handleSubmit={handleSubmit} />}
-        {error && <div className="error">{error}</div>}
+        {error && <div className='error'>{error}</div>}
       </div>
     </main>
   );

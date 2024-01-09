@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
-import { capitalize } from "@/utils/functions";
+import { capitalize } from '@/utils/functions';
 
-import styles from "./vendingSubmissions.module.css";
+import styles from './vendingSubmissions.module.css';
 
-import Loader from "@/app/components/Loader.jsx";
-import { toast } from "react-toastify";
-import Link from "next/link";
+import Loader from '@/app/components/Loader.jsx';
+import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 function VendingRequests() {
   const [requests, setRequests] = useState(null);
@@ -37,17 +37,17 @@ function VendingRequests() {
 
         if (data.error) {
           toast.error(
-            "There was a problem. Please try again or contact the administrator."
+            'There was a problem. Please try again or contact the administrator.'
           );
         } else {
           setRequests(data);
           setLoading(false);
         }
       } catch (error) {
-        if (error.name === "AbortError") {
-          console.log("Fetch aborted!");
+        if (error.name === 'AbortError') {
+          console.log('Fetch aborted!');
         } else {
-          console.log("Error fetching data", error);
+          console.log('Error fetching data', error);
         }
       }
     }
@@ -63,14 +63,14 @@ function VendingRequests() {
 
   function handleNavigateToRequestPage(e) {
     // access data link on tr to route to request page
-    if (e.target.getAttribute("data-tag") === "table-data") {
+    if (e.target.getAttribute('data-tag') === 'table-data') {
       // have to get parent of parent because using div inside td for styling on table
       router.push(
-        e.target.parentElement.parentElement.getAttribute("data-link")
+        e.target.parentElement.parentElement.getAttribute('data-link')
       );
     }
-    if (e.target.tagName === "TD") {
-      router.push(e.target.parentElement.getAttribute("data-link"));
+    if (e.target.tagName === 'TD') {
+      router.push(e.target.parentElement.getAttribute('data-link'));
     }
   }
 
@@ -82,16 +82,16 @@ function VendingRequests() {
     <>
       <main className={styles.vendingSubmissions}>
         <div className={`${styles.menuLinkWrap}`}>
-          <Link href="/access" className={`${styles.menuLink} link`}>
+          <Link href='/portal' className={`${styles.menuLink} link`}>
             Portal Home
           </Link>
-          <Link href="/vending-request" className={`${styles.menuLink} link`}>
+          <Link href='/vending-request' className={`${styles.menuLink} link`}>
             Create Vending Request
           </Link>
         </div>
 
         {requests.length < 1 && (
-          <h1 style={{ marginTop: "5rem" }}>No vending requests</h1>
+          <h1 style={{ marginTop: '5rem' }}>No vending requests</h1>
         )}
         {requests.length > 0 && (
           <>
@@ -105,30 +105,30 @@ function VendingRequests() {
               >
                 <thead>
                   <tr>
-                    <th className={styles.th} style={{ width: "70px" }}>
+                    <th className={styles.th} style={{ width: '70px' }}>
                       ID
                     </th>
-                    <th className={styles.th} style={{ width: "120px" }}>
+                    <th className={styles.th} style={{ width: '120px' }}>
                       Created At
                     </th>
 
-                    <th className={styles.th} style={{ width: "200px" }}>
+                    <th className={styles.th} style={{ width: '200px' }}>
                       Sales Rep
                     </th>
-                    <th className={styles.th} style={{ width: "200px" }}>
+                    <th className={styles.th} style={{ width: '200px' }}>
                       Customer
                     </th>
-                    <th className={styles.th} style={{ width: "200px" }}>
+                    <th className={styles.th} style={{ width: '200px' }}>
                       MFG
                     </th>
-                    <th className={styles.th} style={{ width: "200px" }}>
+                    <th className={styles.th} style={{ width: '200px' }}>
                       Desc 1
                     </th>
-                    <th className={styles.th} style={{ width: "200px" }}>
+                    <th className={styles.th} style={{ width: '200px' }}>
                       SN Number
                     </th>
 
-                    <th className={styles.th} style={{ width: "200px" }}>
+                    <th className={styles.th} style={{ width: '200px' }}>
                       Status
                     </th>
                   </tr>
@@ -147,26 +147,26 @@ function VendingRequests() {
                         </td>
 
                         <td className={styles.td}>
-                          {capitalize(request.sales_rep, "_")}
+                          {capitalize(request.sales_rep, '_')}
                         </td>
                         <td className={styles.td}>{request.customer}</td>
                         <td className={styles.td}>{request.mfg}</td>
 
                         <td className={styles.td}>
                           <div
-                            style={{ maxHeight: "50px", overflow: "auto" }}
-                            data-tag="table-data"
+                            style={{ maxHeight: '50px', overflow: 'auto' }}
+                            data-tag='table-data'
                           >
                             {request.description_1}
                           </div>
                         </td>
 
                         <td className={styles.td}>
-                          {request.supply_net_number || "N/A"}
+                          {request.supply_net_number || 'N/A'}
                         </td>
                         <td className={styles.td}>
                           {request.is_complete
-                            ? "Complete"
+                            ? 'Complete'
                             : capitalize(request.status)}
                         </td>
                       </tr>

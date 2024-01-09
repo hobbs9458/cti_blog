@@ -26,7 +26,7 @@ async function ContactSubmission({ params }) {
   return (
     <div className={styles.submissionScreen}>
       <div className={`${styles.contactSubmissionsLinkWrap} link`}>
-        <Link href='/access' className={styles.contactSubmissionsLink}>
+        <Link href='/portal' className={styles.contactSubmissionsLink}>
           Portal Home
         </Link>
         <Link
