@@ -380,6 +380,7 @@ function Request() {
                       </label>
                       <input
                         type='number'
+                        min='0'
                         name='supply_net_number'
                         id='supply_net_number'
                         className='input'
@@ -407,6 +408,7 @@ function Request() {
                       </label>
                       <input
                         type='number'
+                        min='0'
                         name='mfg_number'
                         id='mfg_number'
                         className='input'
@@ -419,6 +421,7 @@ function Request() {
                       </label>
                       <input
                         type='number'
+                        min='0'
                         name='issue_qty'
                         id='issue_qty'
                         className='input'
@@ -461,6 +464,7 @@ function Request() {
                         </p>
                         <input
                           type='number'
+                          min='0'
                           name='price'
                           id='price'
                           className='input'
@@ -485,6 +489,7 @@ function Request() {
                       <input
                         type='number'
                         name='min'
+                        min='0'
                         id='min'
                         className='input'
                         onChange={handleEditFormChange}
@@ -497,6 +502,7 @@ function Request() {
                       <input
                         type='number'
                         name='max'
+                        min='0'
                         id='max'
                         className='input'
                         onChange={handleEditFormChange}
