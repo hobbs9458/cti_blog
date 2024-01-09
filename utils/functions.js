@@ -1,6 +1,6 @@
 export function capitalize(name, splitChar) {
   const arr = name.split(`${splitChar}`);
-  return arr.map((name) => name[0].toUpperCase() + name.slice(1)).join(" ");
+  return arr.map((name) => name[0].toUpperCase() + name.slice(1)).join(' ');
 }
 
 export async function getRole(createRouteHandlerClient, cookies) {
@@ -10,9 +10,9 @@ export async function getRole(createRouteHandlerClient, cookies) {
   const userId = session.data.session.user.id;
 
   const { data: roleData, error: roleDataError } = await supabase
-    .from("users")
-    .select("roles")
-    .eq("id", userId)
+    .from('users')
+    .select('roles')
+    .eq('id', userId)
     .single();
 
   if (roleDataError) {
@@ -32,7 +32,7 @@ export async function sendMail(nodemailer, subject, message, emailAddresses) {
   const emailPass = process.env.EMAIL_PASS;
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: 'gmail',
     auth: {
       user: emailAddress,
       pass: emailPass,
@@ -49,7 +49,7 @@ export async function sendMail(nodemailer, subject, message, emailAddresses) {
   try {
     const res = await transporter.sendMail(mailOptions);
     if (res.rejected > 0) {
-      console.log("Rejected Emails", res);
+      console.log('Rejected Emails', res);
     }
   } catch (error) {
     console.log(error);
@@ -61,13 +61,13 @@ export async function getUser(supabase) {
   const userId = sessionData.session.user.id;
 
   const { data: user, error: userError } = await supabase
-    .from("users")
+    .from('users')
     .select()
-    .eq("id", userId)
+    .eq('id', userId)
     .single();
 
   if (userError) {
-    console.log("submitterError", userError);
+    console.log('error getting user', userError);
   }
 
   if (user) {
@@ -77,13 +77,13 @@ export async function getUser(supabase) {
 
 export async function getUserByName(supabase, name) {
   const { data: user, error: userError } = await supabase
-    .from("users")
+    .from('users')
     .select()
-    .eq("name", name)
+    .eq('name', name)
     .single();
 
   if (userError) {
-    console.log("submitterError", userError);
+    console.log('error getting user by name', userError);
   }
 
   if (user) {

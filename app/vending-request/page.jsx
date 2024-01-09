@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
-import styles from "./vendingRequest.module.css";
+import styles from './vendingRequest.module.css';
 
-import { toast } from "react-toastify";
-import readXlsxFile from "read-excel-file";
-import Loader from "@/app/components/Loader";
+import { toast } from 'react-toastify';
+import readXlsxFile from 'read-excel-file';
+import Loader from '@/app/components/Loader';
 
 export default function VendingFormSubmission() {
   const [loading, setLoading] = useState(true);
   const [uploadedData, setUploadedData] = useState([]);
-  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab, setActiveTab] = useState('tab1');
   const [singleUploadForm, setSingleUploadForm] = useState({
-    description_1: "",
-    description_2: "",
-    mfg: "",
-    mfg_number: "",
-    supply_net_number: "",
-    min: "",
-    max: "",
-    price: "",
-    price_type: "",
-    customer: "",
-    issue_qty: "",
-    price_type: "profit",
-    sales_rep: "",
+    description_1: '',
+    description_2: '',
+    mfg: '',
+    mfg_number: '',
+    supply_net_number: '',
+    min: '',
+    max: '',
+    price: '',
+    price_type: '',
+    customer: '',
+    issue_qty: '',
+    price_type: 'profit',
+    sales_rep: '',
   });
 
   const uploadRef = useRef(null);
@@ -34,7 +34,7 @@ export default function VendingFormSubmission() {
   useEffect(() => {
     // loading state was preventing setting uploadRef to null on submit. useEffect resets it after submission
     if (uploadRef.current?.value) {
-      uploadRef.current.value = "";
+      uploadRef.current.value = '';
     }
     setLoading(false);
   }, []);
@@ -60,7 +60,7 @@ export default function VendingFormSubmission() {
     const filteredUploadForm = {};
 
     for (const key in singleUploadForm) {
-      if (singleUploadForm[key] === "") {
+      if (singleUploadForm[key] === '') {
         filteredUploadForm[key] = null;
       } else {
         filteredUploadForm[key] = singleUploadForm[key];
@@ -68,8 +68,8 @@ export default function VendingFormSubmission() {
     }
 
     const res = await fetch(`${location.origin}/api/vending-request`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(filteredUploadForm),
     });
 
@@ -81,14 +81,14 @@ export default function VendingFormSubmission() {
       return;
     }
 
-    toast.success("Request submitted");
+    toast.success('Request submitted');
 
     // clear upload form after submission
     for (const key in singleUploadForm) {
-      if (key === "price_type") {
-        singleUploadForm[key] = "profit";
+      if (key === 'price_type') {
+        singleUploadForm[key] = 'profit';
       } else {
-        singleUploadForm[key] = "";
+        singleUploadForm[key] = '';
       }
     }
 
@@ -105,7 +105,7 @@ export default function VendingFormSubmission() {
     const formattedRows = [];
     const rowTemplate = {};
 
-    rows[0].forEach((header) => (rowTemplate[header] = ""));
+    rows[0].forEach((header) => (rowTemplate[header] = ''));
 
     rows.slice(1).forEach((row) => {
       let index = 0;
@@ -124,14 +124,14 @@ export default function VendingFormSubmission() {
   async function handleUploadSubmit(e) {
     e.preventDefault();
     if (uploadedData.length < 1) {
-      return toast.error("Please upload a file before submitting");
+      return toast.error('Please upload a file before submitting');
     }
 
     setLoading(true);
 
     const res = await fetch(`${location.origin}/api/vending-request-upload`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         rows: uploadedData,
       }),
@@ -144,7 +144,7 @@ export default function VendingFormSubmission() {
       setUploadedData([]);
     } else {
       toast.error(
-        "Upload not successful. Please try again or contact an administrator."
+        'Upload not successful. Please try again or contact an administrator.'
       );
     }
     setLoading(false);
@@ -157,10 +157,10 @@ export default function VendingFormSubmission() {
   return (
     <main className={styles.vendingReqMain}>
       <div className={`${styles.menuLinkWrap}`}>
-        <Link href="/access" className={`${styles.menuLink} link`}>
+        <Link href='/access' className={`${styles.menuLink} link`}>
           Portal Home
         </Link>
-        <Link href="/vending-submissions" className={`${styles.menuLink} link`}>
+        <Link href='/vending-submissions' className={`${styles.menuLink} link`}>
           View Vending Submissions
         </Link>
       </div>
@@ -169,211 +169,211 @@ export default function VendingFormSubmission() {
       <div className={styles.tabBtns}>
         <button
           className={`${styles.tabBtn} ${styles.leftTabBtn} ${
-            activeTab === "tab1" ? styles.activeTab : ""
+            activeTab === 'tab1' ? styles.activeTab : ''
           } btn`}
-          onClick={() => setActiveTab("tab1")}
+          onClick={() => setActiveTab('tab1')}
         >
           Single Request
         </button>
         <button
           className={`${styles.tabBtn} ${
-            activeTab === "tab2" ? styles.activeTab : ""
+            activeTab === 'tab2' ? styles.activeTab : ''
           } btn`}
-          onClick={() => setActiveTab("tab2")}
+          onClick={() => setActiveTab('tab2')}
         >
           Upload Requests
         </button>
         <button
           className={`${styles.tabBtn} ${styles.rightTabBtn} ${
-            activeTab === "tab3" ? styles.activeTab : ""
+            activeTab === 'tab3' ? styles.activeTab : ''
           } btn`}
-          onClick={() => setActiveTab("tab3")}
+          onClick={() => setActiveTab('tab3')}
         >
           Item Search
         </button>
       </div>
 
-      {activeTab === "tab1" && (
+      {activeTab === 'tab1' && (
         <>
           <form
             onSubmit={handleSingleSubmit}
             className={styles.vendingSingleForm}
           >
-            <label htmlFor="description_1" className="label">
+            <label htmlFor='description_1' className='label'>
               Description 1
             </label>
             <input
-              type="text"
-              name="description_1"
-              id="description_1"
-              className="input"
+              type='text'
+              name='description_1'
+              id='description_1'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.description_1}
               required
             />
-            <label htmlFor="description_2" className="label">
+            <label htmlFor='description_2' className='label'>
               Description 2 (optional)
             </label>
             <input
-              type="text"
-              name="description_2"
-              id="description_2"
-              className="input"
+              type='text'
+              name='description_2'
+              id='description_2'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.description_2}
             />
-            <label htmlFor="mfg" className="label">
+            <label htmlFor='mfg' className='label'>
               MFG
             </label>
             <input
-              type="text"
-              name="mfg"
-              id="mfg"
-              className="input"
+              type='text'
+              name='mfg'
+              id='mfg'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.mfg}
               required
             />
-            <label htmlFor="mfg_number" className="label">
+            <label htmlFor='mfg_number' className='label'>
               MFG Number
             </label>
             <input
-              type="number"
-              name="mfg_number"
-              id="mfg_number"
-              className="input"
+              type='number'
+              name='mfg_number'
+              id='mfg_number'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.mfg_number}
               required
             />
-            <label htmlFor="issue_qty" className="label">
+            <label htmlFor='issue_qty' className='label'>
               Issue Quantity
             </label>
             <input
-              type="number"
-              name="issue_qty"
-              id="issue_qty"
-              className="input"
+              type='number'
+              name='issue_qty'
+              id='issue_qty'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.issue_qty}
               required
             />
-            <label htmlFor="supply_net_number" className="label">
+            <label htmlFor='supply_net_number' className='label'>
               Supply Net Number (optional)
             </label>
             <input
-              type="number"
-              name="supply_net_number"
-              id="supply_net_number"
-              className="input"
+              type='number'
+              name='supply_net_number'
+              id='supply_net_number'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.supply_net_number}
             />
-            <label htmlFor="customer" className="label">
+            <label htmlFor='customer' className='label'>
               Customer
             </label>
             <input
-              type="text"
-              name="customer"
-              id="customer"
-              className="input"
+              type='text'
+              name='customer'
+              id='customer'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.customer}
               required
             />
-            <label htmlFor="min" className="label">
+            <label htmlFor='min' className='label'>
               Min
             </label>
             <input
-              type="number"
-              name="min"
-              id="min"
-              className="input"
+              type='number'
+              name='min'
+              id='min'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.min}
               required
             />
-            <label htmlFor="max" className="label">
+            <label htmlFor='max' className='label'>
               Max
             </label>
             <input
-              type="number"
-              name="max"
-              id="max"
-              className="input"
+              type='number'
+              name='max'
+              id='max'
+              className='input'
               onChange={handleSingleUploadFormChange}
               value={singleUploadForm.max}
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               required
             />
 
-            <label htmlFor="price" className="label">
+            <label htmlFor='price' className='label'>
               Price
             </label>
 
-            <label htmlFor="profit" style={{ fontSize: "14px" }}>
+            <label htmlFor='profit' style={{ fontSize: '14px' }}>
               Profit
             </label>
             <input
-              type="radio"
-              name="price_type"
-              id="profit"
-              value="profit"
-              checked={singleUploadForm.price_type === "profit"}
+              type='radio'
+              name='price_type'
+              id='profit'
+              value='profit'
+              checked={singleUploadForm.price_type === 'profit'}
               onChange={handleSingleUploadFormChange}
             />
-            <label htmlFor="margin" style={{ fontSize: "14px" }}>
+            <label htmlFor='margin' style={{ fontSize: '14px' }}>
               Margin
             </label>
             <input
-              type="radio"
-              name="price_type"
-              id="margin"
-              value="margin"
-              checked={singleUploadForm.price_type === "margin"}
+              type='radio'
+              name='price_type'
+              id='margin'
+              value='margin'
+              checked={singleUploadForm.price_type === 'margin'}
               onChange={handleSingleUploadFormChange}
             />
             <div className={styles.priceInputWrap}>
               <p className={styles.profitSymbol}>
-                {singleUploadForm.price_type === "profit" && "$"}
+                {singleUploadForm.price_type === 'profit' && '$'}
               </p>
               <input
-                type="number"
-                name="price"
-                id="price"
-                className="input"
+                type='number'
+                name='price'
+                id='price'
+                className='input'
                 onChange={handleSingleUploadFormChange}
                 value={singleUploadForm.price}
                 style={
-                  singleUploadForm.price_type === "profit"
+                  singleUploadForm.price_type === 'profit'
                     ? {
-                        paddingLeft: ".8rem",
+                        paddingLeft: '.8rem',
                       }
-                    : { paddingRight: "1.1rem" }
+                    : { paddingRight: '1.1rem' }
                 }
                 required
               />
               <p className={styles.marginSymbol}>
-                {singleUploadForm.price_type === "margin" && "%"}
+                {singleUploadForm.price_type === 'margin' && '%'}
               </p>
             </div>
 
-            <label htmlFor="sales_rep" className="label">
+            <label htmlFor='sales_rep' className='label'>
               Sales Rep
             </label>
             <select
-              name="sales_rep"
-              id="sales_rep"
-              className="dropdown"
+              name='sales_rep'
+              id='sales_rep'
+              className='dropdown'
               required
               value={singleUploadForm.sales_rep}
               onChange={handleSingleUploadFormChange}
             >
               <option></option>
-              <option value="ronnie_turner">Ronnie Turner</option>
-              <option value="john_narum">John Narum</option>
-              <option value="jimmy_shelton">Jimmy Shelton</option>
-              <option value="kayla_jones">Kayla Jones</option>
+              <option value='ronnie_turner'>Ronnie Turner</option>
+              <option value='john_narum'>John Narum</option>
+              <option value='jimmy_shelton'>Jimmy Shelton</option>
+              <option value='kayla_jones'>Kayla Jones</option>
             </select>
 
             <button className={`btn ${styles.vendingSingleFormBtn}`}>
@@ -383,23 +383,23 @@ export default function VendingFormSubmission() {
         </>
       )}
 
-      {activeTab === "tab2" && (
+      {activeTab === 'tab2' && (
         <form
           className={styles.vendingUploadForm}
           onSubmit={handleUploadSubmit}
         >
           <p className={styles.downloadTemplateP}>
-            {" "}
-            <Link href="/vending-request-excel-template.xlsx" className="link">
+            {' '}
+            <Link href='/vending-request-excel-template.xlsx' className='link'>
               Download the excel template
-            </Link>{" "}
+            </Link>{' '}
             to upload requests in bulk.
           </p>
 
           <input
-            type="file"
-            name="upload"
-            id="upload"
+            type='file'
+            name='upload'
+            id='upload'
             className={styles.uploadFileInput}
             ref={uploadRef}
             onChange={handleFileChange}
@@ -408,8 +408,8 @@ export default function VendingFormSubmission() {
         </form>
       )}
 
-      {activeTab === "tab3" && (
-        <div style={{ textAlign: "center" }}>Search Page Coming Soon</div>
+      {activeTab === 'tab3' && (
+        <div style={{ textAlign: 'center' }}>Search Page Coming Soon</div>
       )}
     </main>
   );

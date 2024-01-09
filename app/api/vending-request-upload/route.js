@@ -1,27 +1,33 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import nodemailer from "nodemailer";
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import nodemailer from 'nodemailer';
 
 import {
   getUser,
   getUserByName,
   sendMail,
   capitalize,
-} from "@/utils/functions";
+} from '@/utils/functions';
 
 export async function POST(req) {
   const formData = await req.json();
   const rows = formData.rows;
   const cookieStore = cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-  const user = await getUser(supabase);
   const successfullyInsertedIds = [];
   let salesRepOnUpload = null;
 
+  let user;
+  let rep;
+
   try {
     for (let i = 0; i < rows.length; i++) {
+      if (!user) {
+        user = await getUser(supabase);
+      }
+
       const {
         min,
         max,
@@ -37,8 +43,12 @@ export async function POST(req) {
         issue_qty,
       } = rows[i];
 
+      if (!rep) {
+        rep = sales_rep.toLowerCase().split(' ').join('_');
+      }
+
       const { data, error } = await supabase
-        .from("vending-requests")
+        .from('vending-requests')
         .insert({
           min,
           max,
@@ -52,10 +62,7 @@ export async function POST(req) {
           price_type,
           customer,
           issue_qty,
-          sales_rep: sales_rep
-            .split(" ")
-            .map((name) => name[0].toLowerCase() + name.slice(1))
-            .join("_"),
+          sales_rep: rep,
         })
         .select()
         .single();
@@ -70,7 +77,7 @@ export async function POST(req) {
 
       // grab the sales rep from one of the rows so you can email them
       if (salesRepOnUpload === null) {
-        salesRepOnUpload = sales_rep;
+        salesRepOnUpload = sales_rep.toLowerCase().split(' ').join('_');
       }
     }
 
@@ -85,7 +92,7 @@ export async function POST(req) {
     }
 
     const emailAddresses = Array.from(uniqueEmailAddresses);
-    const subject = "Vending Requests Uploaded";
+    const subject = 'Vending Requests Uploaded';
     const message = `<html>
       <head>
         <style>
@@ -106,7 +113,7 @@ export async function POST(req) {
         <h1 style="font-size: 20px; color: black">Vending Requests Uploaded</h1>
         <h2 style="margin: 0; font-size: 18px; color: black">Uploaded by ${capitalize(
           user.name,
-          "_"
+          '_'
         )}</h2>
         <hr/>
         <p style="color: black;">Click <a href="http://www.cuttingtoolsinc.com/vending-submissions?redirect=/vending-submissions" style="color: black;">here</a> to view the requests.</p>
@@ -115,25 +122,25 @@ export async function POST(req) {
 
     await sendMail(nodemailer, subject, message, emailAddresses);
 
-    return NextResponse.json({ success: "Upload successful" }, { status: 200 });
+    return NextResponse.json({ success: 'Upload successful' }, { status: 200 });
   } catch (err) {
     // Delete rows based on successfullyInsertedIds
     for (const id of successfullyInsertedIds) {
       try {
         const { error: deleteError } = await supabase
-          .from("vending-requests")
+          .from('vending-requests')
           .delete()
-          .eq("id", id);
+          .eq('id', id);
         if (deleteError) {
-          console.error("Error deleting row:", deleteError);
+          console.error('Error deleting row:', deleteError);
         }
       } catch (deleteErr) {
-        console.error("Error deleting row:", deleteErr);
+        console.error('Error deleting row:', deleteErr);
       }
     }
 
     return NextResponse.json(
-      { error: "Upload not successful" },
+      { error: 'Upload not successful' },
       { status: 500 }
     );
   }
